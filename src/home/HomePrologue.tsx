@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OPENING_HOOK, STORY_BEATS, type StoryState } from "./story";
 import { StoryDialogue } from "./StoryDialogue";
 import { StoryIllustration } from "./StoryIllustration";
 import "./prologue.css";
 export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onNext: () => void; onSkip: () => void }) {
   const host = useRef<HTMLElement>(null);
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const opening = state.phase === "OPENING";
   const transition = state.phase === "TRANSITION";
   const beat = STORY_BEATS[state.beat];
@@ -35,8 +36,25 @@ export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onN
       <header className="story-chapter"><span>DUNATERP / PROLOGUE</span><h1>{beat.chapter}</h1></header>
       <div key={`art-${state.beat}`} className="story-scene-art"><StoryIllustration beat={beat} /></div>
       <StoryDialogue key={state.beat} speaker={beat.speaker} text={beat.text} label={state.beat === STORY_BEATS.length - 1 ? "START THE SALT ROUTE" : "Continue"} onNext={onNext} />
-      <div className="story-progress" aria-label={`Story ${state.beat + 1} of ${STORY_BEATS.length}`}>{STORY_BEATS.map((_, i) => <i key={i} className={i <= state.beat ? "is-complete" : ""} />)}</div>
+      <div className="story-progress" aria-label={`Story ${state.beat + 1} of ${STORY_BEATS.length}`}>
+        {STORY_BEATS.map((_, i) => <i key={i} className={i <= state.beat ? "is-complete" : ""} />)}
+      </div>
+      <button type="button" className="story-overview-toggle" onClick={() => setOverviewOpen(true)}>Browse all scenes</button>
     </>}
+    {overviewOpen && <div className="story-overview" role="dialog" aria-modal="true" aria-label="Story overview">
+      <div className="story-overview-panel">
+        <div className="story-overview-header">
+          <p>ALL CHAPTERS</p>
+          <button type="button" onClick={() => setOverviewOpen(false)}>Close</button>
+        </div>
+        <div className="story-overview-list">
+          {STORY_BEATS.map((item, index) => <article key={`${item.chapter}-${index}`} className="story-overview-item">
+            <small>{item.chapter}</small>
+            <p>{item.text}</p>
+          </article>)}
+        </div>
+      </div>
+    </div>}
     {!transition && <p className="story-controls-hint">Click · Enter · Space <span> / Reveal · Continue</span></p>}
   </section>;
 }

@@ -54,13 +54,14 @@
 .story-products > span { padding: .5rem .7rem; border: 2px solid #ebaf69; background: #493d28; font-size: .8rem; animation: story-item .4s calc(var(--item) * .25s) both; }
 .story-pathway > small, .story-voices > small { font-size: .6rem; line-height: 1.4; text-align: center; color: #eeedce; background: #06221fbf; padding: .3rem .5rem; }
 .story-voices { display: flex; flex-wrap: wrap; align-items: start; justify-content: center; gap: 2rem; }
-.story-voice { position: relative; display: grid; justify-items: center; gap: .5rem; padding: .75rem .5rem; border-bottom: 3px solid transparent; transition: opacity .3s; }
+.story-voice { position: relative; display: grid; justify-items: center; gap: .5rem; padding: .75rem .5rem; border-bottom: 3px solid transparent; transition: opacity .3s; text-decoration: none; color: inherit; }
 .story-voice > strong { font-size: .8rem; }
 .story-voice > span { font-size: .6rem; }
 .story-voice.is-speaking { border-color: #cdf558; background: #06221faa; }
 .story-voice.is-quiet { opacity: .42; }
 .story-voice > b { position: absolute; top: -.5rem; right: -.5rem; padding: .15rem .5rem; background: #fff5db; color: #06221f; text-shadow: none; }
 .story-voices > small { flex-basis: 100%; }
+.story-voice:hover, .story-voice:focus-visible { outline: 2px solid rgba(205, 245, 88, 0.9); outline-offset: 4px; }
 .story-signposts { width: min(36rem, 100%); }
 .story-signposts > p { text-align: center; font-size: .65rem; letter-spacing: .08em; }
 .story-signposts > p span { color: #cdf558; }
@@ -90,6 +91,16 @@
 .story-progress { display: flex; gap: 5px; margin-top: 1rem; }
 .story-progress i { width: 12px; height: 3px; background: #eee4ba40; }
 .story-progress i.is-complete { background: #cdf558; }
+.story-overview-toggle { margin-top: 1rem; padding: .6rem .9rem; border: 1px solid #fdf6e350; background: #06221fcc; color: #edf3db; font: 700 .62rem monospace; letter-spacing: .12em; cursor: pointer; }
+.story-overview { position: absolute; inset: 0; z-index: 80; display: grid; place-items: center; padding: 1.5rem; background: rgba(5, 22, 20, 0.82); }
+.story-overview-panel { width: min(48rem, 100%); max-height: min(72vh, 46rem); display: flex; flex-direction: column; gap: 1rem; padding: 1rem 1rem 0; border: 2px solid rgba(205, 245, 88, 0.7); background: rgba(7, 31, 29, 0.98); box-shadow: 0 0 0 3px rgba(0,0,0,.15); }
+.story-overview-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.story-overview-header p { margin: 0; color: #cdf558; font: 700 .7rem monospace; letter-spacing: .18em; }
+.story-overview-header button { padding: .5rem .75rem; border: 1px solid #fdf6e350; background: #0d3c2c; color: #edf3db; font: 700 .62rem monospace; letter-spacing: .08em; cursor: pointer; }
+.story-overview-list { display: grid; gap: .75rem; max-height: min(60vh, 38rem); overflow: auto; padding-bottom: 1rem; }
+.story-overview-item { padding: .8rem .9rem; border: 1px solid rgba(160, 196, 143, 0.65); background: rgba(12, 47, 43, 0.9); }
+.story-overview-item small { display: block; margin-bottom: .35rem; color: #cdf558; font: 700 .62rem monospace; letter-spacing: .1em; }
+.story-overview-item p { margin: 0; font: 500 .82rem/1.6 monospace; color: #f5f2dd; }
 .story-controls-hint { flex: none; margin: .75rem 0 max(1.2rem, env(safe-area-inset-bottom)); font-size: .6rem; color: #d5ddc3; letter-spacing: .05em; }
 .story-controls-hint > span { opacity: .65; }
 .story-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }

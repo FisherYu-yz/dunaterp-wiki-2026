@@ -278,14 +278,21 @@
   margin: .28rem 0 .32rem;
   font: 900 clamp(1rem, 1.8vw, 1.25rem)/1.08 ui-monospace, Menlo, monospace;
   letter-spacing: -.01em;
+  color: var(--px-ink);
 }
 
 .px-hud .px-card-action {
   display: inline-block;
-  color: #36514c;
+  color: var(--px-ink);
   font: 800 .65rem/1 ui-monospace, Menlo, monospace;
   letter-spacing: .06em;
   text-transform: uppercase;
+}
+
+.px-hud-body {
+  margin: 0;
+  color: #29443f;
+  font: 600 .78rem/1.45 ui-monospace, Menlo, monospace;
 }
 
 /* --- interaction prompt ------------------------------------------------- */

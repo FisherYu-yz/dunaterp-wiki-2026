@@ -1,11 +1,12 @@
 import type { CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import type { StoryBeat } from "./story";
 import { StoryGlyph } from "./StoryGlyph";
 const voices = [
-  { name: "Consumer", topic: "Food · safety", tone: "#f6be70" },
-  { name: "Producer", topic: "Scale · resources", tone: "#e98658" },
-  { name: "Environment", topic: "Biosafety", tone: "#b6d966" },
-  { name: "Researcher", topic: "Public needs", tone: "#a6cbbd" },
+  { name: "Consumer", topic: "Food · safety", tone: "#f6be70", href: "/project-description" },
+  { name: "Producer", topic: "Scale · resources", tone: "#e98658", href: "/engineering" },
+  { name: "Environment", topic: "Biosafety", tone: "#b6d966", href: "/safety-and-security" },
+  { name: "Researcher", topic: "Public needs", tone: "#a6cbbd", href: "/human-practices" },
 ];
 export function StoryIllustration({ beat }: { beat: StoryBeat }) {
   const stagger = (index: number) => ({ "--item": index } as CSSProperties);
@@ -20,7 +21,7 @@ export function StoryIllustration({ beat }: { beat: StoryBeat }) {
         {beat.visual === "products" && <><span className="story-arrow" aria-hidden="true">↓</span><div className="story-products">{["Astaxanthin", "β-ionone", "Crocetin"].map((text, i) => <span key={text} style={stagger(i)}>{text}</span>)}</div><small>Candidate routes · food applications are a design goal</small></>}
       </div>;
     case "voices":
-      return <div className="story-voices">{voices.map((voice, i) => <div key={voice.name} className={`story-voice${beat.voice === i ? " is-speaking" : ""}${beat.voice !== undefined && beat.voice !== i ? " is-quiet" : ""}`} style={stagger(i)}><StoryGlyph kind={i === 2 ? "plant" : "person"} tone={voice.tone} /><strong>{voice.name}</strong><span>{voice.topic}</span>{beat.voice === i && <b aria-hidden="true">…</b>}</div>)}<small>Illustrative stakeholder questions, not interview quotations.</small></div>;
+      return <div className="story-voices">{voices.map((voice, i) => <Link key={voice.name} to={voice.href} className={`story-voice${beat.voice === i ? " is-speaking" : ""}${beat.voice !== undefined && beat.voice !== i ? " is-quiet" : ""}`} style={stagger(i)} aria-label={`Open ${voice.name} context`}><StoryGlyph kind={i === 2 ? "plant" : "person"} tone={voice.tone} /><strong>{voice.name}</strong><span>{voice.topic}</span>{beat.voice === i && <b aria-hidden="true">…</b>}</Link>)}<small>Illustrative stakeholder questions, not interview quotations.</small></div>;
     case "decisions":
       return <div className="story-signposts"><p>REAL-WORLD QUESTIONS <span>→</span> DESIGN DECISIONS</p>{[["SUSTAINABILITY", "Photosynthetic chassis"], ["FOOD", "Food-grade platform goal"], ["BIOSAFETY", "Biocontainment system"]].map(([from, to], i) => <div key={from} style={stagger(i)}><strong>{from}</strong><span aria-hidden="true">→</span><span>{to}</span></div>)}<b>DUNATERP</b></div>;
     case "journey":

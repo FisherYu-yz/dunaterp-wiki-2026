@@ -68,25 +68,25 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#7cc45a",
     initials: "MC",
     intro:
-      "Welcome to the brine edge. Most cells would call this a dead end; Dunaliella salina calls it home. We asked ourselves: why settle for one compound when nature gave this alga a carotenoid goldmine?",
+      "You're standing at the brine edge. Most cells would call this a dead end—but Dunaliella salina calls it home. We kept asking: why settle for one compound when nature built this alga into a carotenoid goldmine? Follow the salt, and the clues start to appear.",
     prompts: [
       {
         id: "why-alga",
         label: "Why follow this salt dweller?",
         response:
-          "Follow the salt and the clue appears: this wall-less, motile alga already thrives in hypersaline water and builds carotenoids. That gives our expedition a living chassis and a native metabolic trail to explore.",
+          "This wall-less, motile alga already thrives in hypersaline water and builds carotenoids as a survival strategy. That gives us a living chassis and a native metabolic trail—no need to force a heterologous pathway into a reluctant host.",
       },
       {
         id: "cell-evidence",
         label: "What belongs in the field notes?",
         response:
-          "Write down what we saw, what we compared and how we measured it. A coloured culture is an exciting footprint; chromatography or spectroscopy tells us which molecule actually left it.",
+          "Write down what we saw, what we compared and how we measured it. A coloured culture is an exciting footprint; chromatography or spectroscopy tells us which molecule actually left it. Separate the observation from the interpretation.",
       },
       {
         id: "careful-claim",
         label: "How far can a claim travel?",
         response:
-          "Only as far as the evidence trail. Name the observation, the comparison and the uncertainty, then stop at the last confirmed marker. That is how another explorer can retrace our route.",
+          "Only as far as the evidence trail. Name the observation, the comparison and the uncertainty, then stop at the last confirmed marker. That is how another explorer can retrace our route—and how we keep the engineering cycle honest.",
       },
     ],
   },
@@ -99,25 +99,25 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#e9c43a",
     initials: "IP",
     intro:
-      "You made it to the product yards. One β-carotene hub sits at the centre, but four routes leave the gate. The real engineering question is not whether we can draw them—it is where the carbon actually goes.",
+      "Welcome to the product yards. One β-carotene hub sits at the centre, but four routes leave the gate. The real engineering question isn't whether we can draw them on paper—it's where the carbon actually goes when the cells are running.",
     prompts: [
       {
         id: "hub",
         label: "Why build around one hub?",
         response:
-          "Think of β-carotene as the busiest roundabout on the map. Strengthening its supply can support every destination, while LCYB controls how much lycopene enters that shared junction.",
+          "Think of β-carotene as the busiest roundabout on the map. Strengthening its supply supports every destination. LCYB controls how much lycopene enters that shared junction—tune it right, and all four branches benefit.",
       },
       {
         id: "branch",
         label: "Which route comes first?",
         response:
-          "Choose the destination, trace every conversion backward, then check the enzyme, substrate and analytical readout at each turn. Astaxanthin, β-ionone, crocetin and β-citraurin each need their own strain and route card.",
+          "Choose the destination, trace every conversion backward, then check the enzyme, substrate and analytical readout at each turn. Astaxanthin, β-ionone, crocetin and β-citraurin each need their own strain and their own route card.",
       },
       {
         id: "model",
         label: "What does the model reveal?",
         response:
-          "A model is our compass: it follows control from promoter occupancy to LCYB transcript, active enzyme and β-carotene. Sensitivity analysis then points to the measurements most likely to change our direction.",
+          "The model is our compass: it follows control from promoter occupancy to LCYB transcript, active enzyme and β-carotene. Sensitivity analysis points to the measurements most likely to change our direction—so we know which experiment to run next.",
       },
     ],
   },
@@ -130,25 +130,25 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#c4a8ff",
     initials: "AO",
     intro:
-      "The path opens into the commons here. A clever construct may begin the journey, but farmers, engineers, regulators and communities decide which questions the map must answer next.",
+      "The path opens into the commons here. A clever construct may begin the journey, but growers, engineers, regulators and communities decide which questions the map must answer next. Every conversation we had reshaped DunaTerp—from chassis choice to safety constraints. This isn't outreach; it's the engine of our design.",
     prompts: [
       {
         id: "listen",
         label: "Whose map are we missing?",
         response:
-          "Start with the people who grow, operate, regulate, process or live beside the system. Ask what they value, what worries them and what evidence would earn their trust; each answer adds a landmark we could not see alone.",
+          "Start with the people who grow, operate, regulate, process or live beside the system. Ask what they value, what worries them and what evidence would earn their trust. Each answer adds a landmark we could not see from the bench alone.",
       },
       {
         id: "safety",
         label: "What opens the next gate?",
         response:
-          "The gate opens when the criteria are visible: containment, reproducibility, product evidence and stakeholder concerns all receive a documented answer. Readiness is a checkpoint the whole team can inspect.",
+          "The gate opens when containment, food-grade selection, process constraints and stakeholder concerns all receive a documented answer. Readiness is a checkpoint the whole team can inspect—not a box we tick after the fact.",
       },
       {
         id: "change-design",
         label: "Can feedback reroute us?",
         response:
-          "Absolutely. A concern can become a design constraint, a new control or a different experiment. We mark every turn in the journal so the final route shows who helped shape it.",
+          "Absolutely. A concern about escape became a biocontainment criterion. A question about food safety became a selection-marker constraint. We mark every turn in the journal so the final route shows who helped shape it—and why.",
       },
     ],
   },

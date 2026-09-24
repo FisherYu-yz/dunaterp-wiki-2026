@@ -280,6 +280,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
             <div>
               <p className="px-hud-kicker">{activeChapter.kicker}</p>
               <h2>{activeChapter.title}</h2>
+              <p className="px-hud-body">{activeChapter.body}</p>
               <span className="px-card-action">Explore chapter →</span>
             </div>
           </button>
