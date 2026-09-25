@@ -53,6 +53,7 @@ export type ExpeditionNpc = {
   accent: string;
   initials: string;
   intro: string;
+  chapterHint: string;
   prompts: NpcPrompt[];
 };
 
@@ -68,25 +69,26 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#7cc45a",
     initials: "MC",
     intro:
-      "You're standing at the brine edge. Most cells would call this a dead end—but Dunaliella salina calls it home. We kept asking: why settle for one compound when nature built this alga into a carotenoid goldmine? Follow the salt, and the clues start to appear.",
+      "The first orange salt pond I saw looked almost lifeless, and that contradiction stayed with me. I want to know what Dunaliella can build here—but I still ask whether every bright colour is really the molecule we hoped for.",
+    chapterHint: "Field trail: Wet Lab → Description, Experiments and Results",
     prompts: [
       {
         id: "why-alga",
         label: "Why follow this salt dweller?",
         response:
-          "This wall-less, motile alga already thrives in hypersaline water and builds carotenoids as a survival strategy. That gives us a living chassis and a native metabolic trail—no need to force a heterologous pathway into a reluctant host.",
+          "Follow the salt and the clue appears: this wall-less, motile alga already thrives in hypersaline water and builds carotenoids. That gives our expedition a living chassis and a native metabolic trail to explore.",
       },
       {
         id: "cell-evidence",
         label: "What belongs in the field notes?",
         response:
-          "Write down what we saw, what we compared and how we measured it. A coloured culture is an exciting footprint; chromatography or spectroscopy tells us which molecule actually left it. Separate the observation from the interpretation.",
+          "Write down what we saw, what we compared and how we measured it. A coloured culture is an exciting footprint; chromatography or spectroscopy tells us which molecule actually left it.",
       },
       {
         id: "careful-claim",
         label: "How far can a claim travel?",
         response:
-          "Only as far as the evidence trail. Name the observation, the comparison and the uncertainty, then stop at the last confirmed marker. That is how another explorer can retrace our route—and how we keep the engineering cycle honest.",
+          "Only as far as the evidence trail. Name the observation, the comparison and the uncertainty, then stop at the last confirmed marker. That is how another explorer can retrace our route.",
       },
     ],
   },
@@ -99,25 +101,26 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#e9c43a",
     initials: "IP",
     intro:
-      "Welcome to the product yards. One β-carotene hub sits at the centre, but four routes leave the gate. The real engineering question isn't whether we can draw them on paper—it's where the carbon actually goes when the cells are running.",
+      "I distrust a tidy pathway diagram until the carbon actually moves through it. Four routes leave this β-carotene hub; my task is to find the bottleneck, and my hesitation is always the same: did we strengthen one branch by starving another?",
+    chapterHint: "Field trail: Wet Lab → Engineering; Dry Lab → Mathematical Modeling",
     prompts: [
       {
         id: "hub",
         label: "Why build around one hub?",
         response:
-          "Think of β-carotene as the busiest roundabout on the map. Strengthening its supply supports every destination. LCYB controls how much lycopene enters that shared junction—tune it right, and all four branches benefit.",
+          "Think of β-carotene as the busiest roundabout on the map. Strengthening its supply can support every destination, while LCYB controls how much lycopene enters that shared junction.",
       },
       {
         id: "branch",
         label: "Which route comes first?",
         response:
-          "Choose the destination, trace every conversion backward, then check the enzyme, substrate and analytical readout at each turn. Astaxanthin, β-ionone, crocetin and β-citraurin each need their own strain and their own route card.",
+          "Choose the destination, trace every conversion backward, then check the enzyme, substrate and analytical readout at each turn. Astaxanthin, β-ionone, crocetin and β-citraurin each need their own strain and route card.",
       },
       {
         id: "model",
         label: "What does the model reveal?",
         response:
-          "The model is our compass: it follows control from promoter occupancy to LCYB transcript, active enzyme and β-carotene. Sensitivity analysis points to the measurements most likely to change our direction—so we know which experiment to run next.",
+          "A model is our compass: it follows control from promoter occupancy to LCYB transcript, active enzyme and β-carotene. Sensitivity analysis then points to the measurements most likely to change our direction.",
       },
     ],
   },
@@ -130,25 +133,26 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#c4a8ff",
     initials: "AO",
     intro:
-      "The path opens into the commons here. A clever construct may begin the journey, but growers, engineers, regulators and communities decide which questions the map must answer next. Every conversation we had reshaped DunaTerp—from chassis choice to safety constraints. This isn't outreach; it's the engine of our design.",
+      "Whenever a design looks complete, I look for the person whose question is missing. I listen for practical worries that never appear in a pathway diagram, then ask whether the project changed because someone trusted us with them.",
+    chapterHint: "Field trail: Human Practices → Human Practices and Sustainability",
     prompts: [
       {
         id: "listen",
         label: "Whose map are we missing?",
         response:
-          "Start with the people who grow, operate, regulate, process or live beside the system. Ask what they value, what worries them and what evidence would earn their trust. Each answer adds a landmark we could not see from the bench alone.",
+          "Start with the people who grow, operate, regulate, process or live beside the system. Ask what they value, what worries them and what evidence would earn their trust; each answer adds a landmark we could not see alone.",
       },
       {
         id: "safety",
         label: "What opens the next gate?",
         response:
-          "The gate opens when containment, food-grade selection, process constraints and stakeholder concerns all receive a documented answer. Readiness is a checkpoint the whole team can inspect—not a box we tick after the fact.",
+          "The gate opens when the criteria are visible: containment, reproducibility, product evidence and stakeholder concerns all receive a documented answer. Readiness is a checkpoint the whole team can inspect.",
       },
       {
         id: "change-design",
         label: "Can feedback reroute us?",
         response:
-          "Absolutely. A concern about escape became a biocontainment criterion. A question about food safety became a selection-marker constraint. We mark every turn in the journal so the final route shows who helped shape it—and why.",
+          "Absolutely. A concern can become a design constraint, a new control or a different experiment. We mark every turn in the journal so the final route shows who helped shape it.",
       },
     ],
   },
@@ -179,6 +183,7 @@ type JournalProgress = {
 };
 
 const STORAGE_KEY = "dunaterp.expedition-journal.v1";
+const PROGRESS_EVENT = "dunaterp:journal-progress";
 
 function emptyProgress(): JournalProgress {
   return {
@@ -230,6 +235,18 @@ function writeProgress(progress: JournalProgress) {
   } catch {
     // Storage is an enhancement; the live journal remains usable.
   }
+}
+
+// Shared by the compact world dialogue and the full journal so its 0/3 counter
+// changes as soon as a real conversation begins.
+// eslint-disable-next-line react-refresh/only-export-components
+export function recordNpcVisit(npcId: ExpeditionNpcId) {
+  if (typeof window === "undefined") return;
+  const current = readProgress();
+  if (current.visited[npcId]) return;
+  const next = { ...current, visited: { ...current.visited, [npcId]: true } };
+  writeProgress(next);
+  window.dispatchEvent(new CustomEvent<JournalProgress>(PROGRESS_EVENT, { detail: next }));
 }
 
 type Feedback = { tone: "hint" | "correct" | "try"; text: string };
@@ -602,6 +619,15 @@ export function ExpeditionJournal({
     writeProgress(progress);
   }, [progress]);
 
+  useEffect(() => {
+    const syncProgress = (event: Event) => {
+      const update = (event as CustomEvent<JournalProgress>).detail;
+      if (update) setProgress(update);
+    };
+    window.addEventListener(PROGRESS_EVENT, syncProgress);
+    return () => window.removeEventListener(PROGRESS_EVENT, syncProgress);
+  }, []);
+
   const markNpcVisited = useCallback((npcId: ExpeditionNpcId) => {
     setProgress((current) => {
       if (current.visited[npcId]) return current;
@@ -662,6 +688,7 @@ export function ExpeditionJournal({
   const activeNpc = NPCS[selectedNpc];
   const nearbyStation = currentStationKey ? STATION_LABELS[currentStationKey] : null;
   const completedGames = GAME_IDS.filter((gameId) => progress.games[gameId]).length;
+  const visitedNpcs = Object.values(progress.visited).filter(Boolean).length;
   const completionPercent = Math.round((completedGames / GAME_IDS.length) * 100);
 
   const completeGame = useCallback((gameId: GameId) => {
@@ -693,7 +720,7 @@ export function ExpeditionJournal({
       >
         <span className="ej-launcher__icon" aria-hidden="true">▤</span>
         <span>Expedition journal</span>
-        <span className="ej-launcher__key" aria-hidden="true">{completedGames}/3</span>
+        <span className="ej-launcher__key" aria-label={`${visitedNpcs} of 3 guides met`}>{visitedNpcs}/3</span>
       </button>
 
       <dialog
@@ -729,7 +756,7 @@ export function ExpeditionJournal({
             <aside className="ej-contacts" aria-label="Field contacts">
               <div className="ej-section-heading">
                 <p className="ej-eyebrow">FIELD CONTACTS</p>
-                <p>{Object.values(progress.visited).filter(Boolean).length}/3 met</p>
+                <p>{visitedNpcs}/3 met</p>
               </div>
               <div className="ej-npc-list">
                 {NPC_LIST.map((npc) => {

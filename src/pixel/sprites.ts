@@ -762,9 +762,7 @@ export function getAtlas(): Atlas {
       boulderS: boulder(false),
       boulderL: boulder(true),
       boat: rowboat(),
-      signStart: signpost("SALT ROUTE", "8"),
-      signFree: signpost("FREE ROAM", "x"),
-      signArchive: signpost("ARCHIVE", "s"),
+      signScroll: signpost("SCROLL", "8"),
     },
     stations: {
       "brine-edge": stationBrineEdge(),
@@ -779,7 +777,7 @@ export function getAtlas(): Atlas {
   return atlas;
 }
 
-/** Signage generated on demand for the numbered station plates. */
+/** Compact station identifier; detailed copy opens only when the stop is viewed. */
 export function stationPlate(index: string, label: string, accent: string): Painter {
   const text = `${index} ${label}`;
   const w = textWidth(text) + 12;

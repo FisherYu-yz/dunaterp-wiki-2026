@@ -167,7 +167,7 @@ export class PixelRenderer {
     /** 0 at the trailhead, 1 at the archive — drives the light. */
     daylight: number;
     prompt: { x: number; y: number; text: string; accent: string } | null;
-    /** NPC names and overhead markers are intentionally shown in free mode. */
+    /** NPC names and overhead markers keep optional guides visible on the route. */
     showNpcLabels?: boolean;
     hideStationLabels?: boolean;
   }) {
@@ -247,12 +247,16 @@ export class PixelRenderer {
           Math.round(item.station.y - shadow.h / 2) - oy,
         );
         ctx.drawImage(sprite.canvas, x, y);
-        if (!hideStationLabels) {
+        if (!hideStationLabels && item.station.key !== "archive") {
           const plate = this.plateFor(item.station);
+          const route = world.path.sample(item.station.u);
+          const side = Math.sign(item.station.offset) || 1;
+          const plateX = item.station.x - route.dy * side * 58 + (item.station.plateNudge?.x ?? 0);
+          const plateY = item.station.y + route.dx * side * 58 - sprite.h / 2 + (item.station.plateNudge?.y ?? 0);
           ctx.drawImage(
             plate.canvas,
-            Math.round(item.station.x - plate.w / 2) - ox,
-            y - plate.h - 4,
+            Math.round(plateX - plate.w / 2) - ox,
+            Math.round(plateY - plate.h / 2) - oy,
           );
         }
       } else if (item.kind === "npc") {
