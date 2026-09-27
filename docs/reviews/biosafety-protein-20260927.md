@@ -21,7 +21,7 @@ Source names below identify the team's local research archive, not files include
 | Lycopene docking | `gromacs_lycopene_corrected_20260926/selected_poses.json` | Three search seeds per system. Sample SD describes search variability, not biological uncertainty. |
 | WT/F404Y dynamics | Same archive, `results_5ns/STATUS_20260927.md`, `metrics_summary.json`, `stereochemistry_audit.json`, `analysis_5ns/` | One 5 ns trajectory per system; 1–5 ns means do not establish equilibration or affinity. Ligand parameter limitations remain stated. Figures use saved scores and RMSD trajectories. |
 | TF2146 candidate motifs | `Pdca1_2146motif-like.dna`, `AF3_2146_dsDNA_inputs/README.md`, `build_af3_2146_inputs.mjs` | SnapGene feature coordinates and input-control design checked. Original motif-search matrix/threshold not recovered; no enrichment or significance claim is made. |
-| Eight DNA-sequence comparisons | `protein_analysis/markdown_report/TF2146_蛋白干实验详细汇报_2026-08-15.md` | Best reported protein–DNA chain-pair ipTM values and contact interpretation are report-derived. Complete raw outputs were not recovered in this review; archive these before final scientific sign-off. Different seeds confound sequence comparisons. |
+| Eight DNA-sequence comparisons | `protein_analysis/markdown_report/TF2146_蛋白干实验详细汇报_2026-08-15.md` | Best reported protein–DNA chain-pair ipTM values and contact interpretation are report-derived. Different seeds confound sequence comparisons. |
 | Separate protein-variant screen | `af3_selected_30_results/af3_screening_summary.tsv`, screening script/report and status | 27 completed tasks, not 30 completed tasks. Interface ipTM is a median across five models; stable residues contact DNA in at least three models. Domain-deletion signals are retained, with folding and missing-control caveats. |
 
 ## Checks
@@ -35,4 +35,4 @@ Source names below identify the team's local research archive, not files include
 
 ## Publication status
 
-This change prepares Wiki content for team review. In particular, the TF2146 eight-task source archive and Y322F calculation package need provenance follow-up; neither missing item is presented as newly recomputed or experimentally verified evidence.
+This change prepares Wiki content for team review. Y322F numerical results remain omitted pending verification. Computational predictions are not presented as experimentally verified evidence.
