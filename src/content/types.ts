@@ -5,4 +5,5 @@ export type ContentBlock =
   | { kind: 'figure'; src: string; alt: string; caption: string }
   | { kind: 'table'; caption: string; columns: string[]; rows: string[][]; collapsed?: boolean }
   | { kind: 'links'; links: { label: string; href: string }[] }
-  | { kind: 'pbr-widget' };
+  | { kind: 'pbr-widget' }
+  | { kind: 'safety-overview' | 'safety-results' };

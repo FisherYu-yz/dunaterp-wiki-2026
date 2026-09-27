@@ -1,5 +1,7 @@
 import type { ContentBlock } from './content/types';
-import { dryLabNavigation, dryLabIndex, emptyDryLabPage, hardware, metabolomics, modeling, transcriptomics } from './content/dry-lab';
+import { safety } from './content/safety';
+import { protein } from './content/protein';
+import { dryLabNavigation, dryLabIndex, hardware, metabolomics, modeling, transcriptomics } from './content/dry-lab';
 
 export type WikiSection = {
   title: string;
@@ -30,7 +32,7 @@ export const pages: Record<string, WikiPage> = {
   'dry-lab': dryLabIndex,
   transcriptomics,
   metabolomics,
-  protein: emptyDryLabPage('Protein'),
+  protein,
   "project-description": {
     title: "DunaTerp: a salt-adapted terpenoid platform",
     eyebrow: "Project description",
@@ -121,14 +123,7 @@ export const pages: Record<string, WikiPage> = {
       { title: "Close the loop", body: "For every major input, show the before state, what you heard, the design decision and the evidence that the decision was implemented." },
     ],
   },
-  "safety-and-security": {
-    title: "Containment begins at the design table", eyebrow: "Safety & Security · standard URL", intro: "A structured place for organism, genetic construct, cultivation, product, waste and deployment risks.", status: "structure-only",
-    sections: [
-      { title: "Risk inventory", body: "Team input required: list chassis strain, donor genes, vectors, selection markers, procedures, hazardous chemicals and the intended scale. Link claims to the approved iGEM Safety Forms." },
-      { title: "Open-pond is not automatically safe", body: "The industrial history of Dunaliella cultivation is not a substitute for a project-specific environmental risk assessment. Address escape, persistence, horizontal transfer, monitoring and waste treatment for the actual engineered strains." },
-      { title: "Design controls", body: "Document physical containment, biological safeguards, operating limits, incident response and who verified each measure." },
-    ],
-  },
+  "safety-and-security": safety,
   "alternative-platform": {
     title: "Engineering beyond the usual chassis", eyebrow: "Best Alternative Platform · standard URL", intro: "Dunaliella salina offers an unusual combination of halotolerance, carotenoid accumulation and established outdoor cultivation—but the award depends on engineering evidence.", status: "team-draft",
     sections: [
