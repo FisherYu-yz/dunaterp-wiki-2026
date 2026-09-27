@@ -15,13 +15,25 @@ try {
   assert.deepEqual(items.map(([label]) => label), ['Transcriptomics','Metabolomics','Protein','Mathematical Modeling','Hardware']);
   assert.equal(new Set(pageOrder).size, pageOrder.length);
   for (const [, href] of items) assert(pages[href.slice(1)], `Missing route ${href}`);
-  for (const slug of ['metabolomics','protein','hardware']) {
+  for (const slug of ['metabolomics','hardware']) {
     assert.equal(pages[slug].sections.length, 0);
     assert.equal(pages[slug].intro, '');
   }
+  assert.equal(pages.protein.sections.length, 9);
+  assert.match(pages.protein.intro, /LCYB.*DsTF2146/);
+  assert.deepEqual(pages.protein.sections.map(section => section.title), [
+    'Workflow at a glance', 'Track I — LCYB structure and design objective',
+    'Pocket discovery, docking and candidate selection', 'F404Y emerged as the first LCYB validation candidate',
+    'WT and F404Y: completed 5 ns pilot MD', 'Track II — DsTF2146 sequence and domain architecture',
+    'Truncation and mutation design for DsTF2146', 'DNA substrate selection and docking quality control',
+    'Engineering conclusions and next cycle',
+  ]);
+  assert.match(JSON.stringify(pages.protein), /CB-Dock2/);
+  assert.match(JSON.stringify(pages.protein), /FoldX/);
+  assert.match(JSON.stringify(pages.protein), /Gln362/);
   let figures = 0;
   let tables = 0;
-  for (const slug of ['dry-lab','transcriptomics','model']) {
+  for (const slug of ['dry-lab','transcriptomics','model','protein']) {
     const page = pages[slug];
     assert(!/[\u3400-\u9fff]/u.test(JSON.stringify(page)), `Non-English content: ${slug}`);
     for (const section of page.sections) {
@@ -74,10 +86,15 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,6);
+  assert.equal(figures,8);
+  assert(pages.protein.sections[2].blocks.some(block => block.kind === 'table' && block.caption === 'CB-Dock2 cavity screen'));
+  assert(pages.protein.sections[2].blocks.some(block => block.kind === 'table' && block.caption === 'LCYB FoldX structural-tolerance screen'));
+  for (const [sectionIndex, figure] of [[7, 'dna-logo'], [7, 'protein-dna-docking']]) {
+    assert(pages.protein.sections[sectionIndex].blocks.some(block => block.kind === 'figure' && block.src === `/figures/dry-lab/${figure}.png`), `Protein figure not placed: ${figure}`);
+  }
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: 5 ordered chapters, 3 empty pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
+  console.log(`Dry Lab checks passed: 5 ordered chapters, 2 empty pages, ${figures} figures, ${tables} tables, 333 ranked transcripts, 5 core ODEs and 9 Protein sections.`);
 } finally {
   await server.close();
 }
