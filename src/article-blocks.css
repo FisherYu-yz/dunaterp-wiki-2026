@@ -17,8 +17,10 @@
 .research-table-details summary span { font-weight: 400; }
 .research-table-details .research-table-scroll { max-height: 38rem; margin-bottom: 0; }
 .research-table-details thead { position: sticky; top: 0; }
-.research-equation, .research-code pre { max-width: 100%; overflow-x: auto; padding: 1.2rem; background: #edf3f1; border-left: 3px solid #26797d; margin: 1.6rem 0; }
-.research-equation .katex-display { margin: 0; min-width: max-content; }
+.research-equation, .research-code pre { max-width: 100%; overflow-x: auto; background: #edf3f1; border-left: 3px solid #26797d; }
+.research-equation { margin: 2.2rem 0; padding: 1.8rem 1.4rem; }
+.research-code pre { margin: 1.6rem 0; padding: 1.2rem; }
+.research-equation .katex-display { margin: .35rem 0; min-width: max-content; }
 .research-equation .katex { font-size: 1.08em; }
 .research-equation pre { margin: 0; white-space: pre; }
 .research-code pre { font-size: .875rem; line-height: 1.8; }
@@ -32,6 +34,7 @@
   .article-toc { max-height: none; }
   .research-table-scroll th, .research-table-scroll td { padding: .6rem; }
   .research-table-details { padding: .75rem; }
+  .research-equation { margin: 1.8rem 0; padding: 1.45rem 1rem; }
 }
 @media print {
   .research-table-details .research-table-scroll { max-height: none; overflow: visible; }
