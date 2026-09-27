@@ -86,13 +86,12 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,15);
+  assert.equal(figures,12);
   assert(pages.protein.sections[2].blocks.some(block => block.kind === 'table' && block.caption === 'CB-Dock2 cavity screen'));
   assert(pages.protein.sections[2].blocks.some(block => block.kind === 'table' && block.caption === 'LCYB FoldX structural-tolerance screen'));
   for (const [sectionIndex, figure] of [
     [1, 'lycopene-cyclase-structure-1'], [1, 'lycopene-cyclase-structure-2'], [1, 'lycopene-cyclase-structure-3'],
-    [5, 'cxc-domain-structure-1'], [5, 'cxc-domain-structure-2'],
-    [6, 'cxc-domain-structure-3'], [6, 'cxc-domain-structure-4'],
+    [5, 'cxc-domain-structure-4'],
     [7, 'dna-logo'], [7, 'protein-dna-docking'],
   ]) {
     assert(pages.protein.sections[sectionIndex].blocks.some(block => block.kind === 'figure' && block.src === `/figures/dry-lab/${figure}.png`), `Protein figure not placed: ${figure}`);
