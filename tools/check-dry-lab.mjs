@@ -86,12 +86,18 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,8);
+  assert.equal(figures,15);
   assert(pages.protein.sections[2].blocks.some(block => block.kind === 'table' && block.caption === 'CB-Dock2 cavity screen'));
   assert(pages.protein.sections[2].blocks.some(block => block.kind === 'table' && block.caption === 'LCYB FoldX structural-tolerance screen'));
-  for (const [sectionIndex, figure] of [[7, 'dna-logo'], [7, 'protein-dna-docking']]) {
+  for (const [sectionIndex, figure] of [
+    [1, 'lycopene-cyclase-structure-1'], [1, 'lycopene-cyclase-structure-2'], [1, 'lycopene-cyclase-structure-3'],
+    [5, 'cxc-domain-structure-1'], [5, 'cxc-domain-structure-2'],
+    [6, 'cxc-domain-structure-3'], [6, 'cxc-domain-structure-4'],
+    [7, 'dna-logo'], [7, 'protein-dna-docking'],
+  ]) {
     assert(pages.protein.sections[sectionIndex].blocks.some(block => block.kind === 'figure' && block.src === `/figures/dry-lab/${figure}.png`), `Protein figure not placed: ${figure}`);
   }
+  assert(!/CB-Dock2 method|AutoDock Vina 1\.2 method|FoldX energy-function paper|GROMACS project/.test(JSON.stringify(pages.protein)), 'Protein page contains unnecessary software or method links');
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
   console.log(`Dry Lab checks passed: 5 ordered chapters, 2 empty pages, ${figures} figures, ${tables} tables, 333 ranked transcripts, 5 core ODEs and 9 Protein sections.`);
