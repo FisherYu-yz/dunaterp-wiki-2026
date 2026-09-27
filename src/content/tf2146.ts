@@ -34,7 +34,7 @@ export const tf2146Sections: WikiPage['sections'] = [
       ['Double CXC deletion, either window', 'Interface ipTM 0.05; no stable contact residues', 'Loss of modeled contacts; folding effects remain a possible confounder'],
       ['S208D with site 1', 'Interface ipTM 0.26', 'A candidate structural effect; not evidence of actual phosphorylation or regulation'],
     ], true),
-    p('These values come from a separate screening summary and should not be pooled with the best-model values above. CXC deletion gave a computational signal worth retaining, but this screen lacked shuffled-DNA controls and explicit Zn. A changed fold or nonspecific DNA contact can affect the result. It therefore does not validate the proposed motif edits as a way to disrupt recognition.'),
+    p('These interface ipTM values are medians across five models in a separate screen; stable contact residues recur in at least three models. They should not be pooled with the best-model values above. CXC deletion gave a computational signal worth retaining, but this screen lacked shuffled-DNA controls and explicit Zn. A changed fold or nonspecific DNA contact can affect the result. It therefore does not validate the proposed motif edits as a way to disrupt recognition.'),
   ] },
   { title: 'TF2146: what we can conclude', body: '', blocks: [
     p('The analysis narrowed the problem from three motif-like regions to a testable site 1 hypothesis. We examined sequence controls and protein variants, and found that plausible-looking contacts alone were insufficient: motif mutation could relocate the predicted interface, and the adjacent-site comparisons did not follow the expected pattern.'),
