@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useId } from 'react';
 
 declare global {
   interface Window {
@@ -29,7 +29,8 @@ function loadPBRWidgetScript() {
 }
 
 export function PBRWidget() {
-  const containerId = useRef(`igem-pbr-live-model-${Math.random().toString(36).slice(2)}`);
+  const id = useId();
+  const containerId = `igem-pbr-live-model-${id}`;
 
   useEffect(() => {
     let cancelled = false;
@@ -37,7 +38,7 @@ export function PBRWidget() {
     loadPBRWidgetScript()
       .then(() => {
         if (cancelled) return;
-        window.mountIGEMPBRModel?.(containerId.current);
+        window.mountIGEMPBRModel?.(containerId);
       })
       .catch((error) => {
         console.error(error);
@@ -46,11 +47,11 @@ export function PBRWidget() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [containerId]);
 
   return (
     <div className="pbr-widget-shell">
-      <div id={containerId.current} />
+      <div id={containerId} />
     </div>
   );
 }
