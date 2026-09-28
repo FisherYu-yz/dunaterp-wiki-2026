@@ -15,13 +15,13 @@ try {
   assert.deepEqual(items.map(([label]) => label), ['Transcriptomics','Metabolomics','Protein','Mathematical Modeling','Hardware']);
   assert.equal(new Set(pageOrder).size, pageOrder.length);
   for (const [, href] of items) assert(pages[href.slice(1)], `Missing route ${href}`);
-  for (const slug of ['metabolomics','protein','hardware']) {
-    assert.equal(pages[slug].sections.length, 0);
-    assert.equal(pages[slug].intro, '');
+  for (const slug of ['metabolomics','protein','hardware','safety-and-security']) {
+    assert(pages[slug].sections.length > 0, `Missing content: ${slug}`);
+    assert(pages[slug].intro, `Missing introduction: ${slug}`);
   }
   let figures = 0;
   let tables = 0;
-  for (const slug of ['dry-lab','transcriptomics','model']) {
+  for (const slug of ['dry-lab','transcriptomics','model','protein','safety-and-security']) {
     const page = pages[slug];
     assert(!/[\u3400-\u9fff]/u.test(JSON.stringify(page)), `Non-English content: ${slug}`);
     for (const section of page.sections) {
@@ -74,10 +74,10 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,6);
+  assert.equal(figures,8);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: 5 ordered chapters, 3 empty pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
+  console.log(`Dry Lab checks passed: 5 ordered chapters, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
 } finally {
   await server.close();
 }

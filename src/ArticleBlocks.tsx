@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import katex from 'katex';
 import type { ContentBlock } from './content/types';
 import { PBRWidget } from './PBRWidget';
+import { SafetyOverview, SafetyResults } from './SafetyEvidence';
 import 'katex/dist/katex.min.css';
 import './article-blocks.css';
 
@@ -47,6 +48,8 @@ export function ArticleBlocks({ blocks }: { blocks: ContentBlock[] }) {
       case 'table': return <DataTable key={i} block={block} />;
       case 'links': return <ul className="research-links" key={i}>{block.links.map(({label,href}) => <li key={href}>{href.startsWith('/') ? <Link to={href}>{label} ↗</Link> : <a href={href}>{label} ↗</a>}</li>)}</ul>;
       case 'pbr-widget': return <PBRWidget key={i} />;
+      case 'safety-overview': return <SafetyOverview key={i} />;
+      case 'safety-results': return <SafetyResults key={i} />;
     }
   })}</div>;
 }
