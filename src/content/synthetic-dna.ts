@@ -1,0 +1,38 @@
+import type { WikiSection } from '../site-data';
+import type { ContentBlock } from './types';
+const p = (text: string): ContentBlock => ({ kind: 'paragraph', text });
+const section = (title: string, ...blocks: ContentBlock[]): WikiSection => ({ title, body: '', blocks });
+const customTable = (caption: string, columns: string[], rows: string[][]): ContentBlock => ({kind:'table',caption,columns,rows});
+const images: Record<string,string> = { 'dna-logo': 'figures/dry-lab/dna-logo.png', 'protein-dna-docking': 'figures/dry-lab/protein-dna-docking.png' };
+const fig = (name: string, alt: string, caption: string): ContentBlock => ({kind:'figure',src:images[name],alt,caption});
+export const syntheticDnaSections: WikiSection[] = [
+  section('TF2146: domains and construct definitions',
+    p('We use the complete CXC regions throughout this page: CXC1, residues 32–72; CXC2, residues 117–158. Narrower conserved cores are not used as alternative domain boundaries. All positions refer to the 457-residue TF2146 candidate.'),
+    customTable('Constructs and interpretation', ['Region or construct', 'Full-length coordinates', 'Interpretation'], [
+      ['CXC1', '32–72', 'First complete CXC region'],
+      ['CXC2', '117–158', 'Second complete CXC region'],
+      ['Dual-CXC / NLS construct', '21–230', 'Contains both CXC regions, S208 and the predicted NLS; not CXC1 alone'],
+      ['Predicted NLS', '209–217 · PPHKRARTA', 'Candidate nuclear-localisation signal; cellular localisation remains to be tested'],
+      ['S208', '208', 'Adjacent to the NLS; A/D substitutions test a hypothesis, not actual phosphorylation'],
+    ]),
+    p('The parallel construct-design work proposes full-length WT, the dual-CXC/NLS region, complete CXC1-only and CXC2-only constructs, and NLS variants. Y48F and Y133F probe aromatic side chains; K212Q and K212Q/R213Q probe local charge. These proposed experiments are distinct from the completed computational deletion screen above. Expression and localisation controls are necessary when interpreting changes in DNA binding.'),
+  ),
+    section('Parallel study: a TSO1-derived DNA duplex',
+      p('This study uses a designed DNA substrate and is independent of the pDCA1 site 1/site 2/site 3 comparisons above. Its docking results are not pooled with those sequence controls.'),
+      p('No clear CPP-family motif was identified in the scanned LCYB promoter sequence. The main 25-bp docking duplex was therefore designed from the Arabidopsis TSO1 JASPAR motif rather than demonstrated as a native LCYB promoter site. This makes the docking a transferable structural hypothesis, not proof that DsTF2146 binds the LCYB promoter in vivo.'),
+      p('The sequence logo records the designed 15-position motif used to define the recognition pattern for the DNA substrate. The motif-derived sequence was assembled into the 25-bp duplex for docking, keeping the design substrate explicit and distinguishable from a native LCYB promoter segment. This provides a consistent sequence reference for interpreting the structural illustration and for tracking the DNA design through the docking workflow.'),
+      fig('dna-logo', 'Sequence logo of the 15-position designed DNA motif used to construct the docking duplex.', 'Figure 6. Sequence logo of the designed DNA motif used to construct the 25-bp docking duplex. The motif was derived from the Arabidopsis TSO1 JASPAR motif and is distinct from a validated native LCYB promoter site.'),
+      p('The docking models also did not converge to a dominant cluster: reported ligand RMSDs were above 50 Å. Several mutants produced identical scores and coordinates, and a repaired full-length complex contained a severe Gln362–DNA steric collision. Under these conditions, docking-score differences cannot be interpreted as affinity changes, and they cannot be converted into predicted transcription strength.'),
+      p('These quality checks define how the calculated poses and scores are used in the project. RMSD values above 50 Å indicate that the sampled ligand placements are widely separated rather than forming a common pose family. Identical coordinates and scores across some mutant entries are treated as a model-generation or input-audit signal, not as independent evidence that the proteins bind identically. The Gln362–DNA overlap identifies a concrete steric incompatibility in the repaired full-length model. Together, these observations distinguish the role of docking as a way to visualise candidate interfaces from quantitative binding evidence.'),
+      p('The docking illustration pairs the designed DNA with the mutated protein model to show the intended components of the structural setup. It should be read together with the sequence logo: the logo defines the designed DNA pattern, while the structure view shows that DNA sequence represented in a protein–DNA docking model. The pose is presented as the project’s computational design visualization, not as a measured binding geometry.'),
+      fig('protein-dna-docking', 'Docking illustration showing the designed DNA sequence paired with a mutated Candidate_2146 protein model.', 'Figure 7. Protein–DNA docking illustration pairing the designed DNA with a mutated Candidate_2146 protein model. The image visualises the designed sequence and modeled protein together in the docking workflow.'),
+      customTable('Protein–DNA docking: what the current results mean', ['Observation', 'Supported conclusion', 'Unsupported conclusion'], [
+        ['Designed 25-bp motif-derived duplex', 'A controlled substrate for testing a CPP/CXC binding hypothesis', 'A validated native LCYB promoter site'],
+        ['Docking scores for truncations and mutants', 'Starting poses for interface inspection and experimental prioritisation', 'Binding constants, kcal mol⁻¹ values or transcriptional output'],
+        ['Ligand RMSD > 50 Å and no dominant cluster', 'Docking uncertainty is high and poses are not directly comparable', 'A reliable affinity ranking'],
+        ['Identical values for several mutant models', 'Inputs and structure generation must be audited', 'Evidence that the mutants behave identically'],
+        ['Full-length clash near Gln362', 'The pose requires redocking or restrained relaxation before interface scoring', 'A favourable DNA contact'],
+      ]),
+      p('Together, the sequence logo, docking audit and construct design form a coherent protein–DNA work package. The logo specifies the designed substrate; the docking models place that sequence alongside full-length or domain-level protein structures; and the pose checks identify which structural comparisons are interpretable. The project can therefore connect a defined DNA input to explicit construct choices and to the EMSA, promoter-reporter and localisation measurements needed to test these proposals.'),
+    ),
+];

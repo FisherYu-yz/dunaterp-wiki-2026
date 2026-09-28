@@ -47,6 +47,18 @@ try {
       assert(!html.includes('research-equation-error'), `Equation failed to render: ${section.title}`);
     }
   }
+  const proteinText = JSON.stringify(pages.protein);
+  for (const stale of ['−10.790','−10.473','0.140 ± 0.010','37–68','122–154']) assert(!proteinText.includes(stale), `Obsolete protein content: ${stale}`);
+  assert(proteinText.includes('TSO1') && proteinText.includes('pDCA1'), 'Both DNA studies must remain explicit');
+  assert(proteinText.includes('32–72') && proteinText.includes('117–158'), 'Complete CXC boundaries required');
+  const structure = JSON.parse(fs.readFileSync('src/content/structures/lycopene-wt.json','utf8'));
+  assert.equal(structure.identity.cid, 446925);
+  assert.equal(structure.ligand.length,40); assert.equal(structure.bonds.length,39);
+  const connected = new Set([0]);
+  for(let i=0;i<40;i++) for(const [a,b] of structure.bonds) { if(connected.has(a)) connected.add(b); if(connected.has(b)) connected.add(a); }
+  assert.equal(connected.size,40, 'Lycopene must be one connected, acyclic heavy-atom graph');
+  const renderSources = JSON.parse(fs.readFileSync('docs/reviews/lycopene-render-provenance.json','utf8')).sources;
+  for(const [file,hash] of Object.entries(structure.sha256)) assert.equal(hash,renderSources[`wt/${file}`], '3D and static render inputs must match');
   const data = JSON.parse(fs.readFileSync('src/content/dry-lab-tables.json','utf8'));
   assert.equal(data.TF_RANKING.rows.length,333);
   data.TF_RANKING.rows.forEach((row,i)=>assert.equal(Number(row[0]), i+1));
@@ -61,7 +73,7 @@ try {
     'Evidence and parameter status','What the model establishes','Interface with metabolomics',
   ]);
   assert(!/day-7|2\.0988|10\.9518|Car09|nine-state|FBA/i.test(JSON.stringify(pages.model)), 'Obsolete quantitative claim remains');
-  for (const slug of ['transcriptomics','model']) {
+  for (const slug of ['transcriptomics','model','protein']) {
     const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).filter(b => b.kind === 'figure').map(b => b.caption);
     captions.forEach((caption, i) => assert(caption.startsWith('Figure ' + (i + 1) + '.'), 'Figure numbering in ' + slug + ': ' + caption));
   }
@@ -74,7 +86,7 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,8);
+  assert.equal(figures,13);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
   console.log(`Dry Lab checks passed: 5 ordered chapters, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
