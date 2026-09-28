@@ -20,9 +20,9 @@ export function DockingViewer() {
   const [error, setError] = useState(false);
   const host = useRef<HTMLDivElement>(null);
   const section = useRef<HTMLElement>(null);
-  const current = useRef({ mode, progress, showProtein, showSite, cutaway });
+  const current = useRef({ mode, progress, showProtein, showSite, cutaway, view });
   const commands = useRef<{ view: (v: View) => void; zoom: (scale: number) => void } | null>(null);
-  useEffect(() => { current.current = { mode, progress, showProtein, showSite, cutaway }; }, [mode, progress, showProtein, showSite, cutaway]);
+  useEffect(() => { current.current = { mode, progress, showProtein, showSite, cutaway, view }; }, [mode, progress, showProtein, showSite, cutaway, view]);
   useEffect(() => {
     const mount = host.current;
     if (!mount) return;
@@ -49,8 +49,19 @@ export function DockingViewer() {
     const key = new THREE.DirectionalLight(0xffffff, 2.8); key.position.set(30,-40,80); scene.add(key);
     const material = (color: string) => new THREE.MeshStandardMaterial({ color, roughness: .55 });
     const teal = material('#78968c'), amber = material('#d89b30'), purple = material('#998874');
-    const protein = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(backbone), 1500, .24, 6, false), teal);
-    scene.add(protein);
+    // Keep local backbone context in the pocket view; never join separated runs.
+    const trace = (points: THREE.Vector3[]) => new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), Math.max(16, points.length * 5), .18, 8, false), teal);
+    const protein = trace(backbone);
+    const localBackbone = new THREE.Group();
+    let run: THREE.Vector3[] = [];
+    const flushRun = () => { if (run.length > 1) localBackbone.add(trace(run)); run = []; };
+    backbone.forEach(p => {
+      if (ligandPoints.some(q => p.distanceTo(q) <= 12)) run.push(p);
+      else flushRun();
+    });
+    flushRun();
+    scene.add(protein, localBackbone);
     const plane = new THREE.Plane();
     const pocketMaterial = new THREE.MeshStandardMaterial({color:'#9bb4a1',emissive:'#66816b',emissiveIntensity:.2,roughness:.88,clippingPlanes:[plane],side:THREE.DoubleSide});
     const geometry=new THREE.BufferGeometry();
@@ -121,10 +132,12 @@ export function DockingViewer() {
         const target=center.clone().addScaledVector(new THREE.Vector3(...approach.direction),distance*.45);
         controls.target.copy(target);camera.position.copy(target).addScaledVector(viewDirection,55+distance*.9);
       }
-      protein.visible=state.showProtein; site.visible=state.showSite;
+      protein.visible=state.showProtein && state.view==='overall';
+      localBackbone.visible=state.showProtein && state.view==='site'; site.visible=state.showSite;
       const facing=camera.position.clone().sub(center).normalize();
       plane.setFromNormalAndCoplanarPoint(facing.clone().negate(),center.clone().addScaledVector(facing,0.8));
       pocketMaterial.clippingPlanes=state.cutaway?[plane]:[];
+      teal.clippingPlanes=state.cutaway?[plane]:[];
       key.position.copy(camera.position).add(new THREE.Vector3(-20,30,10));
       controls.enabled=state.mode!=='scroll'; controls.update(); renderer.render(scene,camera);
     };
@@ -138,7 +151,7 @@ export function DockingViewer() {
     };
   }, []);
   function seek(value: number) { current.current.progress=value; current.current.mode='manual'; setProgress(value); setMode('manual'); }
-  function selectView(value: View) { current.current.mode='manual'; setMode('manual'); setView(value); commands.current?.view(value); }
+  function selectView(value: View) { current.current.view=value; current.current.mode='manual'; setMode('manual'); setView(value); commands.current?.view(value); }
   return <section ref={section} className="docking-scroll" aria-label="Interactive lycopene docking">
     <div className="docking-card">
       <div className="docking-title"><div><span>MOLECULAR VIEW</span><h3>LCYB × lycopene</h3></div><span>{mode==='scroll'?'Scroll-linked':mode==='play'?'Playing':'Manual control'}</span></div>
@@ -170,7 +183,7 @@ export function DockingViewer() {
           <button role="switch" aria-checked={cutaway} disabled={error} onClick={()=>setCutaway(!cutaway)}><span aria-hidden="true"/>Cutaway</button>
           <button role="switch" aria-checked={showSite} disabled={error} onClick={()=>setShowSite(!showSite)}><span aria-hidden="true"/>Phe404</button>
         </div></div>
-        <p>Drag to rotate · Scroll or pinch to zoom. PyMOL molecular surface · pocket atoms within 8 Å · probe radius 1.4 Å.</p>
+        <p>Drag to rotate · Scroll or pinch to zoom. PyMOL molecular surface · pocket atoms within 8 Å · probe radius 1.4 Å. Backbone: local in Pocket view, full in Overall.</p>
       </div>
       <p className="docking-note"><strong>Simulated path.</strong> Exterior approach, followed by a dissolve to the selected docking pose. WT LCYB 71–555 · all-trans lycopene, CID 446925.</p>
     </div>
