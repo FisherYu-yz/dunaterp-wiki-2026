@@ -36,3 +36,16 @@ Source names below identify the team's local research archive, not files include
 ## Publication status
 
 This change prepares Wiki content for team review. Y322F numerical results remain omitted pending verification. Computational predictions are not presented as experimentally verified evidence.
+
+## 2026-09-28：分支整合与三维预览
+
+- 合入 FisherYu-yz 的 `feature/dry-lab-docking`（`6939bb1`），解决页面入口和检查脚本冲突。Protein 只保留一个定义。
+- 保留 TSO1 motif 衍生的人工 25 bp DNA 工作，作为独立章节；与 pDCA1 三位点工作分别表述。
+- CXC 完整区段统一为 32–72、117–158。旧 LCYB 对接/MD 数值、旧配体图片及错误标为 CXC 的小分子图不进入整合页面。
+- 三张静态图用本地 Blender 从校正后的 WT 蛋白与番茄红素坐标重新生成。渲染脚本与输入摘要随代码保存。
+- 交互窗口使用同一坐标来源。口袋表面由 PyMOL 生成，采用 1.4 Å 探针的 solvent-excluded surface；展示配体周围 8 Å 内重原子形成的局部表面，不是完整蛋白的表面。
+- Phe404 默认关闭；整体/口袋视角、剖切、骨架、缩放、播放、进度和恢复滚动均可独立操作。配色、字体和开关样式与 Wiki 统一；所有界面文字为英文。
+- “Simulated path”仅演示外部接近：对整个蛋白的重原子进行距离检查，采样步长 0.25 Å，候选路线筛选阈值 3.0 Å。选中路线到平移距离 17.75 Å 为止，采样最小距离约 3.15 Å；该几何检查不代表能量或动力学验证。
+- 接近结束后使用明确的淡出/淡入切换到原始对接姿态，标记为“Pose transition”；没有绘制穿越蛋白内部的连接轨迹。最终姿态保持原始输入坐标。
+
+- Backbone 与原始 PDB 的 485 个 Cα 坐标逐项核对一致；口袋视角仅显示配体 12 Å 内的连续骨架区段，整体视角显示完整骨架，两者与口袋共用剖切面。
