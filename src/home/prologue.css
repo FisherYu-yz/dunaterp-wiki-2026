@@ -30,6 +30,7 @@
 .story-glyph { display: block; width: 5rem; height: 5rem; image-rendering: pixelated; filter: drop-shadow(4px 5px #06221f88); }
 .story-items { display: flex; align-items: center; justify-content: center; gap: clamp(1rem, 6vw, 5rem); }
 .story-item { display: grid; justify-items: center; gap: 1rem; font-size: .85rem; text-align: center; }
+.story-item > span { min-width: 8.5rem; max-width: 11rem; padding: .5rem .7rem; border: 2px solid #b9ce9c; background: #0a3028e8; box-shadow: 4px 4px 0 #06221f; color: #fff5db; line-height: 1.45; }
 .story-discovery { display: flex; gap: 3rem; align-items: center; }
 .story-specimen { display: grid; justify-items: center; gap: .8rem; }
 .story-specimen .story-glyph { width: 7rem; height: 7rem; animation: story-idle 4s ease-in-out infinite; }
@@ -122,6 +123,7 @@
   .story-loot li { font-size: .63rem; padding: .5rem .65rem; margin: .35rem 0; }
   .story-items { gap: 1rem; }
   .story-item { width: 30%; font-size: .65rem; }
+  .story-item > span { min-width: 0; width: 100%; padding: .4rem .3rem; }
   .story-glyph { width: 3.5rem; height: 3.5rem; }
   .story-voices { gap: .5rem; }
   .story-voice { min-width: 42%; gap: .3rem; padding: .45rem .2rem; }
