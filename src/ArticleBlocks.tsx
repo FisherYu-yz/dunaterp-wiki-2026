@@ -1,9 +1,13 @@
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import katex from 'katex';
 import type { ContentBlock } from './content/types';
 import { PBRWidget } from './PBRWidget';
+import { SafetyOverview, SafetyResults } from './SafetyEvidence';
 import 'katex/dist/katex.min.css';
 import './article-blocks.css';
+
+const DockingViewer = lazy(() => import('./DockingViewer').then(module => ({ default: module.DockingViewer })));
 
 function resolveAsset(src: string) {
   if (/^(?:https?:|data:|blob:|\/\/)/i.test(src)) return src;
@@ -46,7 +50,10 @@ export function ArticleBlocks({ blocks }: { blocks: ContentBlock[] }) {
       case 'figure': return <figure className="feature-figure research-figure" key={i}><a href={resolveAsset(block.src)} aria-label={`Open full-size figure: ${block.alt}`}><img src={resolveAsset(block.src)} alt={block.alt} loading="lazy" decoding="async" /></a><figcaption>{block.caption}<span className="figure-credit">Team analysis figure · CC BY 4.0</span></figcaption></figure>;
       case 'table': return <DataTable key={i} block={block} />;
       case 'links': return <ul className="research-links" key={i}>{block.links.map(({label,href}) => <li key={href}>{href.startsWith('/') ? <Link to={href}>{label} ↗</Link> : <a href={href}>{label} ↗</a>}</li>)}</ul>;
+      case 'docking-viewer': return <Suspense key={i} fallback={<p>Loading 3D docking view…</p>}><DockingViewer /></Suspense>;
       case 'pbr-widget': return <PBRWidget key={i} />;
+      case 'safety-overview': return <SafetyOverview key={i} />;
+      case 'safety-results': return <SafetyResults key={i} />;
     }
   })}</div>;
 }

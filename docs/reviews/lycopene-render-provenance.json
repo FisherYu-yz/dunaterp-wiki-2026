@@ -1,0 +1,19 @@
+{
+  "identity": {
+    "cid": 446925,
+    "name": "all-trans Lycopene",
+    "formula": "C40H56",
+    "heavy_atoms": 40,
+    "heavy_bonds": 39,
+    "rings": 0,
+    "E_double_bonds": 11,
+    "smiles": "CC(C)=CCC/C(C)=C/C=C/C(C)=C/C=C/C(C)=C/C=C/C=C(C)/C=C/C=C(C)/C=C/C=C(\\C)CCC=C(C)C",
+    "conformers": 8,
+    "MMFF_energy": 91.25663742280557
+  },
+  "view": "WT selected docking pose, not an MD frame or measured structure",
+  "sources": {
+    "wt/protein_71_555.pdb": "96623a6da723149cfc4f80f2eb1d42c9bc2cdbcb77664b826b09a4fd638c3897",
+    "wt/lycopene_pose_h.mol2": "ad6af4dd099d09d39f855b0967563a3a78dbec336643611ccd0f8311c507289c"
+  }
+}
