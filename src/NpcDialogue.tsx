@@ -12,9 +12,10 @@ type NpcDialogueProps = {
 export function NpcDialogue({ npcId, onClose }: NpcDialogueProps) {
   const npc = NPCS[npcId];
   const panelRef = useRef<HTMLElement>(null);
-  const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
   const titleId = `${useId().replace(/:/g, "")}-npc-name`;
-  const selected = npc.prompts.find((prompt) => prompt.id === selectedPrompt) ?? null;
+  const selected = page > 0 ? npc.prompts[page - 1] : null;
+  const pageCount = npc.prompts.length + 1;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -45,16 +46,26 @@ export function NpcDialogue({ npcId, onClose }: NpcDialogueProps) {
         }
         return;
       }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setPage((currentPage) => Math.max(0, currentPage - 1));
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setPage((currentPage) => Math.min(pageCount - 1, currentPage + 1));
+        return;
+      }
       const choiceIndex = Number(event.key) - 1;
       const prompt = npc.prompts[choiceIndex];
       if (prompt && choiceIndex >= 0) {
         event.preventDefault();
-        setSelectedPrompt(prompt.id);
+        setPage(choiceIndex + 1);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [npc.prompts, onClose]);
+  }, [npc.prompts, onClose, pageCount]);
 
   return (
     <section
@@ -82,9 +93,14 @@ export function NpcDialogue({ npcId, onClose }: NpcDialogueProps) {
           {selected?.response ?? npc.intro}
         </p>
         <p className="npc-dialogue__hint">
-          {selected ? "Choose another question or continue exploring." : "Choose a question."}
+          {selected ? selected.label : "Meet the field guide, then turn the page."}
         </p>
         <p className="npc-dialogue__chapter-hint">{npc.chapterHint}</p>
+        <div className="npc-dialogue__pager">
+          <span>{String(page + 1).padStart(2, "0")} / {String(pageCount).padStart(2, "0")}</span>
+          <button type="button" onClick={() => setPage((currentPage) => Math.max(0, currentPage - 1))} disabled={page === 0} aria-label="Previous dialogue page">←</button>
+          <button type="button" onClick={() => setPage((currentPage) => Math.min(pageCount - 1, currentPage + 1))} disabled={page === pageCount - 1} aria-label="Next dialogue page">→</button>
+        </div>
       </div>
 
       <div className="npc-dialogue__choices" role="group" aria-label={`Questions for ${npc.name}`}>
@@ -92,9 +108,9 @@ export function NpcDialogue({ npcId, onClose }: NpcDialogueProps) {
           <button
             key={prompt.id}
             type="button"
-            className={`npc-dialogue__choice${selectedPrompt === prompt.id ? " is-selected" : ""}`}
-            onClick={() => setSelectedPrompt(prompt.id)}
-            aria-pressed={selectedPrompt === prompt.id}
+            className={`npc-dialogue__choice${page === index + 1 ? " is-selected" : ""}`}
+            onClick={() => setPage(index + 1)}
+            aria-pressed={page === index + 1}
           >
             <span>{index + 1}</span>
             {prompt.label}

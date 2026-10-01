@@ -70,7 +70,9 @@ export class PixelRenderer {
       if (nx < 0 || ny < 0 || nx >= MAP_W || ny >= MAP_H) return Tile.Salt;
       return world.tiles[ny * MAP_W + nx] as Tile;
     };
-    const band = 6;
+    // Fewer, slightly larger bands keep the loading screen brief without
+    // blocking the first paint for the full terrain pass.
+    const band = 18;
     for (let ty = 0; ty < MAP_H; ty += band) {
       if (cancelled()) return;
       for (let y = ty; y < Math.min(MAP_H, ty + band); y += 1) {

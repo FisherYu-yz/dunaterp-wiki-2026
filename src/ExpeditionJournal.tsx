@@ -101,14 +101,14 @@ export const NPCS: Record<ExpeditionNpcId, ExpeditionNpc> = {
     accent: "#e9c43a",
     initials: "IP",
     intro:
-      "I distrust a tidy pathway diagram until the carbon actually moves through it. Four routes leave this β-carotene hub; my task is to find the bottleneck, and my hesitation is always the same: did we strengthen one branch by starving another?",
+      "A natural pigment pool is useful, but a platform begins only when we can steer it. I keep asking whether TF2146 truly redirects flux toward the β-carotene hub—and what that change costs elsewhere in the pathway.",
     chapterHint: "Field trail: Wet Lab → Engineering; Dry Lab → Mathematical Modeling",
     prompts: [
       {
         id: "hub",
         label: "Why build around one hub?",
         response:
-          "Think of β-carotene as the busiest roundabout on the map. Strengthening its supply can support every destination, while LCYB controls how much lycopene enters that shared junction.",
+          "Think of β-carotene as the busiest roundabout on the map. TF2146 is our regulatory lever for reprogramming traffic toward that hub; LCYB is the enzymatic gate that converts lycopene into it.",
       },
       {
         id: "branch",
@@ -162,9 +162,9 @@ const NPC_LIST = EXPEDITION_NPC_IDS.map((id) => NPCS[id]);
 
 const STATION_LABELS: Record<string, string> = {
   "brine-edge": "Background & challenge",
-  "the-cell": "Biological design",
-  "product-yards": "Product routes",
-  "model-station": "Product & process characterisation",
+  "the-cell": "Salt-adapted chassis",
+  "product-yards": "Metabolic reprogramming",
+  "model-station": "Programmable product platform",
   archive: "Archive",
 };
 

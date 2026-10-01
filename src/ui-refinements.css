@@ -275,3 +275,125 @@ main:focus:not(:focus-visible) { outline: none; }
   *,*::before,*::after { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .map-grid .map-group:hover { transform: none; }
 }
+
+/* Pixel-world continuity for the shared brand and every Wiki article. */
+.brand-mark {
+  position: relative;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+.brand-mark svg { display: block; width: 100%; height: 100%; overflow: visible; image-rendering: pixelated; }
+.brand-mark__flagella { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: square; }
+.brand-mark__cell { fill: var(--lime); stroke: currentColor; stroke-width: 2; }
+.brand-mark__hub { fill: var(--orange); }
+.brand-mark__branch { fill: none; stroke: currentColor; stroke-width: 3; }
+.site-header--light .brand-mark { background: transparent; color: var(--deep); border: 0; }
+.site-header--light .brand-mark__flagella { stroke: #fff5db; }
+
+.article-page {
+  --article-accent: var(--lime);
+  position: relative;
+}
+.article-page::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 90px 0 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(18,60,50,.035) 1px, transparent 1px),
+    linear-gradient(rgba(18,60,50,.035) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.article-page .breadcrumbs {
+  width: fit-content;
+  margin-bottom: 1.6rem;
+  padding: .45rem .65rem;
+  border: 2px solid var(--ink);
+  background: #fffaf0;
+  box-shadow: 3px 3px 0 var(--ink);
+  color: #52675f;
+  font: 800 .72rem/1.4 ui-monospace, Menlo, monospace;
+}
+.article-page .article-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4.2rem);
+  border: 4px solid var(--ink);
+  background: var(--deep);
+  color: #fff5db;
+  box-shadow: 10px 10px 0 color-mix(in srgb, var(--article-accent) 55%, var(--ink));
+}
+.article-page .article-hero::after {
+  content: "";
+  position: absolute;
+  right: -3rem;
+  bottom: -4rem;
+  width: 17rem;
+  height: 11rem;
+  border: 4px solid #fff5db22;
+  transform: rotate(-18deg);
+  background: repeating-linear-gradient(90deg, transparent 0 18px, #fff5db18 18px 28px);
+}
+.article-page .page-eyebrow { color: var(--article-accent); font: 900 .76rem/1.4 ui-monospace, Menlo, monospace; letter-spacing: .15em; }
+.article-page .article-hero h1 { position: relative; z-index: 1; max-width: 17ch; color: #fff5db; font: 900 clamp(2.7rem, 6vw, 6.2rem)/.96 ui-monospace, Menlo, monospace; letter-spacing: -.065em; overflow-wrap: normal; word-break: normal; hyphens: none; text-transform: uppercase; text-shadow: 4px 4px 0 #031411; }
+.article-page .article-intro { position: relative; z-index: 1; }
+.article-page .article-intro > p { color: #dbe7d9; }
+.article-page .status { border: 2px solid #fff5db; border-radius: 0; background: var(--article-accent); color: var(--ink); box-shadow: 3px 3px 0 #031411; font-family: ui-monospace, Menlo, monospace; }
+
+.article-page .article-intro {
+  padding-left: clamp(1rem, 2.2vw, 1.5rem);
+  border-left: 3px solid var(--article-accent);
+}
+.article-page--dry-lab .article-hero h1 {
+  font-size: clamp(2.35rem, 4.5vw, 4.4rem);
+  letter-spacing: -.075em;
+}
+
+.article-page .article-layout { padding-top: 4rem; }
+.article-page .article-toc {
+  padding: 1rem;
+  border: 3px solid var(--ink);
+  background: #fffaf0;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.article-page .article-toc > p { color: #486158; font-family: ui-monospace, Menlo, monospace; }
+.article-page .article-toc nav a { border-left: 4px solid #cbd5c9; font-weight: 680; }
+.article-page .article-toc nav a:hover,
+.article-page .article-toc nav a:focus-visible { border-left-color: var(--article-accent); background: color-mix(in srgb, var(--article-accent) 24%, #fffaf0); }
+.article-page .toc-map { font-family: ui-monospace, Menlo, monospace; font-weight: 800; }
+
+.article-page .article-sections > section {
+  grid-template-columns: 3rem minmax(0,1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-bottom: 1.4rem;
+  padding: clamp(1.4rem, 4vw, 3rem);
+  border: 3px solid var(--ink);
+  background: rgba(255,250,240,.96);
+  box-shadow: 6px 6px 0 #b9c7b9;
+}
+.article-page .article-sections > section:first-child { padding-top: clamp(1.4rem, 4vw, 3rem); }
+.article-page .section-number { display: grid; place-items: center; align-self: start; width: 2.7rem; height: 2.7rem; padding: 0; border: 3px solid var(--ink); background: var(--article-accent); color: var(--ink); font: 900 .78rem/1 ui-monospace, Menlo, monospace; box-shadow: 3px 3px 0 var(--ink); }
+.article-page .section-eyebrow { color: #536c62; font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
+.article-page .article-sections h2 { max-width: 20ch; color: var(--ink); font-family: ui-monospace, Menlo, monospace; font-weight: 900; letter-spacing: -.045em; text-transform: uppercase; }
+.article-page .feature-figure { border: 3px solid var(--ink); border-radius: 0; background: #fffaf0; box-shadow: 6px 6px 0 var(--ink); }
+.article-page .feature-figure img { border-radius: 0; }
+.article-page .review-banner { border: 3px solid var(--ink); border-radius: 0; background: #fffaf0; box-shadow: 5px 5px 0 var(--article-accent); }
+.article-page .review-banner span { font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
+.article-page .next-page { border: 4px solid var(--ink); border-radius: 0; background: var(--deep); box-shadow: 7px 7px 0 var(--article-accent); }
+.article-page .next-page > span,
+.article-page .next-page strong { font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
+.article-page .next-page strong { text-transform: uppercase; }
+
+@media (max-width: 900px) {
+  .article-page .article-toc { position: static; border-radius: 0; }
+}
+@media (max-width: 800px) {
+  .article-page .article-hero { padding: 1.5rem; box-shadow: 6px 6px 0 color-mix(in srgb, var(--article-accent) 55%, var(--ink)); }
+  .article-page .article-hero h1 { font-size: clamp(2.25rem, 10vw, 4rem); }
+  .article-page .article-sections > section { grid-template-columns: 2.5rem minmax(0,1fr); padding: 1.25rem; box-shadow: 4px 4px 0 #b9c7b9; }
+  .article-page .section-number { width: 2.25rem; height: 2.25rem; }
+}

@@ -13,7 +13,7 @@ export type StoryBeat = {
   shot: { u: number; x: number; y: number };
 };
 
-export const OPENING_HOOK = "In one of the world’s harshest environments, a tiny alga learned to turn salt and light into colour.";
+export const OPENING_HOOK = "A programmable, salt-adapted platform for rewiring carotenoid metabolism.";
 
 export const STORY_BEATS: readonly StoryBeat[] = [
   {
@@ -21,7 +21,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
     chapter: "01 · BACKGROUND & CHALLENGE",
     speaker: "Field guide",
     speakerTone: "#cdf558",
-    text: "Plant-derived terpenoids can be limited by slow growth, variable supply, low abundance, and substantial land and freshwater demands. Our route begins with that production challenge.",
+    text: "Terpenoids colour foods, support nutrition and supply high-value ingredients. Plant extraction can be slow and variable, chemical synthesis can carry a heavy environmental cost, and conventional microbial production often depends on sterile freshwater processes.",
     visual: "resources",
     shot: { u: 0.12, x: -52, y: -26 },
   },
@@ -30,25 +30,25 @@ export const STORY_BEATS: readonly StoryBeat[] = [
     chapter: "02 · BIOLOGICAL DESIGN",
     speaker: "Dr. Lin · algal biologist",
     speakerTone: "#cdf558",
-    text: "Dunaliella salina grows in saline media, fixes carbon with light and naturally supplies a carotenoid pathway. We place β-carotene at the centre as a shared metabolic hub.",
+    text: "Dunaliella salina grows in seawater and hypersaline media, tolerates conditions that suppress many contaminants, fixes carbon with light, and already carries a complete MEP-to-carotenoid route. That makes it a practical chassis rather than only another product source.",
     visual: "traits",
     shot: { u: 0.36, x: 24, y: -26 },
   },
   {
     phase: "ROUTES",
-    chapter: "03 · HIGH-VALUE PRODUCT ROUTES",
+    chapter: "03 · METABOLIC REPROGRAMMING",
     speaker: "Mara · pathway engineer",
     speakerTone: "#f7a52d",
-    text: "From the β-carotene hub, four separately cultivated strains route carbon toward astaxanthin, β-ionone, crocetin and β-citraurin through product-specific enzymes.",
+    text: "Our core design introduces the project-selected transcription factor 2146 to reprogramme pathway regulation and redirect metabolic flux toward competitive β-carotene synthesis. The β-carotene pool becomes a controllable hub for the platform.",
     visual: "products",
     shot: { u: 0.62, x: -18, y: -28 },
   },
   {
     phase: "PROCESS",
-    chapter: "04 · PRODUCT & PROCESS CHARACTERISATION",
+    chapter: "04 · PLATFORM DESIGN & VALIDATION",
     speaker: "Ari · community researcher",
     speakerTone: "#c4a8ff",
-    text: "The route ends by connecting intracellular performance to product identity, titre and conversion efficiency, then to light, salinity, biomass productivity and recovery.",
+    text: "Modeling links transcriptional control to pathway flux. Four downstream designs—astaxanthin, β-ionone, crocetin and β-citraurin—then test how the same reprogrammable chassis can support distinct high-value products.",
     visual: "characterisation",
     shot: { u: 0.84, x: 28, y: -26 },
   },
@@ -74,8 +74,8 @@ export function storyReducer(state: StoryState, event: StoryEvent): StoryState {
   if (event === "REPLAY" && state.phase === "WORLD") return initialStory(false);
   if (event === "ARRIVED") return state.phase === "TRANSITION" ? { ...state, phase: "WORLD" } : state;
   if (state.phase === "WORLD" || state.phase === "TRANSITION") return state;
-  if (event === "SKIP") return { ...state, phase: "TRANSITION" };
+  if (event === "SKIP") return { ...state, phase: "WORLD" };
   if (event !== "NEXT") return state;
   const beat = state.beat + 1;
-  return beat >= STORY_BEATS.length ? { ...state, phase: "TRANSITION" } : { beat, phase: STORY_BEATS[beat].phase };
+  return beat >= STORY_BEATS.length ? { ...state, phase: "WORLD" } : { beat, phase: STORY_BEATS[beat].phase };
 }

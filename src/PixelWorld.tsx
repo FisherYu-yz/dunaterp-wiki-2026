@@ -56,6 +56,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   const [chapter, setChapter] = useState(-1);
   const [promptKey, setPromptKey] = useState<string | null>(null);
   const [stationDialogueKey, setStationDialogueKey] = useState<string | null>(null);
+  const [secretOpen, setSecretOpen] = useState(false);
   const [atArchive, setAtArchive] = useState(false);
   const [started, setStarted] = useState(false);
   const [story, dispatchStory] = useReducer(storyReducer, false, initialStory);
@@ -78,11 +79,11 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   }, [isStory]);
 
   useEffect(() => {
-    if ((!dialogueNpc && !stationDialogue) || mode === "free") return;
+    if ((!dialogueNpc && !stationDialogue && !secretOpen) || mode === "free") return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = previous; };
-  }, [dialogueNpc, stationDialogue, mode]);
+  }, [dialogueNpc, stationDialogue, secretOpen, mode]);
 
   useEffect(() => {
     const host = stage.current;
@@ -137,8 +138,9 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
     if (!ready || failed) return;
     const engine = engineRef.current;
     if (story.phase === "OPENING") engine?.beginIntro();
+    else if (story.phase === "WORLD") engine?.finishIntro();
     else if (story.phase === "TRANSITION") engine?.endIntro();
-    else if (story.phase !== "WORLD") {
+    else {
       const shot = STORY_BEATS[story.beat].shot;
       engine?.setIntroShot(shot.u, shot.x, shot.y);
     }
@@ -254,11 +256,30 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
     requestAnimationFrame(() => requestAnimationFrame(() => canvas.current?.focus({ preventScroll: true })));
   }, []);
 
+  const closeSecret = useCallback(() => {
+    setSecretOpen(false);
+    engineRef.current?.setPaused(false);
+    requestAnimationFrame(() => requestAnimationFrame(() => canvas.current?.focus({ preventScroll: true })));
+  }, []);
+
+  useEffect(() => {
+    if (!secretOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeSecret();
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [secretOpen, closeSecret]);
+
   const replayIntro = useCallback(() => {
     const engine = engineRef.current;
     if (!engine || !ready || failed) return;
     setDialogueNpc(null);
     setStationDialogueKey(null);
+    setSecretOpen(false);
     setStarted(false);
     setAtArchive(false);
     engine.beginIntro();
@@ -273,7 +294,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
       id="main-content"
       tabIndex={-1}
       ref={root}
-      className={`px-world${isStory ? " is-prologue" : ""}${story.phase === "TRANSITION" ? " is-handoff" : ""}${ready ? " is-ready" : ""}${started ? " is-started" : ""}${mode === "free" ? " is-free" : ""}${atArchive ? " is-archive" : ""}${failed ? " has-failed" : ""}${dialogueNpc || stationDialogue ? " has-dialogue" : ""}`}
+      className={`px-world${isStory ? " is-prologue" : ""}${story.phase === "TRANSITION" ? " is-handoff" : ""}${ready ? " is-ready" : ""}${started ? " is-started" : ""}${mode === "free" ? " is-free" : ""}${atArchive ? " is-archive" : ""}${failed ? " has-failed" : ""}${dialogueNpc || stationDialogue || secretOpen ? " has-dialogue" : ""}`}
     >
       <div className="home-world-header" inert={isStory}><Header light /></div>
 
@@ -292,17 +313,29 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
         {ready && isStory && <HomePrologue state={story} onNext={() => dispatchStory("NEXT")} onSkip={() => dispatchStory("SKIP")} />}
 
         <div className="px-world-ui" inert={isStory || !ready || failed}>
+        {!started && !dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <aside className="px-trailhead" aria-label="Salt Route instructions">
+          <div className="px-trailhead__mark" aria-hidden="true"><i /><i /><i /></div>
+          <div className="px-trailhead__copy">
+            <p>SALT ROUTE / TRAILHEAD</p>
+            <h2>Follow the boardwalk.</h2>
+          </div>
+          <div className="px-trailhead__keys">
+            <span><kbd>SCROLL</kbd> travel</span>
+            <span><kbd>E</kbd> open field notes</span>
+            <span><kbd>FREE ROAM</kbd> meet hidden guides</span>
+          </div>
+        </aside>}
         {mode === "free" && <ExpeditionJournal
           currentStationKey={npcPrompt?.stationKey ?? promptKey ?? activeChapter?.key ?? null}
           onOpenChange={(open) => { engineRef.current?.setPaused(open); if (!open) requestAnimationFrame(() => requestAnimationFrame(() => canvas.current?.focus({ preventScroll: true }))); }}
           onTravel={(key) => { engineRef.current?.travelToStation(key); canvas.current?.focus({ preventScroll: true }); }}
         />}
-        {npcPrompt && mode === "free" && !dialogueNpc && !stationDialogue && <div className="px-prompt" style={{ "--px-accent": npcPrompt.accent } as React.CSSProperties}>
+        {npcPrompt && mode === "free" && !dialogueNpc && !stationDialogue && !secretOpen && <div className="px-prompt" style={{ "--px-accent": npcPrompt.accent } as React.CSSProperties}>
           <span className="px-prompt-key">E</span>
           <div><p>{npcPrompt.role} · OFF-ROUTE FIELD GUIDE</p><button type="button" onClick={() => engineRef.current?.talkToNpc()}>Talk to {npcPrompt.name}</button></div>
         </div>}
 
-        {promptStation && !dialogueNpc && !stationDialogue && (
+        {promptStation && !dialogueNpc && !stationDialogue && !secretOpen && (
           <button
             type="button"
             className="px-prompt px-station-prompt"
@@ -317,7 +350,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
           </button>
         )}
 
-        {mode === "free" && !dialogueNpc && <div className="px-dpad" role="group" aria-label="Movement controls">
+        {mode === "free" && !dialogueNpc && !stationDialogue && !secretOpen && <div className="px-dpad" role="group" aria-label="Movement controls">
           {([['w', '↑', 'Move up'], ['a', '←', 'Move left'], ['s', '↓', 'Move down'], ['d', '→', 'Move right']] as const).map(([key, symbol, label]) => (
             <button key={key} type="button" aria-label={label}
               onPointerDown={(event) => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); engineRef.current?.setMoveKey(key, true); }}
@@ -330,7 +363,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
           ))}
         </div>}
 
-        {!dialogueNpc && !stationDialogue && !atArchive && <div className="px-controls">
+        {!dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <div className="px-controls">
           <button type="button" className="story-replay" onClick={replayIntro} disabled={!ready || failed}>PLAY INTRO ↺</button>
           <button
             type="button"
@@ -357,7 +390,20 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
           <StationDialogue station={stationDialogue} onClose={closeStationDialogue} />
         )}
 
-        {!dialogueNpc && !stationDialogue && !atArchive && <button type="button" className="px-restart" onClick={restart} aria-label="Return to the trailhead">↑</button>}
+        {!dialogueNpc && !stationDialogue && !secretOpen && (mode === "free" || chapter === 2) && (
+          <button type="button" className="px-secret-glint" aria-label="Inspect an unusual golden glint" onClick={() => { engineRef.current?.setPaused(true); setSecretOpen(true); }}>✦</button>
+        )}
+
+        {secretOpen && <section className="px-secret-note" role="dialog" aria-modal="true" aria-labelledby="px-secret-title">
+          <button type="button" onClick={closeSecret} aria-label="Close hidden field note">×</button>
+          <p>HIDDEN FIELD NOTE · 01</p>
+          <h2 id="px-secret-title">A golden cell in a pink lake.</h2>
+          <div className="px-secret-pigments" aria-hidden="true"><i /><i /><i /><i /></div>
+          <p>Hypersaline ponds can turn orange-pink when <i>Dunaliella</i> accumulates carotenoids under stress. The colour is a clue—not final proof of a product.</p>
+          <span>You found the pigment trail. ✦</span>
+        </section>}
+
+        {!dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <button type="button" className="px-restart" onClick={restart} aria-label="Return to the trailhead">↑</button>}
 
         <div className="px-route" aria-hidden="true">
           {STATION_COPY.map((station) => (

@@ -1,6 +1,6 @@
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, type CSSProperties } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { navigation, pageOrder, pages, type WikiPage } from "./site-data";
+import { navigation, pageOrder, pages } from "./site-data";
 import { ArticleBlocks } from './ArticleBlocks';
 
 const PixelWorld = lazy(() => import("./PixelWorld").then((module) => ({ default: module.PixelWorld })));
@@ -23,6 +23,17 @@ function resolveFigureSrc(src: string) {
   if (/^(?:data|blob):/i.test(relative)) return relative;
   const base = import.meta.env.BASE_URL || "/";
   return `${base.endsWith("/") ? base : `${base}/`}${relative}`;
+}
+
+function BrandMark() {
+  return <span className="brand-mark" aria-hidden="true">
+    <svg viewBox="0 0 48 48" role="img">
+      <path className="brand-mark__flagella" d="M16 13C12 8 12 5 15 2M31 13c5-5 5-8 2-11" />
+      <path className="brand-mark__cell" d="M12 10h24v4h4v20h-4v4H12v-4H8V14h4z" />
+      <path className="brand-mark__hub" d="M19 18h10v3h3v8h-3v3H19v-3h-3v-8h3z" />
+      <path className="brand-mark__branch" d="M13 17h4M31 17h4M13 31h4M31 31h4" />
+    </svg>
+  </span>;
 }
 
 function Header({ light = false }: { light?: boolean }) {
@@ -49,7 +60,7 @@ function Header({ light = false }: { light?: boolean }) {
     };
   }, [pathname]);
   return <header ref={header} className={`site-header${light ? " site-header--light" : ""}`}>
-    <Link className="brand" to="/" aria-label="DunaTerp home"><span className="brand-mark" aria-hidden="true">D</span><span>DunaTerp<small>SCU–CHINA · 2026</small></span></Link>
+    <Link className="brand" to="/" aria-label="DunaTerp home"><BrandMark /><span>DunaTerp<small>SCU–CHINA · 2026</small></span></Link>
     <nav className="desktop-nav" aria-label="Primary navigation">
       {navigation.map((group) => <details key={group.label} name="desktop-navigation">
         <summary className={group.items.some(([, href]) => href === currentPath) ? "is-current" : undefined}>{group.label}<span aria-hidden="true">⌄</span></summary>
@@ -65,12 +76,7 @@ function Header({ light = false }: { light?: boolean }) {
 }
 
 function Footer() {
-  return <footer className="site-footer"><div><p className="footer-brand">DunaTerp<span aria-hidden="true">.</span></p><p>A modular carotenoid-derivative platform in <i>Dunaliella salina</i>.</p><small>SCU–CHINA / iGEM 2026</small></div><div className="footer-links"><a href="https://gitlab.igem.org/2026/scu-china">Team GitLab ↗</a><a href="https://creativecommons.org/licenses/by/4.0/">Content: CC BY 4.0 ↗</a><Link to="/attributions">Attributions</Link><Link to="/responsible-ai">Responsible AI</Link></div></footer>;
-}
-
-function Status({ status }: { status: WikiPage["status"] }) {
-  const labels = { "team-draft": "Team-review draft", "structure-only": "Team input required", "review-ready": "Reviewed" };
-  return <span className={`status status--${status}`}>{labels[status]}</span>;
+  return <footer className="site-footer"><div><p className="footer-brand">DunaTerp<span aria-hidden="true">.</span></p><p>A programmable, salt-adapted terpenoid platform in <i>Dunaliella salina</i>.</p><small>SCU–CHINA / iGEM 2026</small></div><div className="footer-links"><a href="https://gitlab.igem.org/2026/scu-china">Team GitLab ↗</a><a href="https://creativecommons.org/licenses/by/4.0/">Content: CC BY 4.0 ↗</a><Link to="/attributions">Attributions</Link><Link to="/responsible-ai">Responsible AI</Link></div></footer>;
 }
 
 const groupDescriptions = [
@@ -96,16 +102,17 @@ function Article({ slug }: { slug: string }) {
   const nextSlug = pageOrder[(index + 1) % pageOrder.length];
   const next = pages[nextSlug];
   const group = navigation.find((item) => item.items.some(([, href]) => href === `/${slug}`));
+  const groupIndex = Math.max(0, navigation.findIndex((item) => item === group));
+  const articleAccent = ["#cdf558", "#7de2ff", "#e9c43a", "#c4a8ff"][groupIndex];
   const figureSrc = page.figure ? resolveFigureSrc(page.figure.src) : "";
   const hasContent = page.sections.length > 0;
-  return <><Header /><main id="main-content" tabIndex={-1} className={`article-page${group?.label === 'Dry Lab' || slug === 'dry-lab' ? ' article-page--dry-lab' : ''}`}>
+  return <><Header /><main id="main-content" tabIndex={-1} style={{ "--article-accent": articleAccent } as CSSProperties} className={`article-page${group?.label === 'Dry Lab' || slug === 'dry-lab' ? ' article-page--dry-lab' : ''}`}>
     <nav className="breadcrumbs" aria-label="Breadcrumb"><Link to="/wiki-map">Wiki</Link><span aria-hidden="true">/</span>{group && <>{group.label === 'Dry Lab' ? <Link to="/dry-lab">Dry Lab</Link> : <span>{group.label}</span>}<span aria-hidden="true">/</span></>}<span aria-current="page">{group?.items.find(([, href]) => href === `/${slug}`)?.[0] || page.title}</span></nav>
-    <header className="article-hero"><div><p className="page-eyebrow">{page.eyebrow}</p><h1>{page.title}</h1></div>{page.intro && <div className="article-intro"><Status status={page.status} /><p>{page.intro}</p></div>}</header>
+    <header className="article-hero"><div><p className="page-eyebrow">{page.eyebrow}</p><h1>{page.title}</h1></div>{page.intro && <div className="article-intro"><p>{page.intro}</p></div>}</header>
     {hasContent && <>
     <div className="article-layout"><aside className="article-toc"><p>ON THIS PAGE</p><nav aria-label="On this page">{page.sections.map((section, i) => <Link key={section.title} to={{ pathname: `/${slug}`, hash: `#section-${i + 1}` }}><span>{String(i + 1).padStart(2, "0")}</span>{section.title}</Link>)}</nav><Link className="toc-map" to="/wiki-map">All chapters ↗</Link></aside>
       <div className="article-body">{page.figure && <figure className="feature-figure"><img src={figureSrc} alt={page.figure.alt} loading="lazy" decoding="async" /><figcaption>{page.figure.caption}</figcaption></figure>}
         <div className="article-sections">{page.sections.map((section, i) => <section id={`section-${i + 1}`} tabIndex={-1} key={section.title}><div className="section-number">{String(i + 1).padStart(2, "0")}</div><div>{section.eyebrow && <p className="section-eyebrow">{section.eyebrow}</p>}<h2>{section.title}</h2>{section.body && <p>{section.body}</p>}{section.blocks && <ArticleBlocks blocks={section.blocks} />}{section.items && <ul>{section.items.map((item) => <li key={item}>{item}</li>)}</ul>}{section.note && <aside>{section.note}</aside>}</div></section>)}</div>
-        {slug !== 'dry-lab' && <aside className="review-banner"><span>Team review</span><p>Before Wiki Freeze, a named team reviewer must verify claims, citations, figures, licences, alt text and correspondence with the official judging form.</p></aside>}
         <Link className="next-page" to={`/${nextSlug}`}><span>CONTINUE EXPLORING</span><strong>{next.title}</strong><b aria-hidden="true">↗</b></Link>
       </div>
     </div>

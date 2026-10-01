@@ -25,11 +25,10 @@ export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onN
         if (!transition && !event.repeat) host.current?.querySelector<HTMLButtonElement>(".story-dialogue-button")?.click();
       }
     }}>
-    <div className="story-atmosphere" aria-hidden="true"><div className="story-fog" />{Array.from({ length: 12 }, (_, i) => <i key={i} style={{ left: `${8 + i * 7}%`, top: `${12 + (i * 17) % 60}%`, animationDelay: `${-i * 1.7}s` }} />)}</div>
     {!transition && <button type="button" className="story-skip" onClick={onSkip}>SKIP INTRO <span aria-hidden="true">↗</span></button>}
     {transition ? null : opening ? <>
-      <div className="story-title"><p>SALT · LIGHT · POSSIBILITY</p><h1>DUNA<span>TERP</span></h1><small>SCU-CHINA · iGEM 2026</small><h2>ONE TINY ALGA.<br />A BRIGHTER TOMORROW.</h2></div>
-      <StoryDialogue key="opening" opening speaker="A story from the salt lake" text={OPENING_HOOK} label="PRESS ENTER TO BEGIN" delay={2400} onNext={onNext} />
+      <div className="story-title"><h1>DUNA<span>TERP</span></h1></div>
+      <StoryDialogue key="opening" opening speaker="A story from the salt lake" text={OPENING_HOOK} label="PRESS ENTER TO BEGIN" delay={700} onNext={onNext} />
     </> : <>
       <header className="story-chapter"><span>DUNATERP / PROLOGUE</span><h1>{beat.chapter}</h1></header>
       <div key={`art-${state.beat}`} className="story-scene-art"><StoryIllustration beat={beat} /></div>
@@ -38,6 +37,5 @@ export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onN
         <div className="story-progress" aria-label={`Story ${state.beat + 1} of ${STORY_BEATS.length}`}>{STORY_BEATS.map((_, i) => <i key={i} className={i <= state.beat ? "is-complete" : ""} />)}</div>
       </div>
     </>}
-    {!transition && <p className="story-controls-hint">Click · Enter · Space <span> / Reveal · Continue</span></p>}
   </section>;
 }

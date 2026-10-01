@@ -235,6 +235,20 @@ export class PixelEngine {
     this.introReturn = { elapsed: 0, camera: { ...this.camera }, hero: { x: this.hero.x, y: this.hero.y } };
   }
 
+  /** Immediate handoff for skip/final actions: never leave an empty transition frame. */
+  finishIntro() {
+    const start = this.world.path.sample(TRAILHEAD_U);
+    this.u = this.targetU = TRAILHEAD_U;
+    this.uVelocity = 0;
+    this.hero.x = start.x;
+    this.hero.y = start.y;
+    this.updateFacing(start.dx, start.dy);
+    this.camera = { x: start.x, y: start.y };
+    this.introReturn = null;
+    this.introShot = null;
+    this.setPaused(false);
+  }
+
   private stepIntro(delta: number) {
     if (!this.introShot) return;
     const handoff = this.introReturn;

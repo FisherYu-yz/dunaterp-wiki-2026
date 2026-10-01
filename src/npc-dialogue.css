@@ -2,26 +2,27 @@
   --npc-ink: #06221f;
   --npc-paper: #fdf6e3;
   --npc-wood: #8b5734;
-  position: absolute;
+  position: fixed;
   z-index: 34;
   left: 50%;
-  bottom: clamp(1rem, 3vh, 2rem);
+  top: calc(50% + 2.5rem);
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1.45fr) minmax(15rem, .9fr);
-  width: min(68rem, calc(100% - 2rem));
+  grid-template-columns: 9rem minmax(0, 1.55fr) minmax(17rem, .9fr);
+  width: min(76rem, calc(100% - 2rem));
+  min-height: min(39rem, calc(100svh - 7rem));
   max-height: calc(100svh - 7rem);
   border: 4px solid var(--npc-ink);
   background: var(--npc-paper);
   color: var(--npc-ink);
   box-shadow: 10px 10px 0 rgba(6, 34, 31, .72);
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   isolation: isolate;
   animation: npcDialogueIn .16s steps(3) both;
 }
 
 @keyframes npcDialogueIn {
-  from { transform: translate(-50%, 14px); }
-  to { transform: translate(-50%, 0); }
+  from { transform: translate(-50%, calc(-50% + 14px)); }
+  to { transform: translate(-50%, -50%); }
 }
 
 .npc-dialogue::before {
@@ -70,6 +71,8 @@
 
 .npc-dialogue__story {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
   padding: 1rem 1.2rem .9rem;
   background: var(--npc-paper);
 }
@@ -120,10 +123,10 @@
 }
 
 .npc-dialogue__line {
-  min-height: 4.6rem;
+  min-height: 12rem;
   margin: 0;
   color: var(--npc-ink);
-  font-size: 1.08rem;
+  font-size: clamp(1rem, 1.6vw, 1.24rem);
   font-weight: 780;
   line-height: 1.5;
 }
@@ -144,6 +147,18 @@
   font: 800 .72rem/1.45 ui-monospace, Menlo, monospace;
   letter-spacing: .025em;
 }
+
+.npc-dialogue__pager {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.npc-dialogue__pager span { margin-right: auto; color: #52625d; font: 900 .72rem/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; }
+.npc-dialogue__pager button { width: 2.5rem; height: 2.3rem; border: 3px solid var(--npc-ink); background: var(--npc-paper); color: var(--npc-ink); box-shadow: 3px 3px 0 var(--npc-ink); cursor: pointer; font: 900 1rem/1 ui-monospace, Menlo, monospace; }
+.npc-dialogue__pager button:not(:disabled):is(:hover, :focus-visible) { background: var(--npc-accent); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--npc-ink); }
+.npc-dialogue__pager button:disabled { opacity: .35; cursor: default; }
 
 .npc-dialogue__choices {
   display: grid;
@@ -203,7 +218,7 @@
 
 @media (max-width: 760px) {
   .npc-dialogue {
-    bottom: max(.75rem, env(safe-area-inset-bottom));
+    top: calc(50% + 2.4rem);
     grid-template-columns: 5rem minmax(0, 1fr);
     max-height: calc(100svh - 5.5rem);
     overflow: auto;
@@ -217,10 +232,11 @@
     border-left: 0;
   }
   .npc-dialogue__line { min-height: 0; font-size: .94rem; }
+  .npc-dialogue__story { min-height: 18rem; }
 }
 
 @media (max-height: 560px) and (min-width: 761px) {
-  .npc-dialogue { bottom: .6rem; max-height: calc(100svh - 4.7rem); }
+  .npc-dialogue { min-height: 0; max-height: calc(100svh - 6rem); }
   .npc-dialogue__portrait { min-height: 7rem; }
   .npc-dialogue__line { min-height: 0; font-size: .9rem; line-height: 1.4; }
   .npc-dialogue__choice, .npc-dialogue__continue { padding-block: .42rem; }
