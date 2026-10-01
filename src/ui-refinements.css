@@ -342,7 +342,7 @@ main:focus:not(:focus-visible) { outline: none; }
   background: repeating-linear-gradient(90deg, transparent 0 18px, #fff5db18 18px 28px);
 }
 .article-page .page-eyebrow { color: var(--article-accent); font: 900 .76rem/1.4 ui-monospace, Menlo, monospace; letter-spacing: .15em; }
-.article-page .article-hero h1 { position: relative; z-index: 1; max-width: 17ch; color: #fff5db; font: 900 clamp(2.7rem, 6vw, 6.2rem)/.96 ui-monospace, Menlo, monospace; letter-spacing: -.065em; overflow-wrap: normal; word-break: normal; hyphens: none; text-transform: uppercase; text-shadow: 4px 4px 0 #031411; }
+.article-page .article-hero h1 { position: relative; z-index: 1; max-width: 15ch; color: #fff5db; font: 900 clamp(2.35rem, 4.15vw, 4.5rem)/1 ui-monospace, Menlo, monospace; letter-spacing: -.065em; overflow-wrap: normal; word-break: normal; hyphens: none; text-transform: uppercase; text-shadow: 4px 4px 0 #031411; }
 .article-page .article-intro { position: relative; z-index: 1; }
 .article-page .article-intro > p { color: #dbe7d9; }
 .article-page .status { border: 2px solid #fff5db; border-radius: 0; background: var(--article-accent); color: var(--ink); box-shadow: 3px 3px 0 #031411; font-family: ui-monospace, Menlo, monospace; }
@@ -351,16 +351,6 @@ main:focus:not(:focus-visible) { outline: none; }
   padding-left: clamp(1rem, 2.2vw, 1.5rem);
   border-left: 3px solid var(--article-accent);
 }
-.article-page--dry-lab .article-hero h1 {
-  font-size: clamp(2.35rem, 4.5vw, 4.4rem);
-  letter-spacing: -.075em;
-}
-.article-page--safety .article-hero h1 {
-  max-width: 15ch;
-  font-size: clamp(2.35rem, 4.15vw, 4.5rem);
-  line-height: 1;
-}
-
 .article-page .article-layout { padding-top: 4rem; }
 .article-page .article-toc {
   padding: 1rem;
