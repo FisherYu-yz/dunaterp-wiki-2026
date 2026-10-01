@@ -1,12 +1,45 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { StoryGlyph } from "./StoryGlyph";
 export function StoryDialogue({ text, speaker, speakerTone = "#cdf558", label = "Continue", delay = 0, onNext, opening = false }: {
   text: string; speaker: string; speakerTone?: string; label?: string; delay?: number; onNext: () => void; opening?: boolean;
 }) {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const [count, setCount] = useState(reduce ? text.length : 0);
+  const [revealed, setRevealed] = useState(false);
   const next = useRef<HTMLButtonElement>(null);
+  const complete = revealed || count >= text.length;
+  const advance = useCallback(() => {
+    if (!complete) setRevealed(true);
+    else onNext();
+  }, [complete, onNext]);
+
   useEffect(() => {
     next.current?.focus({ preventScroll: true });
-  }, [text, delay, opening]);
+    if (reduce || revealed) return;
+
+    let frame = 0;
+    let elapsed = 0;
+    let previous = performance.now();
+    const resetClock = () => { previous = performance.now(); };
+    document.addEventListener("visibilitychange", resetClock);
+
+    const tick = (now: number) => {
+      if (!document.hidden) elapsed += now - previous;
+      previous = now;
+      const characters = Math.min(text.length, Math.max(0, Math.floor((elapsed - delay) / 19)));
+      setCount(characters);
+      if (characters < text.length) frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", resetClock);
+    };
+  }, [text, delay, reduce, revealed]);
+
+  const visibleCount = complete ? text.length : count;
+  const cursorAt = complete ? -1 : text.slice(0, visibleCount).trimEnd().length - 1;
   const parts = text.split(/(\s+)/);
   const stableText = parts.map((part, partIndex) => {
     const start = parts.slice(0, partIndex).join("").length;
@@ -14,20 +47,20 @@ export function StoryDialogue({ text, speaker, speakerTone = "#cdf558", label = 
     return <span className="story-word" key={`word-${partIndex}`}>
       {Array.from(part).map((character, characterIndex) => {
         const index = start + characterIndex;
-        return <span className="story-char is-visible" key={index}>
-          {character}
+        return <span className={`story-char${index < visibleCount ? " is-visible" : ""}`} key={index}>
+          {character}{index === cursorAt && <i className="story-cursor" />}
         </span>;
       })}
     </span>;
   });
   return <div className={`story-dialogue${opening ? " story-dialogue--opening" : ""}`} style={{ "--story-speaker": speakerTone } as CSSProperties}>
     {!opening && <div className="story-portrait"><StoryGlyph kind="person" tone={speakerTone} /><span>FIELD NOTES</span></div>}
-    <button ref={next} type="button" className="story-dialogue-button" onClick={onNext}
+    <button ref={next} type="button" className="story-dialogue-button" onClick={advance}
       onKeyDown={(event) => { if ((event.key === "Enter" || event.key === " ") && event.repeat) event.preventDefault(); }}>
       <span className="story-speaker">{speaker}</span>
       <span className="story-text" aria-hidden="true"><span className="story-text-ink">{stableText}</span></span>
       <span className="story-sr">{text}</span>
-      <span className="story-next">{label} <span aria-hidden="true">▸</span></span>
+      <span className="story-next">{complete ? label : "Reveal text"} <span aria-hidden="true">▸</span></span>
     </button>
   </div>;
 }
