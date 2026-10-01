@@ -355,6 +355,11 @@ main:focus:not(:focus-visible) { outline: none; }
   font-size: clamp(2.35rem, 4.5vw, 4.4rem);
   letter-spacing: -.075em;
 }
+.article-page--safety .article-hero h1 {
+  max-width: 15ch;
+  font-size: clamp(2.35rem, 4.15vw, 4.5rem);
+  line-height: 1;
+}
 
 .article-page .article-layout { padding-top: 4rem; }
 .article-page .article-toc {

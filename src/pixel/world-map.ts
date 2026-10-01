@@ -565,13 +565,22 @@ export function buildWorld(): World {
     });
   });
 
-  // One small scroll cue sits beside the trailhead. Keeping the centre of the
-  // boardwalk empty makes the traveller visible as soon as the prologue ends.
+  // The route begins at a small field outpost rather than an empty salt flat.
+  // Every item stays outside the boardwalk corridor so the traveller remains
+  // visible and the first movement is unobstructed.
   const head = path.sample(0.012);
+  const pointFromHead = (along: number, across: number) => ({
+    x: head.x + head.dx * along - head.dy * across,
+    y: head.y + head.dy * along + head.dx * across,
+  });
+  const pool = pointFromHead(30, -112);
+  const sign = pointFromHead(8, 66);
+
+  props.push({ sprite: "trailheadBrinePool", x: pool.x, y: pool.y, shadow: "none" });
   props.push({
     sprite: "signScroll",
-    x: head.x - head.dy * 52 + head.dx * 14,
-    y: head.y + head.dx * 52 + head.dy * 14,
+    x: sign.x,
+    y: sign.y,
     shadow: "small",
   });
   // A moored boat or two on the open water.

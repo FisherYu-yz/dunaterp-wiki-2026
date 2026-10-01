@@ -378,6 +378,28 @@ function saltPile(): Painter {
   return p;
 }
 
+function trailheadBrinePool(): Painter {
+  const p = surface(76, 28);
+
+  // A shallow Dunaliella-tinted pool gives the route entrance an immediate
+  // sense of place without adding another floating explanation panel.
+  ellipse(p, 38, 16, 35, 10, "c");
+  ellipse(p, 38, 15, 32, 8, "f");
+  ellipse(p, 39, 15, 25, 6, "g");
+  ellipse(p, 43, 14, 15, 4, "h");
+  ditherEllipse(p, 31, 13, 18, 5, "i", 3, 920);
+
+  // Hard salt rim and a few crystalline glints keep the pool in the same
+  // pixel vocabulary as the surrounding crust.
+  for (const [x, y] of [[7, 14], [13, 8], [62, 9], [69, 15], [23, 23], [57, 22]]) {
+    px(p, x, y, "a");
+    px(p, x + 1, y - 1, "y");
+  }
+  rect(p, 18, 7, 7, 1, "D");
+  rect(p, 48, 18, 9, 1, "D");
+  return p;
+}
+
 function post(height: number, capKey?: string): Painter {
   const p = surface(7, height);
   block(p, 2, 1, 3, height - 2, "p", "q", "o");
@@ -745,6 +767,7 @@ export function getAtlas(): Atlas {
       crystal6: saltCrystal(6),
       crystal7: saltCrystal(7),
       pile: saltPile(),
+      trailheadBrinePool: trailheadBrinePool(),
       postShort: post(14),
       postTall: post(24, "7"),
       postLime: post(18, "8"),

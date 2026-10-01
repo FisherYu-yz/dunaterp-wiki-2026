@@ -44,7 +44,6 @@ export function StoryIllustration({ beat }: { beat: StoryBeat }) {
         <StoryGlyph kind="hero" />
         <p>YOUR JOURNEY</p>
         <h2>THE SALT ROUTE</h2>
-        <span>Follow the story · Meet the guides · Explore freely</span>
       </div>;
   }
 }
