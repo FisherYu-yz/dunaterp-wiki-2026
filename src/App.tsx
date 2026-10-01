@@ -106,7 +106,7 @@ function Article({ slug }: { slug: string }) {
   const articleAccent = ["#cdf558", "#7de2ff", "#e9c43a", "#c4a8ff"][groupIndex];
   const figureSrc = page.figure ? resolveFigureSrc(page.figure.src) : "";
   const hasContent = page.sections.length > 0;
-  return <><Header /><main id="main-content" tabIndex={-1} style={{ "--article-accent": articleAccent } as CSSProperties} className={`article-page${group?.label === 'Dry Lab' || slug === 'dry-lab' ? ' article-page--dry-lab' : ''}`}>
+  return <><Header /><main id="main-content" tabIndex={-1} style={{ "--article-accent": articleAccent } as CSSProperties} className={`article-page${group?.label === 'Dry Lab' || slug === 'dry-lab' ? ' article-page--dry-lab' : ''}${slug === 'safety-and-security' ? ' article-page--safety' : ''}`}>
     <nav className="breadcrumbs" aria-label="Breadcrumb"><Link to="/wiki-map">Wiki</Link><span aria-hidden="true">/</span>{group && <>{group.label === 'Dry Lab' ? <Link to="/dry-lab">Dry Lab</Link> : <span>{group.label}</span>}<span aria-hidden="true">/</span></>}<span aria-current="page">{group?.items.find(([, href]) => href === `/${slug}`)?.[0] || page.title}</span></nav>
     <header className="article-hero"><div><p className="page-eyebrow">{page.eyebrow}</p><h1>{page.title}</h1></div>{page.intro && <div className="article-intro"><p>{page.intro}</p></div>}</header>
     {hasContent && <>
