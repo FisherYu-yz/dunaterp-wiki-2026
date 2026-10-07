@@ -384,6 +384,8 @@ main:focus:not(:focus-visible) { outline: none; }
 .article-page--dry-lab .article-sections h2 { max-width: 34ch; }
 .article-page .feature-figure { border: 3px solid var(--ink); border-radius: 0; background: #fffaf0; box-shadow: 6px 6px 0 var(--ink); }
 .article-page .feature-figure img { border-radius: 0; }
+.article-page--protein .research-figure { padding: .8rem; border: 3px solid #31564a; border-radius: 0; background: #fff; box-shadow: 5px 5px 0 #bdcfb6; }
+.article-page--protein .research-figure figcaption { color: #40594f; }
 .article-page .review-banner { border: 3px solid var(--ink); border-radius: 0; background: #fffaf0; box-shadow: 5px 5px 0 var(--article-accent); }
 .article-page .review-banner span { font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
 .article-page .next-page { border: 4px solid var(--ink); border-radius: 0; background: var(--deep); box-shadow: 7px 7px 0 var(--article-accent); }

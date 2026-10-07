@@ -48,6 +48,7 @@ export function ArticleBlocks({ blocks }: { blocks: ContentBlock[] }) {
       case 'equation': return <Equation key={i} block={block} />;
       case 'code': return <div className="research-code" key={i}><p>{block.label}</p><pre tabIndex={0}><code>{block.text}</code></pre></div>;
       case 'figure': return <figure className="feature-figure research-figure" key={i}><a href={resolveAsset(block.src)} aria-label={`Open full-size figure: ${block.alt}`}><img src={resolveAsset(block.src)} alt={block.alt} loading="lazy" decoding="async" /></a><figcaption>{block.caption}<span className="figure-credit">Team analysis figure · CC BY 4.0</span></figcaption></figure>;
+      case 'figure-row': return <div className="research-figure-row" key={i}>{block.figures.map((figure) => <figure className="feature-figure research-figure" key={figure.src}><a href={resolveAsset(figure.src)} aria-label={`Open full-size figure: ${figure.alt}`}><img src={resolveAsset(figure.src)} alt={figure.alt} loading="lazy" decoding="async" /></a><figcaption>{figure.caption}<span className="figure-credit">Team analysis figure · CC BY 4.0</span></figcaption></figure>)}</div>;
       case 'table': return <DataTable key={i} block={block} />;
       case 'links': return <ul className="research-links" key={i}>{block.links.map(({label,href}) => <li key={href}>{href.startsWith('/') ? <Link to={href}>{label} ↗</Link> : <a href={href}>{label} ↗</a>}</li>)}</ul>;
       case 'docking-viewer': return <Suspense key={i} fallback={<p>Loading 3D docking view…</p>}><DockingViewer /></Suspense>;
