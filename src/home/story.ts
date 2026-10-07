@@ -57,7 +57,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
     chapter: "05 · YOUR JOURNEY",
     speaker: "Field guide",
     speakerTone: "#cdf558",
-    text: "Step onto the Salt Route to revisit the project as a place, or leave the boardwalk to meet three optional field guides. The complete Wet Lab, Dry Lab, Human Practices and People chapters remain in the navigation above.",
+    text: "Welcome to DunaTerp. Follow the boardwalk for our project story, or step off the route to talk with one of the three field guides.",
     visual: "journey",
     shot: { u: 0.04, x: 0, y: -18 },
   },
