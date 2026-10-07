@@ -28,8 +28,7 @@ export const navigation: Array<{ label: string; items: ReadonlyArray<readonly [s
   { label: "People", items: [["Team", "/team"], ["Attributions", "/attributions"], ["Responsible AI", "/responsible-ai"]] },
 ];
 
-/** The compact header groups Dry Lab into its two main entrances. Indexes and
- * archives expand that group so no existing work disappears from view. */
+/** Keep the complete Dry Lab chapter list available in the wiki index. */
 export const archiveNavigation = navigation.map((group) => group.label === "Dry Lab"
   ? {
       ...group,

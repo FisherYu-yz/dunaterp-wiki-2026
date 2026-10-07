@@ -12,7 +12,7 @@ try {
   const { pages, navigation, pageOrder } = await server.ssrLoadModule('/src/site-data.ts');
   const { ArticleBlocks } = await server.ssrLoadModule('/src/ArticleBlocks.tsx');
   const items = navigation.find(g => g.label === 'Dry Lab').items;
-  assert.deepEqual(items.map(([label]) => label), ['Modeling','Hardware']);
+  assert.deepEqual(items.map(([label]) => label), ['Transcriptomics','Metabolomics','Protein','Mathematical Modeling','Hardware']);
   assert.equal(new Set(pageOrder).size, pageOrder.length);
   for (const [, href] of items) assert(pages[href.slice(1)], `Missing route ${href}`);
   for (const slug of ['metabolomics','protein','hardware','safety-and-security']) {
@@ -100,7 +100,7 @@ try {
   assert.equal(figures,15);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: Modeling and Hardware navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
+  console.log(`Dry Lab checks passed: five Dry Lab navigation items, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
 } finally {
   await server.close();
 }

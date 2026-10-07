@@ -13,7 +13,10 @@ const links = (...entries: [string, string][]): ContentBlock => ({ kind: 'links'
 const section = (title: string, ...blocks: ContentBlock[]): WikiSection => ({ title, body: '', blocks });
 
 export const dryLabNavigation = [
-  ['Modeling', '/dry-lab'],
+  ['Transcriptomics', '/transcriptomics'],
+  ['Metabolomics', '/metabolomics'],
+  ['Protein', '/protein'],
+  ['Mathematical Modeling', '/model'],
   ['Hardware', '/hardware'],
 ] as const;
 
