@@ -380,23 +380,53 @@ function saltPile(): Painter {
 
 function trailheadBrinePool(): Painter {
   const p = surface(76, 28);
-
-  // A shallow Dunaliella-tinted pool gives the route entrance an immediate
-  // sense of place without adding another floating explanation panel.
   ellipse(p, 38, 16, 35, 10, "c");
   ellipse(p, 38, 15, 32, 8, "f");
   ellipse(p, 39, 15, 25, 6, "g");
   ellipse(p, 43, 14, 15, 4, "h");
-  ditherEllipse(p, 31, 13, 18, 5, "i", 3, 920);
-
-  // Hard salt rim and a few crystalline glints keep the pool in the same
-  // pixel vocabulary as the surrounding crust.
+  ditherEllipse(p, 31, 13, 18, 5, "f", 3, 920);
   for (const [x, y] of [[7, 14], [13, 8], [62, 9], [69, 15], [23, 23], [57, 22]]) {
     px(p, x, y, "a");
     px(p, x + 1, y - 1, "y");
   }
   rect(p, 18, 7, 7, 1, "D");
   rect(p, 48, 18, 9, 1, "D");
+  return p;
+}
+
+function trailheadOutpost(): Painter {
+  const p = surface(68, 52);
+
+  // A compact field cabin makes the trailhead feel like a place to set out from.
+  block(p, 8, 19, 52, 25, "b", "c", "e");
+  frame(p, 8, 19, 52, 25, "1");
+  for (let y = 23; y < 42; y += 4) rect(p, 10, y, 48, 1, "c");
+
+  // Salt-dark pitched roof, broad enough to read against the pale flats.
+  for (let row = 0; row < 13; row += 1) {
+    const inset = 12 - row;
+    const left = 4 + inset * 2;
+    const width = 60 - inset * 4;
+    rect(p, left, 4 + row, width, 1, row < 3 ? "a" : row < 8 ? "q" : "p");
+    if (row === 3 || row === 7 || row === 11) rect(p, left, 5 + row, width, 1, "r");
+  }
+  block(p, 4, 17, 60, 4, "q", "r", "p");
+  rect(p, 7, 20, 54, 1, "o");
+
+  // A marked door, two sampling windows and a short porch.
+  glass(p, 13, 27, 10, 9, "x");
+  glass(p, 45, 27, 10, 9, "8");
+  block(p, 28, 29, 12, 15, "2", "1", "3");
+  frame(p, 28, 29, 12, 15, "1");
+  rect(p, 37, 36, 1, 1, "D");
+  block(p, 23, 43, 22, 3, "q", "r", "p");
+  for (const x of [15, 52]) block(p, x, 44, 3, 5, "r", "1", "q");
+
+  // Plaque and a roof vent give the little station a field-lab identity.
+  block(p, 23, 22, 22, 5, "2", "1", "3");
+  drawText(p, "FIELD", 27, 23, "8", { shadow: "1" });
+  block(p, 48, 8, 7, 8, "3", "2", "4");
+  rect(p, 50, 6, 3, 2, "q");
   return p;
 }
 
@@ -768,6 +798,7 @@ export function getAtlas(): Atlas {
       crystal7: saltCrystal(7),
       pile: saltPile(),
       trailheadBrinePool: trailheadBrinePool(),
+      trailheadOutpost: trailheadOutpost(),
       postShort: post(14),
       postTall: post(24, "7"),
       postLime: post(18, "8"),

@@ -289,10 +289,12 @@ main:focus:not(:focus-visible) { outline: none; }
   color: inherit;
 }
 .brand-mark svg { display: block; width: 100%; height: 100%; overflow: visible; image-rendering: pixelated; }
-.brand-mark__flagella { fill: none; stroke: var(--lime); stroke-width: 3; stroke-linecap: square; }
-.brand-mark__cell { fill: var(--lime); stroke: currentColor; stroke-width: 2; }
-.brand-mark__hub { fill: var(--orange); }
-.brand-mark__branch { fill: none; stroke: currentColor; stroke-width: 3; }
+.brand-mark__flagella { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: square; }
+.brand-mark__cell { fill: var(--lime); stroke: currentColor; stroke-width: 1.8; stroke-linejoin: bevel; }
+.brand-mark__chloroplast { fill: #17544a; stroke: currentColor; stroke-width: 1; }
+.brand-mark__eyespot { fill: #fff5db; stroke: currentColor; stroke-width: 1; }
+.brand-mark__hub { fill: var(--orange); stroke: currentColor; stroke-width: 1.3; }
+.brand-mark__route { fill: none; stroke: #fff5db; stroke-width: 1.6; stroke-linecap: square; }
 .site-header--light .brand-mark { background: transparent; color: var(--deep); border: 0; }
 .site-header--light .brand-mark__flagella { stroke: #fff5db; }
 
@@ -326,6 +328,7 @@ main:focus:not(:focus-visible) { outline: none; }
   overflow: hidden;
   padding: clamp(2rem, 5vw, 4.2rem);
   border: 4px solid var(--ink);
+  border-top-color: var(--article-accent);
   background: var(--deep);
   color: #fff5db;
   box-shadow: 10px 10px 0 color-mix(in srgb, var(--article-accent) 55%, var(--ink));
@@ -370,6 +373,7 @@ main:focus:not(:focus-visible) { outline: none; }
   margin-bottom: 1.4rem;
   padding: clamp(1.4rem, 4vw, 3rem);
   border: 3px solid var(--ink);
+  border-top-color: color-mix(in srgb, var(--article-accent) 72%, var(--ink));
   background: rgba(255,250,240,.96);
   box-shadow: 6px 6px 0 #b9c7b9;
 }

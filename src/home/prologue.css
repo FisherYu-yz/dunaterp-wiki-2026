@@ -15,7 +15,7 @@
 .home-prologue { position: absolute; inset: 0; z-index: 50; isolation: isolate; overflow: hidden; background: rgba(3, 22, 19, .42); color: #fff5db; font-family: ui-monospace, Menlo, monospace; outline: none; }
 .home-prologue.is-opening { background: rgba(3, 22, 19, .68); }
 .story-fog { position: absolute; inset: 0 -10%; background: linear-gradient(170deg, transparent 35%, #dce7c51c 46%, transparent 58%); animation: story-fog 16s ease-in-out infinite alternate; }
-.story-skip { position: absolute; z-index: 3; right: max(1rem, env(safe-area-inset-right)); top: max(1rem, env(safe-area-inset-top)); padding: .65rem .8rem; border: 1px solid #fdf6e350; background: #06221fcc; color: #e4e7c9; font: 700 .65rem monospace; letter-spacing: .08em; cursor: pointer; }
+.story-skip { position: absolute; z-index: 3; right: max(1.25rem, env(safe-area-inset-right)); top: max(1.25rem, env(safe-area-inset-top)); min-height: 44px; padding: .65rem 1rem; border: 1px solid #fdf6e380; background: #06221fcc; color: #fff5db; font: 750 .9rem/1 monospace; letter-spacing: 0; cursor: pointer; }
 .home-prologue button:focus-visible { outline: 3px solid #cdf558; outline-offset: 5px; }
 .story-title { position: absolute; inset: 50% auto auto 50%; width: min(52rem, calc(100% - 2rem)); transform: translate(-50%, -58%); text-align: center; text-shadow: 3px 3px #06221f; }
 .story-title > p { font-size: .65rem; letter-spacing: .3em; color: #dcdfba; }
@@ -23,9 +23,9 @@
 .story-title h1 span { color: #cdf558; }
 .story-title > small { display: block; font-size: .7rem; letter-spacing: .18em; animation: story-caption .6s 2s both; }
 .story-title h2 { margin: 1.5rem 0 0; font: 800 clamp(.85rem, 1.7vw, 1.3rem)/1.55 monospace; letter-spacing: .15em; animation: story-caption .6s 2.4s both; }
-.story-chapter { position: absolute; z-index: 2; top: max(3.8rem, 6vh); left: 50%; width: max-content; max-width: calc(100% - 12rem); padding: .65rem 1.2rem .75rem; transform: translateX(-50%); border-bottom: 4px solid #cdf558; background: #06221fee; box-shadow: 0 5px 0 #0617138f; text-align: center; text-shadow: 2px 2px #06221f; }
+.story-chapter { position: absolute; z-index: 2; top: max(3.8rem, 6vh); left: 50%; width: max-content; max-width: calc(100% - 12rem); padding: .9rem 1.3rem; transform: translateX(-50%); border-bottom: 4px solid #cdf558; background: #06221fee; box-shadow: 0 5px 0 #0617138f; text-align: center; text-shadow: 2px 2px #06221f; }
 .story-chapter > span { color: #c6d2b4; font-size: .6rem; letter-spacing: .2em; }
-.story-chapter h1 { margin: .65rem 0; font: 800 clamp(.9rem, 1.8vw, 1.4rem)/1.3 monospace; color: #cdf558; }
+.story-chapter h1 { margin: 0; font: 800 clamp(1.1rem, 2vw, 1.65rem)/1.25 monospace; color: #cdf558; letter-spacing: 0; }
 .story-scene-art { position: absolute; inset: 8.5rem 4vw 3.5rem 44vw; display: grid; place-items: center; min-width: 0; padding: 1.5rem; text-shadow: 2px 2px #06221f; }
 .story-glyph { display: block; width: 5rem; height: 5rem; image-rendering: pixelated; filter: drop-shadow(4px 5px #06221f88); }
 .story-items { display: flex; align-items: center; justify-content: center; gap: clamp(1rem, 6vw, 5rem); }
@@ -83,9 +83,10 @@
 .story-cursor { position: absolute; left: 100%; bottom: .18em; width: .4rem; height: .8rem; background: #cdf558; visibility: visible; animation: story-cursor-blink .72s steps(1, end) infinite; }
 .story-next { display: flex; justify-content: end; gap: .65rem; font-size: .65rem; color: #cdf558; letter-spacing: .06em; }
 .story-dialogue--opening { position: absolute; left: 50%; right: auto; top: auto; bottom: clamp(3rem, 5.5vh, 5rem); display: block; width: min(42rem, calc(100% - 3rem)); transform: translateX(-50%); border: 0; outline: 0; box-shadow: none; background: #06221fe8; opacity: 1; animation: none; }
-.story-dialogue--opening .story-dialogue-button { text-align: center; }
+.story-dialogue--opening .story-dialogue-button { gap: 1rem; padding: 1.25rem 1.5rem; text-align: center; }
 .story-dialogue--opening .story-speaker { display: none; }
-.story-dialogue--opening .story-next { justify-content: center; margin-top: .25rem; font-size: .8rem; letter-spacing: .14em; }
+.story-dialogue--opening .story-text { font-size: clamp(1rem, 1.7vw, 1.25rem); line-height: 1.5; }
+.story-dialogue--opening .story-next { align-self: center; justify-content: center; min-height: 48px; margin-top: .25rem; padding: .7rem 1.15rem; background: #cdf558; color: #06221f; font-size: 1.05rem; font-weight: 900; letter-spacing: 0; }
 .story-progress { display: flex; justify-content: center; gap: 6px; width: 100%; margin-top: 1rem; }
 .story-progress i { flex: 0 1 3.25rem; height: 4px; background: #eee4ba40; }
 .story-progress i.is-complete { background: #cdf558; }

@@ -22,10 +22,10 @@ export function StoryIllustration({ beat }: { beat: StoryBeat }) {
       </div>;
 
     case "products":
-      return <div className="story-pathway" aria-label="Transcription factor 2146 reprograms Dunaliella metabolism toward a beta-carotene hub">
+      return <div className="story-pathway" aria-label="A transcription-factor design reprograms Dunaliella metabolism toward a beta-carotene hub">
         <div className="story-specimen"><StoryGlyph kind="alga" /><span>Engineered Dunaliella</span></div>
         <span className="story-arrow" aria-hidden="true">→</span>
-        <div className="story-hub">TF 2146</div>
+        <div className="story-hub">REGULATORY INPUT</div>
         <span className="story-arrow" aria-hidden="true">→</span>
         <div className="story-products">{["METABOLIC REPROGRAMMING", "REDIRECTED FLUX", "β-CAROTENE HUB"].map((text, index) => <span key={text} style={stagger(index)}>{text}</span>)}</div>
       </div>;

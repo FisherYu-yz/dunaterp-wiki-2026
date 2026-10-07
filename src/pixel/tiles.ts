@@ -233,22 +233,22 @@ const PAINTERS: Record<Tile, TilePainter> = {
   [Tile.Mud]: mud,
   [Tile.Brine]: pond("g", "f", "h", false),
   [Tile.BrineDeep]: pond("h", "g", "I", true),
-  [Tile.Amber]: pond("i", "D", "j", false),
+  [Tile.Amber]: pond("f", "g", "h", false),
   [Tile.Water]: pond("l", "k", "m", false),
   [Tile.WaterDeep]: pond("m", "l", "n", true),
   [Tile.Plank]: plank,
   [Tile.AlgaeMat]: algaeMat,
   [Tile.Rock]: rock,
   [Tile.Mineral]: mineral,
-  [Tile.AmberDeep]: pond("j", "i", "h", true),
+  [Tile.AmberDeep]: pond("h", "g", "I", true),
 };
 
 /** Rim colour drawn on a wet tile where it meets dry ground. */
 const RIM: Partial<Record<Tile, string>> = {
   [Tile.Brine]: "f",
   [Tile.BrineDeep]: "g",
-  [Tile.Amber]: "D",
-  [Tile.AmberDeep]: "i",
+  [Tile.Amber]: "f",
+  [Tile.AmberDeep]: "g",
   [Tile.Water]: "k",
   [Tile.WaterDeep]: "l",
 };

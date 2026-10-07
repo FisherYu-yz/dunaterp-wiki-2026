@@ -12,6 +12,17 @@ const engine = new PixelEngine(document.createElement('canvas'), { clientWidth: 
   onEnter() { entries++; }, onNpcInteract() { talks++; },
 });
 const key = (value, interactive = false, repeat = false) => ({ key: value, repeat, target: new Element(interactive), preventDefault() {} });
+const outpost = engine.world.props.find((prop) => prop.sprite === 'trailheadOutpost');
+assert.ok(outpost, 'trailhead field outpost is present');
+const spurStart = engine.world.path.sample(engine.world.path.nearestU(outpost.x, outpost.y));
+const porchEntry = { x: outpost.x, y: outpost.y + 6 };
+for (let step = 0; step <= 12; step++) {
+  const t = step / 12;
+  const x = spurStart.x + (porchEntry.x - spurStart.x) * t;
+  const y = spurStart.y + (porchEntry.y - spurStart.y) * t;
+  assert.equal(isOnDeck(engine.world, x, y), true, `outpost spur is walkable at ${t.toFixed(2)}`);
+  assert.equal(isBlockedAt(engine.world, x, y), false, `outpost spur is unblocked at ${t.toFixed(2)}`);
+}
 engine.enterFree();
 for (const npc of createNpcs(engine.world)) {
   assert.equal(isBlockedAt(engine.world, npc.x, npc.y), false, `${npc.id} must be reachable`);

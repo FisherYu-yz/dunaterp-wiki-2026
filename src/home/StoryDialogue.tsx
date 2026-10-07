@@ -4,7 +4,7 @@ export function StoryDialogue({ text, speaker, speakerTone = "#cdf558", label = 
   text: string; speaker: string; speakerTone?: string; label?: string; delay?: number; onNext: () => void; opening?: boolean;
 }) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const [count, setCount] = useState(reduce ? text.length : 0);
+  const [count, setCount] = useState(reduce || opening ? text.length : 0);
   const [revealed, setRevealed] = useState(false);
   const next = useRef<HTMLButtonElement>(null);
   const complete = revealed || count >= text.length;
@@ -15,7 +15,7 @@ export function StoryDialogue({ text, speaker, speakerTone = "#cdf558", label = 
 
   useEffect(() => {
     next.current?.focus({ preventScroll: true });
-    if (reduce || revealed) return;
+    if (reduce || opening || revealed) return;
 
     let frame = 0;
     let elapsed = 0;
@@ -36,7 +36,7 @@ export function StoryDialogue({ text, speaker, speakerTone = "#cdf558", label = 
       cancelAnimationFrame(frame);
       document.removeEventListener("visibilitychange", resetClock);
     };
-  }, [text, delay, reduce, revealed]);
+  }, [text, delay, reduce, revealed, opening]);
 
   const visibleCount = complete ? text.length : count;
   const cursorAt = complete ? -1 : text.slice(0, visibleCount).trimEnd().length - 1;
