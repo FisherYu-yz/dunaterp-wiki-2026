@@ -19,9 +19,9 @@ export const dryLabNavigation = [
 
 const modelingChapters = [
   ['Transcriptomics', '/transcriptomics', 'Identify light-responsive pathway transcripts and rank candidate regulators.'],
-  ['Metabolic Flow', '/metabolomics', 'Test product feasibility, pathway competition and branch-point control.'],
-  ['Protein & DNA', '/protein', 'Screen LCYB variants and examine the TF2146–DNA recognition hypothesis.'],
-  ['Regulatory Model', '/model', 'Connect TF2146 activity to LCYB expression and β-carotene supply.'],
+  ['Metabolomics', '/metabolomics', 'Test product feasibility, pathway competition and branch-point control.'],
+  ['Protein', '/protein', 'Screen LCYB variants and examine the TF2146–DNA recognition hypothesis.'],
+  ['Mathematical Modeling', '/model', 'Connect TF2146 activity to LCYB expression and β-carotene supply.'],
 ] as const;
 
 export const transcriptomics: WikiPage = {
@@ -267,15 +267,16 @@ v_{\mathrm{LCYB}}&=q_{\mathrm{LCYB}}E\frac{L}{K_{m,\mathrm{LCYB}}+L}\\[4pt]
 };
 
 export const dryLabIndex: WikiPage = {
-  title: 'Modeling overview', eyebrow: 'Dry Lab / Modeling', status: 'team-draft',
-  intro: 'Four connected modeling layers move from public expression evidence to metabolic allocation, molecular structure and a measurable regulatory mechanism. Each layer answers a different design question and passes a defined output to the next.',
+  title: 'Dry Lab overview', eyebrow: 'Dry Lab', status: 'team-draft',
+  intro: 'The Dry Lab has two parts: modeling the biological system and designing the hardware used to cultivate it. The links below lead directly to the work that is already on the site.',
   sections: [
-    section('Overview',
-      p('The workflow begins by locating light-responsive carotenoid transcripts and candidate transcription factors. It then asks how the reconstructed chassis allocates flux among the shared β-carotene hub and four downstream products. Protein and DNA modeling turn selected candidates into structural hypotheses, while the regulatory ODE model states which measurements are needed to connect TF2146 activity to LCYB and β-carotene.'),
+    section('Modeling',
+      p('Four workflows examine the system at different scales: expression data, metabolic flux, molecular structure and regulatory dynamics.'),
       { kind: 'chapter-grid', items: modelingChapters.map(([title, href, text], index) => ({ index: `0${index + 1}`, title, href, text })) },
     ),
-    section('One evidence chain',
-      p('Transcriptomics prioritizes candidates; metabolic analysis identifies influential pathway nodes; structural modeling tests whether proposed interactions are plausible; mathematical modeling translates the proposed regulation into explicit states, parameters and measurable predictions. Results from one layer are not treated as proof for another: coexpression is not binding, a modeled contact is not regulation, and a conditional simulation is not an experimental yield.'),
+    section('Hardware',
+      p('The hardware work develops a flat-panel photobioreactor and an interactive design tool for testing cultivation conditions, light delivery and scale-up choices.'),
+      { kind: 'chapter-grid', items: [{ index: '05', title: 'Photobioreactor', href: '/hardware', text: 'Explore the reactor design, engineering model and interactive hardware tool.' }] },
     ),
   ],
 };

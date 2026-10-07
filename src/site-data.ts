@@ -28,6 +28,21 @@ export const navigation: Array<{ label: string; items: ReadonlyArray<readonly [s
   { label: "People", items: [["Team", "/team"], ["Attributions", "/attributions"], ["Responsible AI", "/responsible-ai"]] },
 ];
 
+/** The compact header groups Dry Lab into its two main entrances. Indexes and
+ * archives expand that group so no existing work disappears from view. */
+export const archiveNavigation = navigation.map((group) => group.label === "Dry Lab"
+  ? {
+      ...group,
+      items: [
+        ["Transcriptomics", "/transcriptomics"],
+        ["Metabolomics", "/metabolomics"],
+        ["Protein", "/protein"],
+        ["Mathematical Modeling", "/model"],
+        ["Hardware", "/hardware"],
+      ] as const,
+    }
+  : group);
+
 export const pages: Record<string, WikiPage> = {
   'dry-lab': dryLabIndex,
   transcriptomics,
