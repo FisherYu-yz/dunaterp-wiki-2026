@@ -39,7 +39,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
     chapter: "03 · METABOLIC REPROGRAMMING",
     speaker: "Mara · pathway engineer",
     speakerTone: "#f7a52d",
-    text: "Our core design introduces the project-selected transcription factor 2146 to reprogramme pathway regulation and redirect metabolic flux toward competitive β-carotene synthesis. The β-carotene pool becomes a controllable hub for the platform.",
+    text: "Our core design reprogrammes pathway regulation and redirects metabolic flux toward competitive β-carotene synthesis. The β-carotene pool becomes a controllable hub for the platform.",
     visual: "products",
     shot: { u: 0.62, x: -18, y: -28 },
   },
