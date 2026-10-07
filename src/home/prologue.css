@@ -40,7 +40,7 @@
 .story-pathway { display: flex; align-items: center; justify-content: center; gap: .7rem; width: 100%; }
 .story-pathway .story-glyph { width: 4.5rem; height: 4.5rem; }
 .story-arrow { color: #cdf558; font-size: 1.5rem; }
-.story-hub { padding: .7rem 1rem; background: #69532e; border: 3px solid #d5b578; font-size: .9rem; }
+.story-hub { max-width: 12rem; padding: .7rem 1rem; background: #69532e; border: 3px solid #d5b578; font-size: .9rem; line-height: 1.35; text-align: center; }
 .story-products { display: flex; justify-content: center; gap: .6rem; flex-wrap: wrap; }
 .story-products > span { padding: .5rem .7rem; border: 2px solid #ebaf69; background: #493d28; font-size: .8rem; }
 .story-checkpoints { display: grid; width: min(34rem, 100%); gap: .8rem; }
