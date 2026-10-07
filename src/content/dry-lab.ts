@@ -27,10 +27,10 @@ export const dryLabMenuGroups = [
 ] as const;
 
 const modelingChapters = [
-  ['Transcriptomics', '/transcriptomics', 'Identify light-responsive pathway transcripts and rank candidate regulators.'],
-  ['Metabolomics', '/metabolomics', 'Test product feasibility, pathway competition and branch-point control.'],
-  ['Protein', '/protein', 'Screen LCYB variants and examine the TF2146–DNA recognition hypothesis.'],
-  ['Mathematical Modeling', '/model', 'Connect TF2146 activity to LCYB expression and β-carotene supply.'],
+  ['Transcriptomics', '/transcriptomics', 'Rank pathway-associated regulators using published D. salina light-response RNA-seq.'],
+  ['Metabolomics', '/metabolomics', 'Compare four product routes across eight A–H conditions, then test pathway branch points.'],
+  ['Protein', '/protein', 'Screen LCYB variants and examine the proposed TF2146–DNA interaction.'],
+  ['Mathematical Modeling', '/model', 'Trace promoter occupancy through LCYB expression to the β-carotene pool.'],
 ] as const;
 
 export const transcriptomics: WikiPage = {
@@ -277,15 +277,15 @@ v_{\mathrm{LCYB}}&=q_{\mathrm{LCYB}}E\frac{L}{K_{m,\mathrm{LCYB}}+L}\\[4pt]
 
 export const dryLabIndex: WikiPage = {
   title: 'Dry Lab overview', eyebrow: 'Dry Lab', status: 'team-draft',
-  intro: 'The Dry Lab has two parts: modeling the biological system and designing the hardware used to cultivate it. The links below lead directly to the work that is already on the site.',
+  intro: 'The Dry Lab combines computational work with reactor design. We start from published light-response data, use a reconstructed Dunaliella salina network to compare four carotenoid-product routes, and examine the LCYB variants and proposed TF2146–DNA interaction behind the design. A five-state model follows a regulatory input through LCYB expression to the β-carotene pool. These analyses help frame experiments; they are not a substitute for wet-lab validation. The hardware work asks how to cultivate the engineered alga in a flat-panel airlift photobioreactor.',
   sections: [
     section('Modeling',
-      p('Four workflows examine the system at different scales: expression data, metabolic flux, molecular structure and regulatory dynamics.'),
+      p('Each page answers a specific design question. Transcriptomics uses public samples from three light intensities to rank pathway-associated regulator candidates; an expression association alone does not show direct promoter binding. Metabolomics tests whether the reconstructed network can support the four product branches across eight published A–H conditions, then compares product flux, chassis cost and branch-point effects. Protein analysis screens LCYB variants and explores the proposed TF2146–DNA interaction. The mathematical model links promoter occupancy to LCYB transcript, active enzyme, lycopene and β-carotene. Model outputs are predictions to guide experiments, not measured product titres.'),
       { kind: 'chapter-grid', items: modelingChapters.map(([title, href, text], index) => ({ index: `0${index + 1}`, title, href, text })) },
     ),
     section('Hardware',
-      p('The hardware work develops a flat-panel photobioreactor and an interactive design tool for testing cultivation conditions, light delivery and scale-up choices.'),
-      { kind: 'chapter-grid', items: [{ index: '05', title: 'Photobioreactor', href: '/hardware', text: 'Explore the reactor design, engineering model and interactive hardware tool.' }] },
+      p('The hardware page presents a flat-panel airlift photobioreactor illuminated through both transparent faces. Its engineering model considers light attenuation, cultivation dynamics, light–dark cycling, scale-up and energy use; the interactive tool makes the design assumptions easier to inspect.'),
+      { kind: 'chapter-grid', items: [{ index: '05', title: 'Photobioreactor', href: '/hardware', text: 'See the double-sided reactor design, engineering model and interactive tool.' }] },
     ),
   ],
 };

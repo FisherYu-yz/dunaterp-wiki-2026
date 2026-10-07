@@ -385,7 +385,11 @@ main:focus:not(:focus-visible) { outline: none; }
 .article-page .section-number { display: grid; place-items: center; align-self: start; width: 2.7rem; height: 2.7rem; padding: 0; border: 3px solid var(--ink); background: var(--article-accent); color: var(--ink); font: 900 .78rem/1 ui-monospace, Menlo, monospace; box-shadow: 3px 3px 0 var(--ink); }
 .article-page .section-eyebrow { color: #536c62; font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
 .article-page .article-sections h2 { max-width: 20ch; color: var(--ink); font-family: ui-monospace, Menlo, monospace; font-weight: 900; letter-spacing: -.045em; text-transform: uppercase; }
-.article-page--dry-lab .article-sections h2 { max-width: 34ch; }
+.article-page--dry-lab .article-sections h2 {
+  max-width: 38ch;
+  font-size: clamp(1.45rem, 2.1vw, 2.05rem);
+  line-height: 1.2;
+}
 .article-page .feature-figure { border: 3px solid var(--ink); border-radius: 0; background: #fffaf0; box-shadow: 6px 6px 0 var(--ink); }
 .article-page .feature-figure img { border-radius: 0; }
 .article-page .review-banner { border: 3px solid var(--ink); border-radius: 0; background: #fffaf0; box-shadow: 5px 5px 0 var(--article-accent); }
