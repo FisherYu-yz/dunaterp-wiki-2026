@@ -21,6 +21,11 @@ export const dryLabNavigation = [
   ['Hardware', '/hardware'],
 ] as const;
 
+export const dryLabMenuGroups = [
+  { label: 'Modeling', items: [dryLabNavigation[1], dryLabNavigation[2], dryLabNavigation[3], dryLabNavigation[4]] },
+  { label: 'Hardware', items: [dryLabNavigation[5]] },
+] as const;
+
 const modelingChapters = [
   ['Transcriptomics', '/transcriptomics', 'Identify light-responsive pathway transcripts and rank candidate regulators.'],
   ['Metabolomics', '/metabolomics', 'Test product feasibility, pathway competition and branch-point control.'],

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, type CSSProperties } from "react";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { archiveNavigation, navigation, pageOrder, pages } from "./site-data";
+import { dryLabMenuGroups } from "./content/dry-lab";
 import { ArticleBlocks } from './ArticleBlocks';
 
 const PixelWorld = lazy(() => import("./PixelWorld").then((module) => ({ default: module.PixelWorld })));
@@ -65,12 +66,27 @@ function Header({ light = false }: { light?: boolean }) {
     <nav className="desktop-nav" aria-label="Primary navigation">
       {navigation.map((group) => <details key={group.label} name="desktop-navigation">
         <summary className={group.items.some(([, href]) => href === currentPath) || (group.label === 'Dry Lab' && MODELING_PATHS.includes(currentPath)) ? "is-current" : undefined}>{group.label}<span aria-hidden="true">⌄</span></summary>
-        <div className="nav-popover"><p>{group.label}</p>{group.items.map(([label, href]) => <Link key={href} to={href} aria-current={currentPath === href ? "page" : undefined}>{label}<span aria-hidden="true">↗</span></Link>)}</div>
+        <div className={`nav-popover${group.label === 'Dry Lab' ? ' nav-popover--dry-lab' : ''}`}>
+          {group.label === 'Dry Lab' ? <>
+            <p>{group.label}</p>
+            <Link to="/dry-lab" aria-current={currentPath === '/dry-lab' ? "page" : undefined}>Overview<span aria-hidden="true">↗</span></Link>
+            {dryLabMenuGroups.map((section) => <section className="nav-popover-section" key={section.label}>
+              <h3>{section.label}</h3>
+              {section.items.map(([label, href]) => <Link key={href} to={href} aria-current={currentPath === href ? "page" : undefined}>{label}<span aria-hidden="true">↗</span></Link>)}
+            </section>)}
+          </> : <>
+            <p>{group.label}</p>
+            {group.items.map(([label, href]) => <Link key={href} to={href} aria-current={currentPath === href ? "page" : undefined}>{label}<span aria-hidden="true">↗</span></Link>)}
+          </>}
+        </div>
       </details>)}
       <Link className="nav-index" to="/wiki-map" aria-current={currentPath === "/wiki-map" ? "page" : undefined}>Explore Wiki <span aria-hidden="true">↗</span></Link>
     </nav>
     <details className="mobile-menu"><summary>Menu <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile navigation">
-      {navigation.map((group) => <div className="mobile-nav-group" key={group.label}><p>{group.label}</p>{group.items.map(([label, href]) => <Link key={href} to={href} aria-current={currentPath === href ? "page" : undefined}>{label}</Link>)}</div>)}
+      {navigation.map((group) => <div className="mobile-nav-group" key={group.label}><p>{group.label}</p>{group.label === 'Dry Lab' ? <>
+        <Link to="/dry-lab" aria-current={currentPath === '/dry-lab' ? "page" : undefined}>Overview</Link>
+        {dryLabMenuGroups.map((section) => <section className="mobile-nav-subgroup" key={section.label}><p>{section.label}</p>{section.items.map(([label, href]) => <Link key={href} to={href} aria-current={currentPath === href ? "page" : undefined}>{label}</Link>)}</section>)}
+      </> : group.items.map(([label, href]) => <Link key={href} to={href} aria-current={currentPath === href ? "page" : undefined}>{label}</Link>)}</div>)}
       <Link className="mobile-map-link" to="/wiki-map">Explore all pages ↗</Link>
     </nav></details>
   </header>;
