@@ -182,6 +182,32 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
     };
   }, [isStory, ready, atArchive]);
 
+  // Space advances one authored stop at a time in guided mode. Relying on the
+  // browser's default page jump could leave the traveller between stations,
+  // especially at the trailhead where the lead-in spacer is shorter than the
+  // complete scroll journey.
+  useEffect(() => {
+    if (!ready || failed || isStory || mode === "free") return;
+    const advance = (event: KeyboardEvent) => {
+      if (event.code !== "Space" || event.repeat || dialogueNpc || stationDialogue || secretOpen) return;
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.closest("button,a,input,textarea,select,option,[contenteditable],[role='button'],[role='link'],[role='dialog']")) return;
+      const node = root.current;
+      const engine = engineRef.current;
+      if (!node || !engine) return;
+      const next = [...STATION_COPY.map((station) => station.u), 0.999]
+        .find((stop) => stop > engine.journey + 0.025);
+      if (next === undefined) return;
+      event.preventDefault();
+      const top = node.getBoundingClientRect().top + window.scrollY;
+      const travel = Math.max(1, node.offsetHeight - window.innerHeight);
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: top + next * travel, behavior: reduce ? "instant" : "smooth" });
+    };
+    window.addEventListener("keydown", advance);
+    return () => window.removeEventListener("keydown", advance);
+  }, [ready, failed, isStory, mode, dialogueNpc, stationDialogue, secretOpen]);
+
   // Free mode pins the document so wandering never scrolls the page away from
   // the world, and hands the scroll position back at the point the hero left.
   useEffect(() => {
@@ -320,7 +346,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
             <h2>Follow the boardwalk.</h2>
           </div>
           <div className="px-trailhead__keys">
-            <span><kbd>SCROLL</kbd> travel</span>
+            <span><kbd>SCROLL</kbd> / <kbd>SPACE</kbd> travel</span>
             <span><kbd>E</kbd> open field notes</span>
             <span><kbd>FREE ROAM</kbd> meet hidden guides</span>
           </div>

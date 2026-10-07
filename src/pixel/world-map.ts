@@ -348,6 +348,28 @@ export function buildWorld(): World {
   const stations = STATION_COPY.map(place);
   const archive = place(ARCHIVE_COPY);
 
+  const head = path.sample(0.012);
+  const pointFromHead = (along: number, across: number) => ({
+    x: head.x + head.dx * along - head.dy * across,
+    y: head.y + head.dy * along + head.dx * across,
+  });
+
+  // Use the same tile-based shoreline and colour bands as every other pond.
+  // The previous entrance pool was a floating oval sprite and therefore read
+  // differently from the salt lakes elsewhere in the world.
+  const trailheadPool = pointFromHead(30, -112);
+  stampEllipse(
+    tiles,
+    trailheadPool.x / TILE,
+    trailheadPool.y / TILE,
+    7,
+    4,
+    Tile.Brine,
+    Tile.BrineDeep,
+    167,
+  );
+  stampBands(tiles);
+
   // Station 01 reads the bloom directly, so put the bloom where it stands.
   {
     const brine = stations[0];
@@ -568,21 +590,35 @@ export function buildWorld(): World {
   // The route begins at a small field outpost rather than an empty salt flat.
   // Every item stays outside the boardwalk corridor so the traveller remains
   // visible and the first movement is unobstructed.
-  const head = path.sample(0.012);
-  const pointFromHead = (along: number, across: number) => ({
-    x: head.x + head.dx * along - head.dy * across,
-    y: head.y + head.dy * along + head.dx * across,
-  });
-  const pool = pointFromHead(30, -112);
   const sign = pointFromHead(8, 66);
+  const lodge = path.sample(0);
 
-  props.push({ sprite: "trailheadBrinePool", x: pool.x, y: pool.y, shadow: "none" });
+  props.push({ sprite: "trailheadLodge", x: lodge.x, y: lodge.y + 3, shadow: "large" });
   props.push({
     sprite: "signScroll",
     x: sign.x,
     y: sign.y,
     shadow: "small",
   });
+  const headLamp = pointFromHead(34, 72);
+  const headCrate = pointFromHead(-3, -55);
+  props.push({ sprite: "lamp", x: headLamp.x, y: headLamp.y, shadow: "small" });
+  props.push({ sprite: "crate", x: headCrate.x, y: headCrate.y, shadow: "small" });
+
+  // The archive is a destination rather than another loose end of timber.
+  // A paired light and mineral marker create a small arrival court around its
+  // doorway while keeping the final boardwalk corridor clear.
+  const end = path.sample(0.994);
+  const pointFromEnd = (along: number, across: number) => ({
+    x: end.x + end.dx * along - end.dy * across,
+    y: end.y + end.dy * along + end.dx * across,
+  });
+  for (const across of [-70, 70]) {
+    const light = pointFromEnd(-18, across);
+    const crystal = pointFromEnd(18, across * 0.9);
+    props.push({ sprite: "lamp", x: light.x, y: light.y, shadow: "small" });
+    props.push({ sprite: across < 0 ? "crystal6" : "crystal7", x: crystal.x, y: crystal.y, shadow: "small" });
+  }
   // A moored boat or two on the open water.
   for (const [bx, by] of [[17, 35], [14, 76], [19, 100]] as Array<[number, number]>) {
     props.push({ sprite: "boat", x: bx * TILE, y: by * TILE, shadow: "none" });

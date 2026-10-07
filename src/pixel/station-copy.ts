@@ -124,7 +124,7 @@ export const ARCHIVE_COPY: StationCopy = {
   route: "/wiki-map",
   color: "#cdf558",
   accent: "8",
-  u: 0.985,
+  u: 0.998,
   offset: 0,
   sprite: "archive",
 };
