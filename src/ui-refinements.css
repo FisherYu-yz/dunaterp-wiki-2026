@@ -387,6 +387,22 @@ main:focus:not(:focus-visible) { outline: none; }
 .article-page .next-page strong { font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
 .article-page .next-page strong { text-transform: uppercase; }
 
+/* Modeling reads as a sequence of white laboratory sheets on warm paper.
+   Most exported plots already use white canvases, so this avoids the previous
+   dark-frame/white-image mismatch while keeping the pixel editorial system. */
+body:has(.article-page--modeling),
+body:has(.article-page--hardware) { background: #f3ecd0; }
+.article-page--modeling .article-sections > section,
+.article-page--hardware .article-sections > section { background: #fffef9; }
+.article-page--modeling .feature-figure,
+.article-page--hardware .feature-figure { border-color: var(--ink); background: #fff; color: var(--ink); box-shadow: 6px 6px 0 #cbbf93; }
+.article-page--modeling .feature-figure img,
+.article-page--hardware .feature-figure img { background: #fff; }
+.article-page--modeling .feature-figure figcaption,
+.article-page--hardware .feature-figure figcaption { color: #53675f; }
+.article-page--modeling .research-equation,
+.article-page--hardware .research-equation { border: 3px solid var(--ink); border-left: 6px solid var(--article-accent); background: #fff; box-shadow: 5px 5px 0 #d8cc9e; }
+
 @media (max-width: 900px) {
   .article-page .article-toc { position: static; border-radius: 0; }
 }

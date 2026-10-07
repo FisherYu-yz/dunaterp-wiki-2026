@@ -4,6 +4,17 @@
 .research-blocks a { color: #176c82; text-underline-offset: .2em; }
 .research-blocks .research-figure { margin: 2rem auto; padding: .75rem; border-radius: .4rem; }
 .research-figure a, .research-figure img { display: block; width: 100%; }
+.research-figure-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin: 2rem 0; }
+.research-figure-grid .research-figure { display: flex; flex-direction: column; margin: 0; min-width: 0; }
+.research-figure-grid .research-figure a { display: grid; place-items: center; flex: 1; min-height: 20rem; }
+.research-figure-grid .research-figure img { max-height: 30rem; object-fit: contain; }
+.research-chapter-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin: 2rem 0; }
+.research-chapter-card { position: relative; display: grid; grid-template-columns: 2.4rem 1fr auto; gap: .8rem; min-height: 12rem; padding: 1.4rem; border: 3px solid var(--ink); background: #fff; color: var(--ink)!important; box-shadow: 5px 5px 0 #b8f24b; text-decoration: none; }
+.research-chapter-card>span { font: 900 .75rem/1 ui-monospace,Menlo,monospace; color: #426057; }
+.research-chapter-card h3 { margin: 0 0 .65rem; font: 900 1.15rem/1.2 ui-monospace,Menlo,monospace; text-transform: uppercase; }
+.research-chapter-card p { margin: 0; font-size: .9rem!important; line-height: 1.6!important; color: #4d625a!important; }
+.research-chapter-card>b { font-size: 1.2rem; }
+.research-chapter-card:hover { transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #b8f24b; }
 .figure-credit { display: block; margin-top: .6rem; font-size: .8125rem; }
 .research-table-scroll { width: 100%; overflow-x: auto; margin: 1.8rem 0; border: 1px solid var(--line); border-radius: .35rem; }
 .research-table-scroll table { width: 100%; border-collapse: collapse; font-size: .875rem; line-height: 1.55; font-variant-numeric: tabular-nums; }
@@ -35,6 +46,8 @@
   .research-table-scroll th, .research-table-scroll td { padding: .6rem; }
   .research-table-details { padding: .75rem; }
   .research-equation { margin: 1.8rem 0; padding: 1.45rem 1rem; }
+  .research-figure-grid,.research-chapter-grid { grid-template-columns: 1fr; }
+  .research-figure-grid .research-figure a { min-height: 14rem; }
 }
 @media print {
   .research-table-details .research-table-scroll { max-height: none; overflow: visible; }

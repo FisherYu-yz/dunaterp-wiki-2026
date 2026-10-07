@@ -50,8 +50,10 @@ export const protein: WikiPage = {
       fig('docking-seeds', 'Three lycopene docking scores for WT and F404Y, with their means and seed-to-seed standard deviations.', 'Figure 1. Open circles show the best score from each search seed. Squares and horizontal intervals show the mean ± sample SD across three seeds. These intervals describe docking-search variability, not biological uncertainty.'),
       { kind: 'docking-viewer' },
       fig('lcyb-lycopene', 'Coordinate-based overview of the WT LCYB C-alpha trace and selected lycopene docking pose.', 'Figure 2. WT residues 71–555 as a smoothed C-alpha trace (teal), all-trans lycopene heavy atoms (amber), and Phe404 (purple). Blender rendering from the corrected docking inputs; not an experimental structure or an MD snapshot.'),
-      fig('lcyb-lycopene_detail', 'Close-up of the corrected all-trans lycopene docking pose in WT LCYB.', 'Figure 3. Close-up of the same selected WT pose. Ligand connectivity contains 40 carbon atoms and 39 heavy-atom bonds, with no terminal rings. The displayed pose does not establish affinity or catalysis.'),
-      fig('lcyb-lycopene-detail-alt', 'Alternate orientation of the same WT lycopene docking pose.', 'Figure 4. Alternate view of the same input coordinates. Camera orientation changes only; this is not an independent model or replicate.'),
+      { kind: 'figure-grid', figures: [
+        { src: figures['lcyb-lycopene_detail'], alt: 'Close-up of the corrected all-trans lycopene docking pose in WT LCYB.', caption: 'Figure 3. Close-up of the selected WT pose; the displayed pose does not establish affinity or catalysis.' },
+        { src: figures['lcyb-lycopene-detail-alt'], alt: 'Alternate orientation of the same WT lycopene docking pose.', caption: 'Figure 4. Alternate camera view of the same coordinates, not an independent model or replicate.' },
+      ] },
       table('Lycopene docking results', ['System', 'Mean ± seed SD (kcal/mol)', 'Seeds'], [
         ['WT','−9.434 ± 0.213','3'], ['F404Y','−9.701 ± 0.477','3'],
       ]),
