@@ -378,19 +378,45 @@ function saltPile(): Painter {
   return p;
 }
 
-function trailheadBrinePool(): Painter {
-  const p = surface(76, 28);
-  ellipse(p, 38, 16, 35, 10, "c");
-  ellipse(p, 38, 15, 32, 8, "f");
-  ellipse(p, 39, 15, 25, 6, "g");
-  ellipse(p, 43, 14, 15, 4, "h");
-  ditherEllipse(p, 31, 13, 18, 5, "f", 3, 920);
-  for (const [x, y] of [[7, 14], [13, 8], [62, 9], [69, 15], [23, 23], [57, 22]]) {
-    px(p, x, y, "a");
-    px(p, x + 1, y - 1, "y");
+function trailheadLodge(): Painter {
+  const p = surface(86, 68);
+
+  // A small field lodge turns the loose end of the boardwalk into a real
+  // departure point. Salt-brick walls and the dark green roof reuse the
+  // archive/station vocabulary instead of introducing a separate art style.
+  block(p, 9, 25, 68, 38, "b", "d", "a");
+  for (let y = 28; y < 61; y += 5) {
+    for (let x = 11; x < 75; x += 10) {
+      rect(p, x + ((y / 5) % 2 === 0 ? 0 : 5), y, 9, 4, "c");
+    }
   }
-  rect(p, 18, 7, 7, 1, "D");
-  rect(p, 48, 18, 9, 1, "D");
+  frame(p, 9, 25, 68, 38, "1");
+
+  // Deep stepped roof with a lime trail marker.
+  for (let y = 0; y < 13; y += 1) {
+    rect(p, 2 + y * 3, 25 - y, 82 - y * 6, 1, y < 3 ? "8" : y < 8 ? "5" : "3");
+  }
+  rect(p, 1, 24, 84, 3, "1");
+  rect(p, 4, 22, 78, 2, "8");
+
+  // Warm doorway meeting the first plank of the route.
+  block(p, 34, 38, 18, 25, "2", "1", "3");
+  for (let y = 0; y < 20; y += 1) {
+    rect(p, 37, 41 + y, 12, 1, y < 7 ? "D" : y < 14 ? "i" : "j");
+  }
+  px(p, 47, 50, "y");
+
+  // Windows, route pennant and a compact sign band.
+  for (const x of [16, 58]) {
+    block(p, x, 37, 11, 10, "2", "1", "3");
+    rect(p, x + 2, 39, 7, 6, "x");
+    line(p, x + 5, 39, x + 5, 44, "1");
+  }
+  block(p, 28, 28, 30, 8, "2", "1", "3");
+  drawText(p, "TRAIL", 31, 30, "8", { shadow: "1" });
+  line(p, 73, 18, 73, 4, "C");
+  rect(p, 74, 5, 9, 5, "8");
+  rect(p, 74, 10, 6, 3, "7");
   return p;
 }
 
@@ -797,8 +823,8 @@ export function getAtlas(): Atlas {
       crystal6: saltCrystal(6),
       crystal7: saltCrystal(7),
       pile: saltPile(),
-      trailheadBrinePool: trailheadBrinePool(),
       trailheadOutpost: trailheadOutpost(),
+      trailheadLodge: trailheadLodge(),
       postShort: post(14),
       postTall: post(24, "7"),
       postLime: post(18, "8"),

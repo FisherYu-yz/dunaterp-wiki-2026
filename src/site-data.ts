@@ -28,6 +28,21 @@ export const navigation: Array<{ label: string; items: ReadonlyArray<readonly [s
   { label: "People", items: [["Team", "/team"], ["Attributions", "/attributions"], ["Responsible AI", "/responsible-ai"]] },
 ];
 
+/** The compact header groups Dry Lab into its two main entrances. Indexes and
+ * archives expand that group so no existing work disappears from view. */
+export const archiveNavigation = navigation.map((group) => group.label === "Dry Lab"
+  ? {
+      ...group,
+      items: [
+        ["Transcriptomics", "/transcriptomics"],
+        ["Metabolomics", "/metabolomics"],
+        ["Protein", "/protein"],
+        ["Mathematical Modeling", "/model"],
+        ["Hardware", "/hardware"],
+      ] as const,
+    }
+  : group);
+
 export const pages: Record<string, WikiPage> = {
   'dry-lab': dryLabIndex,
   transcriptomics,
@@ -112,14 +127,6 @@ export const pages: Record<string, WikiPage> = {
   },
   model: modeling,
   hardware,
-  contribution: {
-    title: "Leave a map for the next team", eyebrow: "Bronze contribution · standard URL", intro: "Candidate contributions described in the project draft are organised here for the team to validate, document and release with their underlying files.", status: "team-draft",
-    sections: [
-      { title: "A reproducible transcriptomics trail", body: "The public-data workflow links GSE120965 expression features to sequence annotations, checks the paper's 600/150 pathway transcripts by Trinity identifier and publishes the full pathway-associated TF ranking. The exact inputs, commands and reference versions should accompany a final release." },
-      { title: "A dimensional regulatory model", body: "The modeling code represents regulatory-factor activity, promoter occupancy, LCYB transcript, active enzyme, lycopene and β-carotene with explicit units and caller-supplied parameters. It can be reused with measured promoter and metabolite data." },
-      { title: "Release checklist", body: "Before claiming these as contributions, the team should package inputs, environment details, exact commands, expected outputs, licences and a small verification test in the official iGEM GitLab repository." },
-    ],
-  },
   "human-practices": {
     title: "Let the world reshape the design", eyebrow: "Silver human practices · standard URL", intro: "This is a decision log, not an outreach gallery: each stakeholder conversation should connect to a concrete project change.", status: "structure-only",
     sections: [
@@ -183,8 +190,8 @@ export const pages: Record<string, WikiPage> = {
   },
 };
 
-export const pageOrder = [
+export const pageOrder = [...new Set([
   'project-description', 'engineering', 'experiments', 'results',
-  'dry-lab', ...dryLabNavigation.map(([, path]) => path.slice(1)),
-  ...Object.keys(pages).filter((key) => !['project-description', 'engineering', 'experiments', 'results', 'dry-lab', ...dryLabNavigation.map(([, path]) => path.slice(1))].includes(key)),
-];
+  'dry-lab', 'transcriptomics', 'metabolomics', 'protein', 'model', 'hardware',
+  ...Object.keys(pages).filter((key) => !['project-description', 'engineering', 'experiments', 'results', 'dry-lab', 'transcriptomics', 'metabolomics', 'protein', 'model', 'hardware'].includes(key)),
+])];

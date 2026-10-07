@@ -13,11 +13,15 @@ const links = (...entries: [string, string][]): ContentBlock => ({ kind: 'links'
 const section = (title: string, ...blocks: ContentBlock[]): WikiSection => ({ title, body: '', blocks });
 
 export const dryLabNavigation = [
-  ['Transcriptomics', '/transcriptomics'],
-  ['Metabolomics', '/metabolomics'],
-  ['Protein', '/protein'],
-  ['Mathematical Modeling', '/model'],
+  ['Modeling', '/dry-lab'],
   ['Hardware', '/hardware'],
+] as const;
+
+const modelingChapters = [
+  ['Transcriptomics', '/transcriptomics', 'Identify light-responsive pathway transcripts and rank candidate regulators.'],
+  ['Metabolomics', '/metabolomics', 'Test product feasibility, pathway competition and branch-point control.'],
+  ['Protein', '/protein', 'Screen LCYB variants and examine the TF2146–DNA recognition hypothesis.'],
+  ['Mathematical Modeling', '/model', 'Connect TF2146 activity to LCYB expression and β-carotene supply.'],
 ] as const;
 
 export const transcriptomics: WikiPage = {
@@ -114,55 +118,70 @@ export const transcriptomics: WikiPage = {
 };
 
 export const metabolomics: WikiPage = {
-  title: 'Metabolomics', eyebrow: 'Dry Lab / Metabolomics', status: 'team-draft',
-  intro: 'The metabolomics workflow extends the Dunaliella salina chassis model into a four-product carotenoid platform and uses flux-balance plus local ODE analyses to compare product support, environmental dependence, branch-point control and chassis cost.',
+  title: 'Metabolic Flow Analysis', eyebrow: 'Modeling / Metabolic Flow', status: 'team-draft',
+  intro: 'We use a constraint-based chassis model and a local dynamic branch model to ask how D. salina can support four carotenoid-derived products, which conditions favour production, and where pathway intervention has the greatest leverage.',
   sections: [
-    section('Project background',
-      p('This work uses Dunaliella salina as the chassis organism and focuses on metabolic modeling and analysis of carotenoids and their derivatives. The goal is not only to build a metabolic network that runs computationally, but also to ask whether the chassis can support several target products, whether those products compete with one another, which products are favored under different environmental conditions, and which metabolic nodes are the strongest priorities for future engineering intervention.'),
-      p('The resulting workflow covers chassis-network validation, target-pathway integration, product comparison, key-node analysis and local ODE-based dynamic modeling. Together these steps turn a reaction list into a platform that can be computed, extended and compared across scenarios.'),
+    section('Introduction',
+      p('DunaTerp treats β-carotene as a shared metabolic hub rather than a single endpoint. The metabolic analysis therefore asks four connected questions: can the reconstructed D. salina network carry each engineered product route, how do environmental constraints change attainable flux, what chassis cost accompanies stronger production, and which branch points should be prioritized for intervention?'),
+      p('The analysis follows a reproducible sequence: validate the chassis network under published scenarios, add the four product routes, define a flux-balance objective, compare production and trade-offs, test LCYB- and zeaxanthin-associated nodes, and finally use a local ODE model to examine time-dependent redistribution. This organization follows the evidence-first logic of the SCU-China 2024 metabolic-flow page while retaining the present project’s own network, targets and results.'),
+      { kind: 'chapter-grid', items: [
+        { index: '01', title: 'Validate the chassis', text: 'Reconstruct the D. salina network and confirm feasible solutions across the published A–H scenarios.', href: '/metabolomics#section-2' },
+        { index: '02', title: 'Integrate four routes', text: 'Add product-specific reactions and sinks to one shared β-carotene-centred platform model.', href: '/metabolomics#section-4' },
+        { index: '03', title: 'Compare allocation', text: 'Quantify product support, environmental effects, chassis cost and branch-point leverage.', href: '/metabolomics#section-5' },
+        { index: '04', title: 'Resolve dynamics', text: 'Use local Michaelis–Menten kinetics and sensitivity analysis to prioritize measurements.', href: '/metabolomics#section-8' },
+      ] },
+      links(['SCU-China 2024 · metabolic-flow analysis structure','https://2024.igem.wiki/scu-china/metabolic-flow-analysis']),
     ),
-    section('Construction and validation of the core network',
+    section('Chassis model construction and validation',
       p('The Dunaliella salina metabolic network was reconstructed and then validated under the eight A-H scenarios reported in the literature. The analysis unified the definitions of light conditions, nitrogen-source conditions and objective functions, and confirmed that the model could be solved stably under a conservative interpretation of those scenarios.'),
       p('All eight A-H scenarios yielded stable feasible solutions. This established a computable metabolic chassis that provides a consistent foundation for the later product, environment and branch-point analyses.'),
+    ),
+    section('Method: constrained flux balance analysis',
+      p('Flux balance analysis assumes that internal metabolite pools are at quasi-steady state over the optimization interval. The stoichiometric matrix S links metabolites to reaction fluxes v; lower and upper bounds encode the environmental and reaction constraints. For each question, a stated objective c is optimized without changing the underlying mass-balance rule.'),
+      eq('FBA problem', String.raw`\begin{aligned}\max_{v}\quad &c^{\mathsf T}v\\[2pt]\text{subject to}\quad &Sv=0\\&v_{\min}\le v\le v_{\max}\end{aligned}`),
+      p('Product sink flux is used when comparing maximum product support. Cal01 is retained as a carbon-fixation proxy when testing the cost of product formation. These outputs are conditional model optima, not measured titres.'),
     ),
     section('Integration of four target product pathways',
       p('The core network was extended with four project-relevant target pathways: astaxanthin, beta-ionone, beta-citraurin and crocetin. For each branch, the corresponding metabolites, reaction steps and product sink reactions were added so that pathway performance could be tracked and compared quantitatively within one shared model.'),
       p('After individual validation, all four pathways remained feasible when the corresponding product reaction was used as the objective. This marks the transition from a chassis-only model to a platform model that can compare different production routes rather than merely demonstrating that the network runs.'),
     ),
-    section('Product potential and chassis metabolic cost',
+    section('Product-production simulation and chassis cost',
       p('After pathway integration, the model was used to compare the maximum potential of each target product. Cal01 was used as a proxy for carbon fixation so that product output could be evaluated against chassis metabolic cost.'),
       p('This analysis asks which pathway is most easily favored for flux redirection, which pathway imposes the least burden on the chassis, and at what point increased product output begins to compete strongly with core chassis function. Within the current framework, the ranking is consistently beta-ionone > beta-citraurin > astaxanthin > crocetin. Most pathways retain substantial output under low-to-moderate constraints, while product flux declines clearly only when the carbon-fixation requirement is forced into a high range.'),
       fig('platform_product_tradeoffs_H', 'Trade-off comparison of four target products in scenario H, showing that beta-ionone has the highest yield, followed by beta-citraurin, astaxanthin and crocetin under different Cal01 constraints.', 'Figure 1. This figure compares the maximum yields of the four target product pathways under different Cal01 constraints in scenario H. The results show a stable difference in platform support for different products, with the overall ranking beta-ionone > beta-citraurin > astaxanthin > crocetin, and most pathways declining clearly only under high carbon-fixation requirements.'),
       fig('astaxanthin_tradeoff_F_H', 'Relationship between astaxanthin production and Cal01 constraint in scenarios F and H, showing that maximum astaxanthin production decreases as carbon-fixation demand increases.', 'Figure 2. This figure shows how astaxanthin production changes in the representative scenarios F and H. As the Cal01 requirement increases, the maximum astaxanthin flux gradually decreases, indicating a quantifiable trade-off between product formation and chassis carbon-fixation capacity.'),
     ),
-    section('Platform performance under environmental scenarios',
+    section('Environmental scenario comparison',
       p('To test whether the product ranking depended on one specific condition, the four pathways were compared across all eight A-H scenarios. This provides a unified view of how light and nitrogen conditions shape the maximum attainable product fluxes.'),
       p('The platform is most favorable for redirecting flux toward target-product synthesis under high-light and low-nitrate conditions, with scenarios D and H performing best. At the same time, the relative ranking of the four products remains consistent across all scenarios, indicating that the ranking reflects a stable platform tendency rather than an isolated result from one environment.'),
       fig('platform_environment_map_heatmap', 'Heatmap of maximum production potential for four target products across scenarios A-H, showing that high-light and low-nitrate conditions are most favorable and that beta-ionone remains the best-performing product.', 'Figure 3. This heatmap compares the maximum potential of the four target product pathways across the eight A-H scenarios. The results show that high-light and low-nitrate conditions are the most favorable for product-flux redirection, while the relative ranking of the four products remains consistent across scenarios.'),
     ),
-    section('Key nodes: LCYB and zeaxanthin flux redistribution',
+    section('Key-node and flux-redistribution analysis',
       p('Beyond final product comparison, the analysis also focused on key nodes in the carotenoid backbone, especially Car09, the LCYB-related node, and Car10, the zeaxanthin-producing node. Forced-flux analysis was used to test how increasing these nodes affects proxies for carbon fixation, chlorophyll and membrane lipids.'),
       p('Increasing Car09 or Car10 does not immediately impose severe metabolic stress on the chassis in the low-to-moderate range, but the burden becomes clearer at higher forcing levels. Zeaxanthin was then examined as a branch-point metabolite by sequentially blocking the three major engineered outlets Car26, Car23 and Car17. The additional zeaxanthin is not split evenly across all downstream branches; instead, it follows the leakage priority Car26 > Car23 > Car17.'),
       fig('lcyb_car09_forced_analysis_H', 'Forced-flux analysis of Car09 in scenario H, showing that increasing the LCYB-related node begins to reduce chassis metabolic performance at high forcing levels.', 'Figure 4. This figure shows how key chassis indicators change in scenario H when Car09, the LCYB-related node, is progressively increased. The results indicate that low-to-moderate enhancement does not immediately impose strong metabolic stress, while higher forcing levels gradually introduce a metabolic burden.'),
       fig('zeaxanthin_car10_forced_proxies_H', 'Relationship between forced Car10 flux and multiple chassis proxy indicators in scenario H, showing that stronger zeaxanthin production leads to noticeable metabolic burden mainly at high forcing levels.', 'Figure 5. This figure shows the responses of Cal01, chlorophyll-related proxies and membrane-lipid proxies when Car10, the zeaxanthin-producing node, is progressively increased in scenario H. The results indicate that increasing zeaxanthin does not immediately impose severe chassis stress in the low-to-moderate range, but gradually introduces metabolic cost at higher forcing levels.'),
       fig('zeaxanthin_car10_rerouting_H', 'Downstream rerouting of zeaxanthin in scenario H, showing that under different outlet-blocking conditions, zeaxanthin is preferentially redirected to Car26, then Car23 and then Car17.', 'Figure 6. By sequentially blocking Car26, Car23 and Car17, this figure shows how zeaxanthin is redistributed when different downstream branches are available. The results indicate that additional zeaxanthin is not split evenly, but instead follows the priority Car26 > Car23 > Car17.'),
     ),
-    section('Local ODE-based dynamic modeling',
+    section('Dynamic branch model',
       p('To move beyond steady-state FBA, a local ODE model was constructed around the branch β-carotene -> zeaxanthin -> four target products. The model includes the BCAR, ZEA and VIO pools together with the four target product pools, and uses a simplified Michaelis-Menten formulation to describe the main branching processes.'),
       p('The first ODE version reproduces the same broad trend seen in the FBA analyses: beta-ionone is more easily favored, while zeaxanthin occupies a central branching position. This allows the analysis to begin asking how flux is redistributed over time rather than only whether a steady state exists.'),
-      fig('carotenoid_branch_ode_v1_baseline_pools', 'Time-course plot of key metabolite pools in the ODE baseline scenario, showing the dynamic accumulation of BCAR, ZEA, VIO and the four target product pools.', 'Figure 7. This figure shows the time-course behavior of key metabolite pools in the first ODE model under baseline parameters, including BCAR, ZEA, VIO and the four target product pools. The results indicate that the beta-ionone pool accumulates most rapidly, while zeaxanthin remains at a relatively stable level as a central branching intermediate.'),
-      fig('carotenoid_branch_ode_v1_baseline_fluxes', 'Time-course plot of key reaction fluxes in the ODE baseline scenario, showing BCAR branching toward ZEA and the beta-ionone pathway, as well as downstream distribution of ZEA among multiple branches.', 'Figure 8. This figure shows the time-course behavior of key reaction fluxes in the first ODE model under the baseline scenario, including the entry-point split of BCAR and the downstream branching of ZEA. The results show that β-carotene already exhibits a preference for the beta-ionone pathway at the entry point, while all three downstream target branches from zeaxanthin can be activated.'),
+      eq('Local branch kinetics', String.raw`v_i(S)=V_{\max,i}\frac{S}{K_{m,i}+S},\qquad \frac{dS}{dt}=v_{\mathrm{in}}-\sum_i v_i(S)-k_SS`),
+      { kind: 'figure-grid', figures: [
+        { src: '/figures/dry-lab/carotenoid_branch_ode_v1_baseline_pools.png', alt: 'Time-course plot of key metabolite pools in the ODE baseline scenario.', caption: 'Figure 7. Baseline metabolite-pool trajectories for BCAR, ZEA, VIO and the four product pools.' },
+        { src: '/figures/dry-lab/carotenoid_branch_ode_v1_baseline_fluxes.png', alt: 'Time-course plot of key reaction fluxes in the ODE baseline scenario.', caption: 'Figure 8. Baseline flux trajectories showing the BCAR entry split and downstream distribution from ZEA.' },
+      ] },
       fig('carotenoid_branch_ode_v1_scenario_products', 'Comparison of final accumulated levels of the four target products across different ODE perturbation scenarios, showing how parameter changes alter astaxanthin, beta-ionone, beta-citraurin and crocetin outputs.', 'Figure 9. This figure compares the final accumulated levels of the four target products under different ODE perturbation scenarios, including enhanced Car10, enhanced beta-ionone branching and partial blocking of downstream zeaxanthin branches. The results illustrate how different engineering interventions reshape the final product pattern.'),
     ),
-    section('ODE parameter sensitivity analysis',
+    section('Sensitivity analysis and dynamic results',
       p('A local sensitivity analysis was then applied to the first ODE version to identify which control parameters matter most. The perturbed parameters focused on the entry and branch terms vmax_bcar_to_zea, vmax_bcar_to_bion, vmax_zea_to_asta, vmax_zea_to_citr and vmax_zea_to_croc.'),
       p('The strongest control layer over the overall product pattern lies mainly at the β-carotene entry-point split, especially BCAR -> BION and BCAR -> ZEA. These two entry parameters influence the global outcome more strongly than the single downstream branch parameters ZEA -> ASTA, ZEA -> CITR and ZEA -> CROC. In practice, this means that changing the entry-point branching nodes is likely to be more effective than only fine-tuning the terminal branches when the goal is to reshape overall platform allocation.'),
       fig('carotenoid_branch_ode_v1_sensitivity_heatmap', 'ODE parameter sensitivity heatmap showing the relative effects of key parameter changes on Peak ZEA, astaxanthin, beta-ionone, beta-citraurin and crocetin.', 'Figure 10. This heatmap shows the relative influence of perturbed key parameters on multiple output indicators in the first ODE model. The results indicate that the most sensitive control parameters governing the overall product pattern are located at the β-carotene entry-point branching layer rather than within the final downstream branches themselves.'),
       fig('carotenoid_branch_ode_v1_sensitivity_ranking', 'Ranking plot of key parameter influence in the ODE model, showing that entry-point branching parameters are more important than downstream single-branch parameters for determining the overall product pattern.', 'Figure 11. This figure ranks the overall influence strength of key parameters in the first ODE model. The results show that parameters associated with BCAR -> BION and BCAR -> ZEA have the strongest effects on overall product distribution, indicating that the entry-point branching layer is the most important control level in the current dynamic model.'),
     ),
-    section('Overall significance',
+    section('Conclusions and experimental guidance',
       p('The metabolomics work now forms a comparatively complete workflow: reconstruction of the Dunaliella salina chassis network, integration of multi-product pathways, scenario-feasibility validation, product-potential comparison, environmental adaptation analysis, key-node mechanistic analysis, and finally local dynamic modeling with sensitivity analysis.'),
-      p('This means the platform can now address not only which products can be produced, but also under which conditions they are most likely to accumulate, what chassis cost accompanies their production, which nodes are the most worthwhile engineering targets, and why the present flux distribution among pathways emerges in the way it does. These results provide a theoretical basis for later experimental design, pathway prioritization and the final Wiki presentation.'),
+      p('The conditional results prioritize three measurements for wet-lab feedback: product formation under the D/H-like light and nitrate regimes, the cost of increasing LCYB- and zeaxanthin-associated flux, and kinetic measurements at the BCAR→BION versus BCAR→ZEA entry split. Those data can replace nominal bounds and Vmax/Km values, turning the present scenario model into a calibrated project model.'),
     ),
   ],
 };
@@ -248,8 +267,18 @@ v_{\mathrm{LCYB}}&=q_{\mathrm{LCYB}}E\frac{L}{K_{m,\mathrm{LCYB}}+L}\\[4pt]
 };
 
 export const dryLabIndex: WikiPage = {
-  title: 'Dry Lab', eyebrow: 'Project / Dry Lab', intro: '', status: 'team-draft',
-  sections: [section('Chapters', links(...dryLabNavigation.map(([label, href]): [string,string] => [label,href])))],
+  title: 'Dry Lab overview', eyebrow: 'Dry Lab', status: 'team-draft',
+  intro: 'The Dry Lab has two parts: modeling the biological system and designing the hardware used to cultivate it. The links below lead directly to the work that is already on the site.',
+  sections: [
+    section('Modeling',
+      p('Four workflows examine the system at different scales: expression data, metabolic flux, molecular structure and regulatory dynamics.'),
+      { kind: 'chapter-grid', items: modelingChapters.map(([title, href, text], index) => ({ index: `0${index + 1}`, title, href, text })) },
+    ),
+    section('Hardware',
+      p('The hardware work develops a flat-panel photobioreactor and an interactive design tool for testing cultivation conditions, light delivery and scale-up choices.'),
+      { kind: 'chapter-grid', items: [{ index: '05', title: 'Photobioreactor', href: '/hardware', text: 'Explore the reactor design, engineering model and interactive hardware tool.' }] },
+    ),
+  ],
 };
 
 export const emptyDryLabPage = (title: string): WikiPage => ({ title, eyebrow: `Dry Lab / ${title}`, intro: '', status: 'structure-only', sections: [] });

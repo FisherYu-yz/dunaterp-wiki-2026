@@ -393,12 +393,45 @@ main:focus:not(:focus-visible) { outline: none; }
 .article-page .next-page strong { font-family: ui-monospace, Menlo, monospace; font-weight: 900; }
 .article-page .next-page strong { text-transform: uppercase; }
 
+/* Modeling reads as a sequence of white laboratory sheets on warm paper.
+   Most exported plots already use white canvases, so this avoids the previous
+   dark-frame/white-image mismatch while keeping the pixel editorial system. */
+body:has(.article-page--modeling),
+body:has(.article-page--hardware) { background: #f3ecd0; }
+.article-page--modeling .article-sections > section,
+.article-page--hardware .article-sections > section { background: #fffef9; }
+.article-page--modeling .feature-figure,
+.article-page--hardware .feature-figure { border-color: var(--ink); background: #fff; color: var(--ink); box-shadow: 6px 6px 0 #cbbf93; }
+.article-page--modeling .feature-figure img,
+.article-page--hardware .feature-figure img { background: #fff; }
+.article-page--modeling .feature-figure figcaption,
+.article-page--hardware .feature-figure figcaption { color: #53675f; }
+.article-page--modeling .research-equation,
+.article-page--hardware .research-equation { border: 3px solid var(--ink); border-left: 6px solid var(--article-accent); background: #fff; box-shadow: 5px 5px 0 #d8cc9e; }
+
+/* The Dry Lab landing page is an index, not a chapter opener. Keep its hero
+   compact so the real modeling and hardware routes are visible immediately. */
+.article-page--overview .breadcrumbs { margin-bottom: 1.1rem; }
+.article-page--overview .article-hero {
+  grid-template-columns: minmax(0, .8fr) minmax(20rem, 1.2fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  min-height: 0;
+  padding: clamp(1.5rem, 2.8vw, 2.4rem);
+}
+.article-page--overview .article-hero h1 {
+  max-width: 12ch;
+  font-size: clamp(2.25rem, 3.7vw, 3.8rem);
+}
+.article-page--overview .article-intro > p { margin: 0; line-height: 1.6; }
+.article-page--overview .article-layout { padding-top: 2.25rem; }
+
 @media (max-width: 900px) {
   .article-page .article-toc { position: static; border-radius: 0; }
 }
 @media (max-width: 800px) {
   .article-page .article-hero { padding: 1.5rem; box-shadow: 6px 6px 0 color-mix(in srgb, var(--article-accent) 55%, var(--ink)); }
   .article-page .article-hero h1 { font-size: clamp(2.25rem, 10vw, 4rem); }
+  .article-page--overview .article-hero { grid-template-columns: 1fr; gap: 1.25rem; }
   .article-page .article-sections > section { grid-template-columns: 2.5rem minmax(0,1fr); padding: 1.25rem; box-shadow: 4px 4px 0 #b9c7b9; }
   .article-page .section-number { width: 2.25rem; height: 2.25rem; }
 }

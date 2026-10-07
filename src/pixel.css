@@ -702,4 +702,7 @@
 @media (max-width: 650px) {
   .px-archive { max-height: calc(100svh - 8rem); }
   .px-archive-grid { grid-template-columns: 1fr; }
+  .px-archive > header { align-items: flex-start; flex-direction: column; }
+  .px-archive > header p { order: 0; }
+  .px-archive-grid nav { grid-template-columns: 1fr; }
 }

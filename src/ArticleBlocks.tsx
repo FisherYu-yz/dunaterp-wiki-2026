@@ -40,6 +40,13 @@ function Equation({ block }: { block: Extract<ContentBlock, { kind: 'equation' }
   return <div className="research-equation" role="region" aria-label={block.label} tabIndex={0} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
+function ResearchFigure({ figure, compact = false }: { figure: { src: string; alt: string; caption: string }; compact?: boolean }) {
+  return <figure className={`feature-figure research-figure${compact ? ' research-figure--compact' : ''}`}>
+    <a href={resolveAsset(figure.src)} aria-label={`Open full-size figure: ${figure.alt}`}><img src={resolveAsset(figure.src)} alt={figure.alt} loading="lazy" decoding="async" /></a>
+    <figcaption>{figure.caption}<span className="figure-credit">Team analysis figure · CC BY 4.0</span></figcaption>
+  </figure>;
+}
+
 export function ArticleBlocks({ blocks }: { blocks: ContentBlock[] }) {
   return <div className="research-blocks">{blocks.map((block, i) => {
     switch (block.kind) {
@@ -47,8 +54,10 @@ export function ArticleBlocks({ blocks }: { blocks: ContentBlock[] }) {
       case 'heading': return <h3 key={i}>{block.text}</h3>;
       case 'equation': return <Equation key={i} block={block} />;
       case 'code': return <div className="research-code" key={i}><p>{block.label}</p><pre tabIndex={0}><code>{block.text}</code></pre></div>;
-      case 'figure': return <figure className="feature-figure research-figure" key={i}><a href={resolveAsset(block.src)} aria-label={`Open full-size figure: ${block.alt}`}><img src={resolveAsset(block.src)} alt={block.alt} loading="lazy" decoding="async" /></a><figcaption>{block.caption}<span className="figure-credit">Team analysis figure · CC BY 4.0</span></figcaption></figure>;
-      case 'figure-row': return <div className="research-figure-row" key={i}>{block.figures.map((figure) => <figure className="feature-figure research-figure" key={figure.src}><a href={resolveAsset(figure.src)} aria-label={`Open full-size figure: ${figure.alt}`}><img src={resolveAsset(figure.src)} alt={figure.alt} loading="lazy" decoding="async" /></a><figcaption>{figure.caption}<span className="figure-credit">Team analysis figure · CC BY 4.0</span></figcaption></figure>)}</div>;
+      case 'figure': return <ResearchFigure key={i} figure={block} />;
+      case 'figure-row': return <div className="research-figure-row" key={i}>{block.figures.map((figure) => <ResearchFigure key={figure.src} figure={figure} compact />)}</div>;
+      case 'figure-grid': return <div className="research-figure-grid" key={i}>{block.figures.map((figure) => <ResearchFigure key={figure.src} figure={figure} compact />)}</div>;
+      case 'chapter-grid': return <div className="research-chapter-grid" key={i}>{block.items.map((item) => <Link className="research-chapter-card" to={item.href} key={item.href}><span>{item.index}</span><div><h3>{item.title}</h3><p>{item.text}</p></div><b aria-hidden="true">↗</b></Link>)}</div>;
       case 'table': return <DataTable key={i} block={block} />;
       case 'links': return <ul className="research-links" key={i}>{block.links.map(({label,href}) => <li key={href}>{href.startsWith('/') ? <Link to={href}>{label} ↗</Link> : <a href={href}>{label} ↗</a>}</li>)}</ul>;
       case 'docking-viewer': return <Suspense key={i} fallback={<p>Loading 3D docking view…</p>}><DockingViewer /></Suspense>;

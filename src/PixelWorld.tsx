@@ -14,7 +14,7 @@ import { ExpeditionJournal, recordNpcVisit } from "./ExpeditionJournal";
 import { NpcDialogue } from "./NpcDialogue";
 import { StationDialogue } from "./StationDialogue";
 import type { Npc } from "./pixel/npc-data";
-import { navigation } from "./site-data";
+import { archiveNavigation } from "./site-data";
 import { HomePrologue } from "./home/HomePrologue";
 import { initialStory, STORY_BEATS, storyReducer } from "./home/story";
 
@@ -211,7 +211,6 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
     window.addEventListener("keydown", onSpace);
     return () => window.removeEventListener("keydown", onSpace);
   }, [advanceToNextStop, atArchive, dialogueNpc, failed, isStory, mode, ready, secretOpen, stationDialogue]);
-
   // Free mode pins the document so wandering never scrolls the page away from
   // the world, and hands the scroll position back at the point the hero left.
   useEffect(() => {
@@ -461,7 +460,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
             <span>Four sections, all the project chapters.<br />Pick a stop to continue reading.</span>
           </header>
           <div className="px-archive-grid">
-            {navigation.map((group, index) => (
+            {archiveNavigation.map((group, index) => (
               <section key={group.label} style={{ "--px-accent": GROUP_ACCENTS[index] } as React.CSSProperties}>
                 <p className="px-archive-index">{String(index + 1).padStart(2, "0")}</p>
                 <h3>{group.label}</h3>

@@ -27,7 +27,7 @@ export function StoryIllustration({ beat }: { beat: StoryBeat }) {
         <span className="story-arrow" aria-hidden="true">→</span>
         <div className="story-hub">REGULATORY INPUT</div>
         <span className="story-arrow" aria-hidden="true">→</span>
-        <div className="story-products">{["METABOLIC REPROGRAMMING", "REDIRECTED FLUX", "β-CAROTENE HUB"].map((text, index) => <span key={text} style={stagger(index)}>{text}</span>)}</div>
+        <div className="story-products">{["REDIRECTED FLUX", "β-CAROTENE HUB"].map((text, index) => <span key={text} style={stagger(index)}>{text}</span>)}</div>
       </div>;
 
     case "characterisation":
