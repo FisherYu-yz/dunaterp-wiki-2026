@@ -12,7 +12,7 @@ try {
   const { pages, navigation, pageOrder } = await server.ssrLoadModule('/src/site-data.ts');
   const { ArticleBlocks } = await server.ssrLoadModule('/src/ArticleBlocks.tsx');
   const items = navigation.find(g => g.label === 'Dry Lab').items;
-  assert.deepEqual(items.map(([label]) => label), ['Transcriptomics','Metabolomics','Protein','Mathematical Modeling','Hardware']);
+  assert.deepEqual(items.map(([label]) => label), ['Modeling','Hardware']);
   assert.equal(new Set(pageOrder).size, pageOrder.length);
   for (const [, href] of items) assert(pages[href.slice(1)], `Missing route ${href}`);
   for (const slug of ['metabolomics','protein','hardware','safety-and-security']) {
@@ -26,15 +26,17 @@ try {
     assert(!/[\u3400-\u9fff]/u.test(JSON.stringify(page)), `Non-English content: ${slug}`);
     for (const section of page.sections) {
       for (const block of section.blocks ?? []) {
-        if (block.kind === 'figure') {
+        const figureBlocks = block.kind === 'figure' ? [block] : block.kind === 'figure-grid' ? block.figures : [];
+        for (const figure of figureBlocks) {
           figures++;
-          assert(fs.existsSync(path.join('public', block.src)), `Missing ${block.src}`);
-          assert(block.alt && block.caption);
+          assert(fs.existsSync(path.join('public', figure.src)), `Missing ${figure.src}`);
+          assert(figure.alt && figure.caption);
         }
         if (block.kind === 'table') {
           tables++;
           assert(block.rows.every(row => row.length === block.columns.length), block.caption);
         }
+        if (block.kind === 'chapter-grid') for (const item of block.items) assert(pages[item.href.split('#')[0].slice(1)], item.href);
         if (block.kind === 'links') for (const link of block.links) {
           if (link.href.startsWith('/')) assert(pages[link.href.slice(1)], link.href);
           else assert.equal(new URL(link.href).protocol, 'https:');
@@ -74,7 +76,7 @@ try {
   ]);
   assert(!/day-7|2\.0988|10\.9518|Car09|nine-state|FBA/i.test(JSON.stringify(pages.model)), 'Obsolete quantitative claim remains');
   for (const slug of ['transcriptomics','model','protein']) {
-    const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).filter(b => b.kind === 'figure').map(b => b.caption);
+    const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).flatMap(b => b.kind === 'figure' ? [b.caption] : b.kind === 'figure-grid' ? b.figures.map(figure => figure.caption) : []);
     captions.forEach((caption, i) => assert(caption.startsWith('Figure ' + (i + 1) + '.'), 'Figure numbering in ' + slug + ': ' + caption));
   }
   assert(!pages.model.sections.some(section => /CPP/i.test(JSON.stringify(section))), 'Unverified CPP regulator remains in modeling');
@@ -89,7 +91,7 @@ try {
   assert.equal(figures,13);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: 5 ordered chapters, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
+  console.log(`Dry Lab checks passed: Modeling and Hardware navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
 } finally {
   await server.close();
 }
