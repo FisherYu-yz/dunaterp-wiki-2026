@@ -1,7 +1,7 @@
 import type { ContentBlock } from './content/types';
 import { safety } from './content/safety';
 import { protein } from './content/protein';
-import { dryLabNavigation, dryLabIndex, hardware, metabolomics, modeling, transcriptomics } from './content/dry-lab';
+import { dryLabNavigation, dryLabIndex, hardware, hardwareDesign, metabolomics, modeling, transcriptomics } from './content/dry-lab';
 
 export type WikiSection = {
   title: string;
@@ -38,7 +38,8 @@ export const archiveNavigation = navigation.map((group) => group.label === "Dry 
         ["Metabolomics", "/metabolomics"],
         ["Protein", "/protein"],
         ["Mathematical Modeling", "/model"],
-        ["Hardware", "/hardware"],
+        ["Hardware Modeling", "/hardware"],
+        ["Hardware Design", "/hardware-design"],
       ] as const,
     }
   : group);
@@ -127,6 +128,7 @@ export const pages: Record<string, WikiPage> = {
   },
   model: modeling,
   hardware,
+  "hardware-design": hardwareDesign,
   "human-practices": {
     title: "Let the world reshape the design", eyebrow: "Silver human practices · standard URL", intro: "This is a decision log, not an outreach gallery: each stakeholder conversation should connect to a concrete project change.", status: "structure-only",
     sections: [
@@ -192,6 +194,10 @@ export const pages: Record<string, WikiPage> = {
 
 export const pageOrder = [...new Set([
   'project-description', 'engineering', 'experiments', 'results',
-  'dry-lab', 'transcriptomics', 'metabolomics', 'protein', 'model', 'hardware',
-  ...Object.keys(pages).filter((key) => !['project-description', 'engineering', 'experiments', 'results', 'dry-lab', 'transcriptomics', 'metabolomics', 'protein', 'model', 'hardware'].includes(key)),
+  'dry-lab', 'transcriptomics', 'metabolomics', 'protein', 'model', 'hardware', 'hardware-design',
+  ...Object.keys(pages).filter((key) => ![
+    'project-description', 'engineering', 'experiments', 'results',
+    'dry-lab', 'transcriptomics', 'metabolomics', 'protein',
+    'model', 'hardware', 'hardware-design',
+  ].includes(key)),
 ])];
