@@ -13,7 +13,7 @@ export function StationDialogue({ station, onClose }: StationDialogueProps) {
   const [page, setPage] = useState(0);
   const titleId = `${useId().replace(/:/g, "")}-station-title`;
   const pages = [
-    { label: "ROUTE OVERVIEW", title: station.title, text: station.panelLead },
+    { label: "ROUTE OVERVIEW", title: station.panelTitle ?? station.title, text: station.panelLead },
     ...station.panelPoints.map((point) => ({ label: "FIELD NOTE", title: point.label, text: point.text })),
   ];
   const current = pages[page];

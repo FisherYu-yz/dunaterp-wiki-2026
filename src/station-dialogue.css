@@ -54,7 +54,7 @@
 .station-dialogue__header p,
 .station-dialogue__header h2 { margin: 0; }
 .station-dialogue__header p { font: 900 .72rem/1.2 ui-monospace, Menlo, monospace; letter-spacing: .12em; }
-.station-dialogue__header h2 { margin-top: .25rem; font: 900 clamp(1.1rem, 2.3vw, 1.7rem)/1.15 ui-monospace, Menlo, monospace; text-transform: uppercase; }
+.station-dialogue__header h2 { margin-top: .25rem; font: 900 clamp(1rem, 1.7vw, 1.35rem)/1.15 ui-monospace, Menlo, monospace; text-transform: uppercase; }
 
 .station-dialogue__header button {
   width: 2.3rem;
@@ -116,8 +116,8 @@
   background-size: 16px 16px;
 }
 .station-dialogue__page > p:first-child { margin: 0 0 1rem; color: color-mix(in srgb, var(--station-accent) 58%, var(--station-ink)); font: 900 .78rem/1.2 ui-monospace, Menlo, monospace; letter-spacing: .14em; }
-.station-dialogue__page h3 { max-width: 16ch; margin: 0 0 1.3rem; font: 900 clamp(2rem, 5vw, 4.6rem)/.95 ui-monospace, Menlo, monospace; text-transform: uppercase; }
-.station-dialogue__page > p:nth-of-type(2) { max-width: 54ch; margin: 0; font-size: clamp(1rem, 1.8vw, 1.25rem); font-weight: 720; line-height: 1.7; }
+.station-dialogue__page h3 { max-width: 30ch; margin: 0 0 1rem; font: 900 clamp(1.3rem, 2.2vw, 2.15rem)/1.1 ui-monospace, Menlo, monospace; text-transform: uppercase; }
+.station-dialogue__page > p:nth-of-type(2) { max-width: 58ch; margin: 0; font-size: clamp(.94rem, 1.2vw, 1.05rem); font-weight: 500; line-height: 1.65; }
 .station-dialogue__stamp { position: absolute; right: 1.3rem; bottom: 1.1rem; display: flex; gap: .55rem; align-items: center; color: rgba(6,34,31,.42); font: 900 .64rem/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; }
 .station-dialogue__stamp span { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border: 2px solid currentColor; }
 
@@ -146,7 +146,7 @@
   .station-dialogue__spread > aside button { display: block; padding: .55rem; text-align: center; font-size: 0; }
   .station-dialogue__spread > aside button span { font-size: .72rem; }
   .station-dialogue__page { min-height: 20rem; padding: 2rem 1.2rem 3.2rem; }
-  .station-dialogue__page h3 { font-size: clamp(1.8rem, 10vw, 3rem); }
+  .station-dialogue__page h3 { max-width: none; font-size: clamp(1.25rem, 5.5vw, 1.8rem); }
   .station-dialogue > footer { align-items: flex-start; flex-direction: column; padding-inline: .75rem; }
   .station-dialogue__pager { width: 100%; justify-content: space-between; }
 }

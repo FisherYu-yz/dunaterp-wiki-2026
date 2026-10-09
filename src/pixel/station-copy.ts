@@ -9,6 +9,7 @@ export type StationCopy = {
   index: string;
   kicker: string;
   title: string;
+  panelTitle?: string;
   body: string;
   panelLead: string;
   panelPoints: readonly { label: string; text: string }[];
@@ -36,12 +37,13 @@ export const STATION_COPY: StationCopy[] = [
     index: "01",
     kicker: "WHY DUNATERP",
     title: "Background & Challenge",
+    panelTitle: "Why do we need another route?",
     body: "Terpenoids are valuable across food, nutrition, materials and other industries, but current production routes carry supply, resource or process costs.",
-    panelLead: "High-value terpenoids are widely used, yet plant extraction can be slow and variable, chemical synthesis can carry a heavy environmental footprint, and conventional microbial factories often require sterile freshwater processes.",
+    panelLead: "Terpenoids have valuable uses, but making them reliably at scale is not simple. Plant extraction, chemical synthesis and microbial production each come with different limits. The next pages explain where these molecules are used, how they are made today, and what is still missing.",
     panelPoints: [
-      { label: "VALUE", text: "Terpenoids supply pigments, nutrients, aromas and other high-value ingredients across daily life and industry." },
-      { label: "CURRENT ROUTES", text: "Plant extraction faces slow growth, variable abundance, land and freshwater demand; chemical synthesis adds process and environmental costs." },
-      { label: "BIOPRODUCTION GAP", text: "Yeast and E. coli can serve as microbial factories, but many processes still depend on sterile freshwater cultivation and energy-intensive operation." },
+      { label: "VALUE", text: "Terpenoids include pigments such as carotenoids and aroma compounds such as β-ionone. They are used in food, nutrition, cosmetics and materials. Their different uses call for reliable supply and product-appropriate quality." },
+      { label: "CURRENT ROUTES", text: "Plant extraction can be limited by crop growth, variable compound levels, land and freshwater needs. Chemical synthesis offers controlled production but may require multiple reaction and purification steps. Microbial biosynthesis allows pathway engineering, though yields, feedstocks and recovery still matter." },
+      { label: "BIOPRODUCTION GAP", text: "Many bacterial and yeast processes use freshwater media and carefully controlled cultivation. At scale, water, energy, contamination control and product recovery all affect process cost. The challenge is to find a chassis that grows in saline conditions and still supports carotenoid-pathway engineering." },
     ],
     route: "/project-description#section-1",
     color: "#cdf558",
