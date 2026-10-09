@@ -28,9 +28,12 @@ function DataTable({ block }: { block: Extract<ContentBlock, { kind: 'table' }> 
 
 function renderEquation(text: string): string | null {
   try {
-    // KaTeX's default \jot is fixed. Add a clearly visible gap between rows
-    // throughout the site, including rows that already specify a smaller gap.
-    const spacedText = text.replace(/\\\\(?:\s*\[[^\]]+\])?/g, '\\\\[10pt]');
+    // KaTeX's default \jot is fixed. Add a clearly visible gap between rows,
+    // while respecting any larger, formula-specific spacing in the source.
+    const spacedText = text.replace(
+      /\\\\(?:\s*\[(\d+(?:\.\d+)?)pt\])?/g,
+      (_lineBreak, authoredGap?: string) => `\\\\[${authoredGap && Number(authoredGap) > 10 ? authoredGap : 10}pt]`,
+    );
     return katex.renderToString(spacedText, { displayMode: true, throwOnError: true, trust: false });
   } catch {
     return null;
