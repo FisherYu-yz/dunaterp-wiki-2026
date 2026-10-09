@@ -28,7 +28,11 @@ function DataTable({ block }: { block: Extract<ContentBlock, { kind: 'table' }> 
 
 function renderEquation(text: string): string | null {
   try {
-    return katex.renderToString(text, { displayMode: true, throwOnError: true, trust: false });
+    // Add a little breathing room between rows in every displayed equation.
+    // KaTeX's default \jot is fixed, so normalize both plain `\\` row breaks
+    // and rows that already specify a smaller optional gap.
+    const spacedText = text.replace(/\\\\(?:\s*\[[^\]]+\])?/g, '\\\\[5pt]');
+    return katex.renderToString(spacedText, { displayMode: true, throwOnError: true, trust: false });
   } catch {
     return null;
   }
