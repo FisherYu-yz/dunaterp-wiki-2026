@@ -28,10 +28,9 @@ function DataTable({ block }: { block: Extract<ContentBlock, { kind: 'table' }> 
 
 function renderEquation(text: string): string | null {
   try {
-    // Add a little breathing room between rows in every displayed equation.
-    // KaTeX's default \jot is fixed, so normalize both plain `\\` row breaks
-    // and rows that already specify a smaller optional gap.
-    const spacedText = text.replace(/\\\\(?:\s*\[[^\]]+\])?/g, '\\\\[5pt]');
+    // KaTeX's default \jot is fixed. Add a clearly visible gap between rows
+    // throughout the site, including rows that already specify a smaller gap.
+    const spacedText = text.replace(/\\\\(?:\s*\[[^\]]+\])?/g, '\\\\[10pt]');
     return katex.renderToString(spacedText, { displayMode: true, throwOnError: true, trust: false });
   } catch {
     return null;
