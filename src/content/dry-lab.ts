@@ -373,7 +373,7 @@ X(t)
 \begin{bmatrix}
 I^+(z,t)\\
 I^-(z,t)
-\end{bmatrix}\\[52pt]
+\end{bmatrix}\\[10pt]
 I^+(0,t)&=I_F(t),\qquad
 I^-(L,t)=I_B(t)\\[4pt]
 I_F(t)&=I_B(t)=I_0(t)\\[4pt]
@@ -440,7 +440,7 @@ P
 (\mu-k_d)X\\
 -\mu X/Y_{X/N}\\
 (\alpha\mu+\beta(t))X-k_pP
-\end{bmatrix}\\[52pt]
+\end{bmatrix}\\[10pt]
 \mu(t)
 &=
 \mu_{\max}
@@ -503,7 +503,7 @@ I_{\mathrm{opt}}
 \begin{cases}
 [I_g,I_g,\beta_g], & 0\le t<t_s\\
 [I_p,I_p,\beta_p], & t_s\le t\le T
-\end{cases}\\[32pt]
+\end{cases}\\[10pt]
 Q_P(I_g,t_s)
 &=
 \frac{P(T;I_g,t_s)}{T}\\[4pt]
