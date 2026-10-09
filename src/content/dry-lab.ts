@@ -440,7 +440,7 @@ P
 (\mu-k_d)X\\
 -\mu X/Y_{X/N}\\
 (\alpha\mu+\beta(t))X-k_pP
-\end{bmatrix}\\[5pt]
+\end{bmatrix}\\[52pt]
 \mu(t)
 &=
 \mu_{\max}
@@ -503,7 +503,7 @@ I_{\mathrm{opt}}
 \begin{cases}
 [I_g,I_g,\beta_g], & 0\le t<t_s\\
 [I_p,I_p,\beta_p], & t_s\le t\le T
-\end{cases}\\[5pt]
+\end{cases}\\[32pt]
 Q_P(I_g,t_s)
 &=
 \frac{P(T;I_g,t_s)}{T}\\[4pt]
