@@ -373,7 +373,7 @@ X(t)
 \begin{bmatrix}
 I^+(z,t)\\
 I^-(z,t)
-\end{bmatrix}\\[4pt]
+\end{bmatrix}\\[18pt]
 I^+(0,t)&=I_F(t),\qquad
 I^-(L,t)=I_B(t)\\[4pt]
 I_F(t)&=I_B(t)=I_0(t)\\[4pt]
