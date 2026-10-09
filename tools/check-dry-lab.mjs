@@ -18,11 +18,12 @@ try {
     ['Metabolomics', '/metabolomics'],
     ['Protein', '/protein'],
     ['Mathematical Modeling', '/model'],
-    ['Hardware', '/hardware'],
+    ['Hardware Modeling', '/hardware'],
+    ['Hardware Design', '/hardware-design'],
   ]);
   assert.equal(new Set(pageOrder).size, pageOrder.length);
   for (const [, href] of items) assert(pages[href.slice(1)], `Missing route ${href}`);
-  for (const slug of ['metabolomics','protein','hardware','safety-and-security']) {
+  for (const slug of ['metabolomics','protein','hardware','hardware-design','safety-and-security']) {
     assert(pages[slug].sections.length > 0, `Missing content: ${slug}`);
     assert(pages[slug].intro, `Missing introduction: ${slug}`);
   }
@@ -97,8 +98,8 @@ try {
   }
   assert.equal(figures,14);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
-  for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: complete six-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
+  for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware','hardware-design']) assert(workflow.includes(`            ${slug} \\`));
+  console.log(`Dry Lab checks passed: complete seven-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
 } finally {
   await server.close();
 }
