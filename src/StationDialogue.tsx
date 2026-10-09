@@ -13,8 +13,8 @@ export function StationDialogue({ station, onClose }: StationDialogueProps) {
   const [page, setPage] = useState(0);
   const titleId = `${useId().replace(/:/g, "")}-station-title`;
   const pages = [
-    { label: "ROUTE OVERVIEW", title: station.panelTitle ?? station.title, text: station.panelLead },
-    ...station.panelPoints.map((point) => ({ label: "FIELD NOTE", title: point.label, text: point.text })),
+    { label: "ROUTE OVERVIEW", navTitle: "OVERVIEW", title: station.panelTitle ?? station.title, text: station.panelLead },
+    ...station.panelPoints.map((point) => ({ label: "FIELD NOTE", navTitle: point.label, title: point.label, text: point.text })),
   ];
   const current = pages[page];
 
@@ -81,7 +81,7 @@ export function StationDialogue({ station, onClose }: StationDialogueProps) {
       <div className="station-dialogue__spread">
         <aside aria-label="Route note pages">
           <p>{String(page + 1).padStart(2, "0")} / {String(pages.length).padStart(2, "0")}</p>
-          <div>{pages.map((item, index) => <button key={item.title} type="button" className={index === page ? "is-current" : undefined} onClick={() => setPage(index)} aria-label={`Open page ${index + 1}: ${item.title}`} aria-current={index === page ? "page" : undefined}><span>{String(index + 1).padStart(2, "0")}</span>{item.title}</button>)}</div>
+          <div>{pages.map((item, index) => <button key={item.navTitle} type="button" className={index === page ? "is-current" : undefined} onClick={() => setPage(index)} aria-label={`Open page ${index + 1}: ${item.navTitle}`} aria-current={index === page ? "page" : undefined}><span>{String(index + 1).padStart(2, "0")}</span>{item.navTitle}</button>)}</div>
         </aside>
         <article className="station-dialogue__page" aria-live="polite">
           <p>{current.label}</p>
