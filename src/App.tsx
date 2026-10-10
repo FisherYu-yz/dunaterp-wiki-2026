@@ -30,10 +30,12 @@ function resolveFigureSrc(src: string) {
 function BrandMark() {
   return <span className="brand-mark" aria-hidden="true">
     <svg viewBox="0 0 48 48" role="img">
-      <path className="brand-mark__flagella" d="M16 13C12 8 12 5 15 2M31 13c5-5 5-8 2-11" />
-      <path className="brand-mark__cell" d="M12 10h24v4h4v20h-4v4H12v-4H8V14h4z" />
-      <path className="brand-mark__hub" d="M19 18h10v3h3v8h-3v3H19v-3h-3v-8h3z" />
-      <path className="brand-mark__branch" d="M13 17h4M31 17h4M13 31h4M31 31h4" />
+      <path className="brand-mark__flagella" d="M17 13C11 9 11 5 14 2M30 13c6-4 7-8 4-11" />
+      <path className="brand-mark__cell" d="m12 15 5-5h15l6 6v15l-6 7H17l-6-6V20z" />
+      <path className="brand-mark__chloroplast" d="M16 20c3-5 11-6 16-2l2 8c-2 6-10 8-16 4l-3-5z" />
+      <circle className="brand-mark__eyespot" cx="30" cy="17" r="2.2" />
+      <circle className="brand-mark__hub" cx="24" cy="28" r="3.8" />
+      <path className="brand-mark__route" d="M13 22h3m16 8h3" />
     </svg>
   </span>;
 }
@@ -125,7 +127,7 @@ function Article({ slug }: { slug: string }) {
   const figureSrc = page.figure ? resolveFigureSrc(page.figure.src) : "";
   const hasContent = page.sections.length > 0;
   const isModeling = MODELING_PATHS.includes(`/${slug}`);
-  return <><Header /><main id="main-content" tabIndex={-1} style={{ "--article-accent": articleAccent } as CSSProperties} className={`article-page${group?.label === 'Dry Lab' || slug === 'dry-lab' ? ' article-page--dry-lab' : ''}${isModeling ? ' article-page--modeling' : ''}${slug === 'dry-lab' ? ' article-page--overview' : ''}${slug === 'hardware' ? ' article-page--hardware' : ''}${slug === 'safety-and-security' ? ' article-page--safety' : ''}`}>
+  return <><Header /><main id="main-content" tabIndex={-1} style={{ "--article-accent": articleAccent } as CSSProperties} className={`article-page${group?.label === 'Dry Lab' || slug === 'dry-lab' ? ' article-page--dry-lab' : ''}${slug === 'protein' ? ' article-page--protein' : ''}${isModeling ? ' article-page--modeling' : ''}${slug === 'dry-lab' ? ' article-page--overview' : ''}${slug === 'hardware' ? ' article-page--hardware' : ''}${slug === 'safety-and-security' ? ' article-page--safety' : ''}`}>
     <nav className="breadcrumbs" aria-label="Breadcrumb"><Link to="/wiki-map">Wiki</Link><span aria-hidden="true">/</span>{group && <>{group.label === 'Dry Lab' ? <Link to="/dry-lab">Dry Lab</Link> : <span>{group.label}</span>}<span aria-hidden="true">/</span></>}<span aria-current="page">{group?.items.find(([, href]) => href === `/${slug}`)?.[0] || page.title}</span></nav>
     <header className="article-hero"><div><p className="page-eyebrow">{page.eyebrow}</p><h1>{page.title}</h1></div>{page.intro && <div className="article-intro"><p>{page.intro}</p></div>}</header>
     {hasContent && <>

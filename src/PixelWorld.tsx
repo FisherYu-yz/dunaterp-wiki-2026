@@ -9,7 +9,7 @@ import {
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { PixelEngine, type Mode } from "./pixel/engine";
-import { STATION_COPY } from "./pixel/station-copy";
+import { ARCHIVE_COPY, STATION_COPY } from "./pixel/station-copy";
 import { ExpeditionJournal, recordNpcVisit } from "./ExpeditionJournal";
 import { NpcDialogue } from "./NpcDialogue";
 import { StationDialogue } from "./StationDialogue";
@@ -57,6 +57,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   const [promptKey, setPromptKey] = useState<string | null>(null);
   const [stationDialogueKey, setStationDialogueKey] = useState<string | null>(null);
   const [secretOpen, setSecretOpen] = useState(false);
+  const [secretKind, setSecretKind] = useState<'carotenoid' | 'salt-crystal'>('carotenoid');
   const [atArchive, setAtArchive] = useState(false);
   const [started, setStarted] = useState(false);
   const [story, dispatchStory] = useReducer(storyReducer, false, initialStory);
@@ -69,6 +70,20 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
     () => STATION_COPY.find((item) => item.key === stationDialogueKey) ?? null,
     [stationDialogueKey],
   );
+  const advanceToNextStop = useCallback(() => {
+    const engine = engineRef.current;
+    const node = root.current;
+    if (!engine || !node || engine.mode !== "guided") return;
+    const currentChapterU = chapter >= 0 ? STATION_COPY[chapter]?.u ?? engine.journey : engine.journey;
+    const currentU = Math.max(engine.journey, currentChapterU);
+    const nextStop = [...STATION_COPY, ARCHIVE_COPY].find((stop) => stop.u > currentU + 0.005);
+    if (!nextStop) return;
+    const progress = nextStop.key === ARCHIVE_COPY.key ? 1 : nextStop.u;
+    const top = node.getBoundingClientRect().top + window.scrollY;
+    const travel = Math.max(1, node.offsetHeight - window.innerHeight);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: top + progress * travel, behavior: reduce ? "instant" : "smooth" });
+  }, [chapter]);
 
   useEffect(() => {
     if (!isStory) return;
@@ -79,11 +94,12 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   }, [isStory]);
 
   useEffect(() => {
-    if ((!dialogueNpc && !stationDialogue && !secretOpen) || mode === "free") return;
+    const ownsViewport = Boolean(dialogueNpc || stationDialogue || secretOpen || (atArchive && mode !== "free"));
+    if (!ownsViewport) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = previous; };
-  }, [dialogueNpc, stationDialogue, secretOpen, mode]);
+  }, [dialogueNpc, stationDialogue, secretOpen, atArchive, mode]);
 
   useEffect(() => {
     const host = stage.current;
@@ -182,32 +198,19 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
     };
   }, [isStory, ready, atArchive]);
 
-  // Space advances one authored stop at a time in guided mode. Relying on the
-  // browser's default page jump could leave the traveller between stations,
-  // especially at the trailhead where the lead-in spacer is shorter than the
-  // complete scroll journey.
   useEffect(() => {
-    if (!ready || failed || isStory || mode === "free") return;
-    const advance = (event: KeyboardEvent) => {
-      if (event.code !== "Space" || event.repeat || dialogueNpc || stationDialogue || secretOpen) return;
+    const onSpace = (event: KeyboardEvent) => {
+      if (event.code !== "Space" || event.repeat || event.defaultPrevented) return;
+      if (!ready || failed || isStory || mode !== "guided" || dialogueNpc || stationDialogue || secretOpen || atArchive) return;
       const target = event.target instanceof Element ? event.target : null;
-      if (target?.closest("button,a,input,textarea,select,option,[contenteditable],[role='button'],[role='link'],[role='dialog']")) return;
-      const node = root.current;
-      const engine = engineRef.current;
-      if (!node || !engine) return;
-      const next = [...STATION_COPY.map((station) => station.u), 0.999]
-        .find((stop) => stop > engine.journey + 0.025);
-      if (next === undefined) return;
+      if (target?.closest("button,a,summary,input,textarea,select,dialog,[contenteditable],[role='button'],[role='dialog']")) return;
+      if (target && target !== document.body && !root.current?.contains(target)) return;
       event.preventDefault();
-      const top = node.getBoundingClientRect().top + window.scrollY;
-      const travel = Math.max(1, node.offsetHeight - window.innerHeight);
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      window.scrollTo({ top: top + next * travel, behavior: reduce ? "instant" : "smooth" });
+      advanceToNextStop();
     };
-    window.addEventListener("keydown", advance);
-    return () => window.removeEventListener("keydown", advance);
-  }, [ready, failed, isStory, mode, dialogueNpc, stationDialogue, secretOpen]);
-
+    window.addEventListener("keydown", onSpace);
+    return () => window.removeEventListener("keydown", onSpace);
+  }, [advanceToNextStop, atArchive, dialogueNpc, failed, isStory, mode, ready, secretOpen, stationDialogue]);
   // Free mode pins the document so wandering never scrolls the page away from
   // the world, and hands the scroll position back at the point the hero left.
   useEffect(() => {
@@ -342,13 +345,15 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
         {!started && !dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <aside className="px-trailhead" aria-label="Salt Route instructions">
           <div className="px-trailhead__mark" aria-hidden="true"><i /><i /><i /></div>
           <div className="px-trailhead__copy">
-            <p>SALT ROUTE / TRAILHEAD</p>
-            <h2>Follow the boardwalk.</h2>
+            <p>YOUR FIELD GUIDE</p>
+            <h2>Start at the brine edge.</h2>
+            <span>Meet the alga, follow the β-carotene hub, then trace four product designs.</span>
           </div>
           <div className="px-trailhead__keys">
-            <span><kbd>SCROLL</kbd> / <kbd>SPACE</kbd> travel</span>
-            <span><kbd>E</kbd> open field notes</span>
-            <span><kbd>FREE ROAM</kbd> meet hidden guides</span>
+            <span><kbd>SCROLL</kbd><b>Walk the boardwalk</b></span>
+            <span><kbd>SPACE</kbd><b>Next route stop</b></span>
+            <span><kbd>E</kbd><b>Open a station story</b></span>
+            <span><kbd>FREE ROAM</kbd><b>Meet the field guides</b></span>
           </div>
         </aside>}
         {mode === "free" && <ExpeditionJournal
@@ -417,16 +422,21 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
         )}
 
         {!dialogueNpc && !stationDialogue && !secretOpen && (mode === "free" || chapter === 2) && (
-          <button type="button" className="px-secret-glint" aria-label="Inspect an unusual golden glint" onClick={() => { engineRef.current?.setPaused(true); setSecretOpen(true); }}>✦</button>
+          <button type="button" className="px-secret-glint" aria-label="Inspect an unusual golden glint" onClick={() => { engineRef.current?.setPaused(true); setSecretKind('carotenoid'); setSecretOpen(true); }}>✦</button>
+        )}
+        {!dialogueNpc && !stationDialogue && !secretOpen && chapter === 0 && mode !== "free" && (
+          <button type="button" className="px-secret-shell" aria-label="Inspect a tiny salt crystal" onClick={() => { engineRef.current?.setPaused(true); setSecretKind('salt-crystal'); setSecretOpen(true); }}>◇</button>
         )}
 
         {secretOpen && <section className="px-secret-note" role="dialog" aria-modal="true" aria-labelledby="px-secret-title">
           <button type="button" onClick={closeSecret} aria-label="Close hidden field note">×</button>
-          <p>HIDDEN FIELD NOTE · 01</p>
-          <h2 id="px-secret-title">A golden cell in a pink lake.</h2>
+          <p>HIDDEN FIELD NOTE · {secretKind === 'salt-crystal' ? '02' : '01'}</p>
+          <h2 id="px-secret-title">{secretKind === 'salt-crystal' ? 'Salt leaves a map.' : 'A golden cell in a pink lake.'}</h2>
           <div className="px-secret-pigments" aria-hidden="true"><i /><i /><i /><i /></div>
-          <p>Hypersaline ponds can turn orange-pink when <i>Dunaliella</i> accumulates carotenoids under stress. The colour is a clue—not final proof of a product.</p>
-          <span>You found the pigment trail. ✦</span>
+          <p>{secretKind === 'salt-crystal'
+            ? <>Salt crystals form as brine evaporates. <i>Dunaliella</i> can thrive in these hypersaline ponds, where light and salt shape its carotenoid response.</>
+            : <>Hypersaline ponds can turn orange-pink when <i>Dunaliella</i> accumulates carotenoids under stress. The colour is a clue—not final proof of a product.</>}</p>
+          <span>{secretKind === 'salt-crystal' ? 'You found the shoreline marker. ◇' : 'You found the pigment trail. ✦'}</span>
         </section>}
 
         {!dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <button type="button" className="px-restart" onClick={restart} aria-label="Return to the trailhead">↑</button>}
@@ -443,8 +453,11 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
 
         <section className="px-archive" inert={!atArchive || mode === "free"} aria-label="DunaTerp wiki index">
           <header>
-            <p>FIELD ARCHIVE</p>
-            <h2>Open any Wiki chapter.</h2>
+            <div>
+              <p>FIELD ARCHIVE · END OF ROUTE</p>
+              <h2>Choose a chapter.</h2>
+            </div>
+            <span>Four sections, all the project chapters.<br />Pick a stop to continue reading.</span>
           </header>
           <div className="px-archive-grid">
             {archiveNavigation.map((group, index) => (

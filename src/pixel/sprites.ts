@@ -420,6 +420,42 @@ function trailheadLodge(): Painter {
   return p;
 }
 
+function trailheadOutpost(): Painter {
+  const p = surface(68, 52);
+
+  // A compact field cabin makes the trailhead feel like a place to set out from.
+  block(p, 8, 19, 52, 25, "b", "c", "e");
+  frame(p, 8, 19, 52, 25, "1");
+  for (let y = 23; y < 42; y += 4) rect(p, 10, y, 48, 1, "c");
+
+  // Salt-dark pitched roof, broad enough to read against the pale flats.
+  for (let row = 0; row < 13; row += 1) {
+    const inset = 12 - row;
+    const left = 4 + inset * 2;
+    const width = 60 - inset * 4;
+    rect(p, left, 4 + row, width, 1, row < 3 ? "a" : row < 8 ? "q" : "p");
+    if (row === 3 || row === 7 || row === 11) rect(p, left, 5 + row, width, 1, "r");
+  }
+  block(p, 4, 17, 60, 4, "q", "r", "p");
+  rect(p, 7, 20, 54, 1, "o");
+
+  // A marked door, two sampling windows and a short porch.
+  glass(p, 13, 27, 10, 9, "x");
+  glass(p, 45, 27, 10, 9, "8");
+  block(p, 28, 29, 12, 15, "2", "1", "3");
+  frame(p, 28, 29, 12, 15, "1");
+  rect(p, 37, 36, 1, 1, "D");
+  block(p, 23, 43, 22, 3, "q", "r", "p");
+  for (const x of [15, 52]) block(p, x, 44, 3, 5, "r", "1", "q");
+
+  // Plaque and a roof vent give the little station a field-lab identity.
+  block(p, 23, 22, 22, 5, "2", "1", "3");
+  drawText(p, "FIELD", 27, 23, "8", { shadow: "1" });
+  block(p, 48, 8, 7, 8, "3", "2", "4");
+  rect(p, 50, 6, 3, 2, "q");
+  return p;
+}
+
 function post(height: number, capKey?: string): Painter {
   const p = surface(7, height);
   block(p, 2, 1, 3, height - 2, "p", "q", "o");
@@ -787,6 +823,7 @@ export function getAtlas(): Atlas {
       crystal6: saltCrystal(6),
       crystal7: saltCrystal(7),
       pile: saltPile(),
+      trailheadOutpost: trailheadOutpost(),
       trailheadLodge: trailheadLodge(),
       postShort: post(14),
       postTall: post(24, "7"),

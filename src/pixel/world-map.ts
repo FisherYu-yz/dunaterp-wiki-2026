@@ -192,30 +192,24 @@ function stampEllipse(
 }
 
 function stampBands(tiles: Uint8Array) {
-  // Multi-source distance transform out from every wet tile, then two colour
-  // bands: the carotenoid-stained evaporite ring a drying pond leaves behind,
-  // and the damp crust beyond it.
-  const distance = new Int16Array(MAP_W * MAP_H).fill(999);
-  const queue: number[] = [];
-  for (let i = 0; i < tiles.length; i += 1) {
-    if (isWet(tiles[i] as Tile)) {
-      distance[i] = 0;
-      queue.push(i);
-    }
-  }
-  for (let head = 0; head < queue.length; head += 1) {
-    const i = queue[head];
-    if (distance[i] >= 5) continue;
-    const tx = i % MAP_W;
-    const ty = (i / MAP_W) | 0;
-    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]] as Array<[number, number]>) {
-      const nx = tx + dx;
-      const ny = ty + dy;
-      if (!inBounds(nx, ny)) continue;
-      const j = index(nx, ny);
-      if (distance[j] <= distance[i] + 1) continue;
-      distance[j] = distance[i] + 1;
-      queue.push(j);
+  // Radial distance keeps the coloured evaporite ring following the pond's
+  // shoreline instead of spreading into a plus-shaped, four-way halo.
+  const distance = new Float32Array(MAP_W * MAP_H).fill(999);
+  for (let ty = 0; ty < MAP_H; ty += 1) {
+    for (let tx = 0; tx < MAP_W; tx += 1) {
+      const i = index(tx, ty);
+      if (isWet(tiles[i] as Tile)) continue;
+      let nearest = 999;
+      for (let dy = -6; dy <= 6; dy += 1) {
+        for (let dx = -6; dx <= 6; dx += 1) {
+          const radius = Math.hypot(dx, dy);
+          if (radius >= nearest || radius > 5.5) continue;
+          const nx = tx + dx;
+          const ny = ty + dy;
+          if (inBounds(nx, ny) && isWet(tiles[index(nx, ny)] as Tile)) nearest = radius;
+        }
+      }
+      distance[i] = nearest;
     }
   }
   for (let i = 0; i < tiles.length; i += 1) {
@@ -231,6 +225,7 @@ function stampBands(tiles: Uint8Array) {
 
 export function buildWorld(): World {
   const tiles = new Uint8Array(MAP_W * MAP_H).fill(Tile.Salt);
+  const path = new RoutePath(WAYPOINTS);
 
   // Broad terrain bands: open lake along the west edge, crust in the middle,
   // mud and reed flats along the east.
@@ -245,8 +240,8 @@ export function buildWorld(): World {
     }
   }
 
-  // Evaporation ponds. The pink and amber ones are Dunaliella blooms: the real
-  // reason these lakes turn colour, and the visual anchor of the whole scene.
+  // Evaporation ponds. Brine and amber blooms share one carotenoid-stained
+  // surface treatment; the lower-salinity open-water ponds remain blue.
   const ponds: Array<[number, number, number, number, Tile, Tile]> = [
     [46, 84, 11, 6, Tile.Amber, Tile.AmberDeep],
     [62, 44, 10, 6, Tile.Water, Tile.WaterDeep],
@@ -282,8 +277,6 @@ export function buildWorld(): World {
   }
 
   stampBands(tiles);
-
-  const path = new RoutePath(WAYPOINTS);
 
   // Layered foothills frame the valley. Keep a generous corridor around the
   // route so stations, NPC work areas and free-roam approaches remain open.
@@ -328,10 +321,13 @@ export function buildWorld(): World {
       if (inBounds(tx, ty)) deckMask[index(tx, ty)] = 1;
     }
   };
-  const deckSteps = Math.ceil(path.length / 8);
+  const deckEnd = ARCHIVE_COPY.u - 0.006;
+  const deckSteps = Math.ceil(path.length * deckEnd / 8);
   for (let step = 0; step <= deckSteps; step += 1) {
-    const sample = path.sample(step / deckSteps);
-    layDeck(sample.x, sample.y, Math.atan2(sample.dy, sample.dx), 15);
+    const u = deckEnd * step / deckSteps;
+    const sample = path.sample(u);
+    const halfWidth = u > deckEnd - 0.025 ? 25 : 15;
+    layDeck(sample.x, sample.y, Math.atan2(sample.dy, sample.dx), halfWidth);
   }
 
   // Place the stations against the route, then reserve their footprint.
@@ -590,6 +586,40 @@ export function buildWorld(): World {
   // The route begins at a small field outpost rather than an empty salt flat.
   // Every item stays outside the boardwalk corridor so the traveller remains
   // visible and the first movement is unobstructed.
+  const outpost = [
+    pointFromHead(-32, 110),
+    pointFromHead(-44, 136),
+    pointFromHead(32, 122),
+  ].find((point) => !occupied(point.x, point.y, 50)) ?? pointFromHead(-32, 110);
+  props.push({ sprite: "trailheadOutpost", x: outpost.x, y: outpost.y, shadow: "medium" });
+  for (let ty = Math.floor((outpost.y - 48) / TILE); ty <= Math.floor((outpost.y - 10) / TILE); ty += 1) {
+    for (let tx = Math.floor((outpost.x - 30) / TILE); tx <= Math.floor((outpost.x + 30) / TILE); tx += 1) {
+      if (inBounds(tx, ty) && !deckMask[index(tx, ty)]) blocked[index(tx, ty)] = 1;
+    }
+  }
+
+  // A short branch joins the outpost porch to the marked boardwalk.
+  const approachU = path.nearestU(outpost.x, outpost.y);
+  const approach = path.sample(approachU);
+  const spurX = outpost.x - approach.x;
+  const spurY = outpost.y + 6 - approach.y;
+  const spurAngle = Math.atan2(spurY, spurX);
+  const spurSteps = Math.max(1, Math.ceil(Math.hypot(spurX, spurY) / 8));
+  for (let step = 0; step <= spurSteps; step += 1) {
+    const t = step / spurSteps;
+    const x = approach.x + spurX * t;
+    const y = approach.y + spurY * t;
+    layDeck(x, y, spurAngle, 10);
+    const acrossX = -Math.sin(spurAngle);
+    const acrossY = Math.cos(spurAngle);
+    for (let offset = -14; offset <= 14; offset += 2) {
+      const tx = Math.floor((x + acrossX * offset) / TILE);
+      const ty = Math.floor((y + acrossY * offset) / TILE);
+      if (!inBounds(tx, ty)) continue;
+      deckMask[index(tx, ty)] = 1;
+      if (!isWet(tiles[index(tx, ty)] as Tile)) blocked[index(tx, ty)] = 0;
+    }
+  }
   const sign = pointFromHead(8, 66);
   const lodge = path.sample(0);
 
@@ -608,7 +638,7 @@ export function buildWorld(): World {
   // The archive is a destination rather than another loose end of timber.
   // A paired light and mineral marker create a small arrival court around its
   // doorway while keeping the final boardwalk corridor clear.
-  const end = path.sample(0.994);
+  const end = path.sample(ARCHIVE_COPY.u - 0.004);
   const pointFromEnd = (along: number, across: number) => ({
     x: end.x + end.dx * along - end.dy * across,
     y: end.y + end.dy * along + end.dx * across,
@@ -618,6 +648,10 @@ export function buildWorld(): World {
     const crystal = pointFromEnd(18, across * 0.9);
     props.push({ sprite: "lamp", x: light.x, y: light.y, shadow: "small" });
     props.push({ sprite: across < 0 ? "crystal6" : "crystal7", x: crystal.x, y: crystal.y, shadow: "small" });
+  }
+  const landing = path.sample(ARCHIVE_COPY.u - 0.025);
+  for (const side of [-1, 1]) {
+    props.push({ sprite: side < 0 ? "crystal3" : "crystal6", x: landing.x - landing.dy * 42 * side, y: landing.y + landing.dx * 42 * side, shadow: "small" });
   }
   // A moored boat or two on the open water.
   for (const [bx, by] of [[17, 35], [14, 76], [19, 100]] as Array<[number, number]>) {

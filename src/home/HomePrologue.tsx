@@ -25,12 +25,12 @@ export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onN
         if (!transition && !event.repeat) host.current?.querySelector<HTMLButtonElement>(".story-dialogue-button")?.click();
       }
     }}>
-    {!transition && <button type="button" className="story-skip" onClick={onSkip}>SKIP INTRO <span aria-hidden="true">↗</span></button>}
+    {!transition && <button type="button" className="story-skip" onClick={onSkip}>Skip story</button>}
     {transition ? null : opening ? <>
       <div className="story-title"><h1>DUNA<span>TERP</span></h1></div>
-      <StoryDialogue key="opening" opening speaker="A story from the salt lake" text={OPENING_HOOK} label="PRESS ENTER TO BEGIN" delay={700} onNext={onNext} />
+      <StoryDialogue key="opening" opening speaker="A story from the salt lake" text={OPENING_HOOK} label="Begin the story" delay={700} onNext={onNext} />
     </> : <>
-      <header className="story-chapter"><span>DUNATERP / PROLOGUE</span><h1>{beat.chapter}</h1></header>
+      <header className="story-chapter"><h1>{beat.chapter}</h1></header>
       <div key={`art-${state.beat}`} className="story-scene-art"><StoryIllustration beat={beat} /></div>
       <div className="story-dialogue-cluster">
         <StoryDialogue key={state.beat} speaker={beat.speaker} speakerTone={beat.speakerTone} text={beat.text} label={state.beat === STORY_BEATS.length - 1 ? "START THE SALT ROUTE" : "Continue"} onNext={onNext} />

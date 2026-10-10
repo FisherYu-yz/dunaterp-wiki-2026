@@ -61,6 +61,7 @@ export function ArticleBlocks({ blocks }: { blocks: ContentBlock[] }) {
       case 'equation': return <Equation key={i} block={block} />;
       case 'code': return <div className="research-code" key={i}><p>{block.label}</p><pre tabIndex={0}><code>{block.text}</code></pre></div>;
       case 'figure': return <ResearchFigure key={i} figure={block} />;
+      case 'figure-row': return <div className="research-figure-row" key={i}>{block.figures.map((figure) => <ResearchFigure key={figure.src} figure={figure} compact />)}</div>;
       case 'figure-grid': return <div className="research-figure-grid" key={i}>{block.figures.map((figure) => <ResearchFigure key={figure.src} figure={figure} compact />)}</div>;
       case 'chapter-grid': return <div className="research-chapter-grid" key={i}>{block.items.map((item) => <Link className="research-chapter-card" to={item.href} key={item.href}><span>{item.index}</span><div><h3>{item.title}</h3><p>{item.text}</p></div><b aria-hidden="true">↗</b></Link>)}</div>;
       case 'table': return <DataTable key={i} block={block} />;

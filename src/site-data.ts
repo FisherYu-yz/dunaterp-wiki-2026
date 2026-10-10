@@ -28,8 +28,7 @@ export const navigation: Array<{ label: string; items: ReadonlyArray<readonly [s
   { label: "People", items: [["Team", "/team"], ["Attributions", "/attributions"], ["Responsible AI", "/responsible-ai"]] },
 ];
 
-/** The compact header groups Dry Lab into its two main entrances. Indexes and
- * archives expand that group so no existing work disappears from view. */
+/** Keep the complete Dry Lab chapter list available in the wiki index. */
 export const archiveNavigation = navigation.map((group) => group.label === "Dry Lab"
   ? {
       ...group,
@@ -52,7 +51,7 @@ export const pages: Record<string, WikiPage> = {
   "project-description": {
     title: "DunaTerp: a programmable terpenoid platform",
     eyebrow: "Project description",
-    intro: "DunaTerp reprogrammes carotenoid metabolism in the halophilic microalga Dunaliella salina. The core design introduces the project-selected transcription factor 2146 to redirect pathway flux toward a competitive β-carotene hub; four downstream product designs demonstrate what that programmable chassis can support.",
+    intro: "DunaTerp reprogrammes carotenoid metabolism in the halophilic microalga Dunaliella salina. The core design introduces a project-selected transcription-factor regulator to redirect pathway flux toward a competitive β-carotene hub; four downstream product designs demonstrate what that programmable chassis can support.",
     status: "team-draft",
     sections: [
       {
@@ -67,7 +66,7 @@ export const pages: Record<string, WikiPage> = {
       },
       {
         eyebrow: "The core intervention",
-        title: "Reprogramme the Metabolic Engine",
+        title: "Metabolic Reprogramming",
         body: "DunaTerp does not stop at using a naturally productive alga. The project identifies and introduces transcription factor 2146 as a regulatory input intended to reshape carotenoid-pathway expression and redirect metabolic flux toward competitive β-carotene synthesis. This turns the native β-carotene pool from a fixed biological trait into the shared, programmable hub of the platform. LCYB remains the enzymatic gate from lycopene into that hub, while TF2146 provides the upstream regulatory intervention.",
       },
       {

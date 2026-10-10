@@ -9,18 +9,17 @@ let state = initialStory(false);
 assert.equal(state.phase, 'OPENING');
 for (let i = 0; i < STORY_BEATS.length; i++) {
   const skipped = storyReducer(state, 'SKIP');
-  assert.equal(skipped.phase, 'TRANSITION');
-  assert.equal(storyReducer(skipped, 'ARRIVED').phase, 'WORLD');
+  assert.equal(skipped.phase, 'WORLD');
+  assert.equal(storyReducer(skipped, 'ARRIVED'), skipped);
   state = storyReducer(state, 'NEXT');
   assert.equal(state.beat, i);
   assert.equal(state.phase, STORY_BEATS[i].phase);
 }
 state = storyReducer(state, 'NEXT');
-assert.equal(state.phase, 'TRANSITION');
-assert.equal(storyReducer(state, 'NEXT'), state, 'Repeated input cannot bypass handoff');
-state = storyReducer(state, 'ARRIVED');
 assert.equal(state.phase, 'WORLD');
-assert.equal(storyReducer(state, 'SKIP'), state);
+assert.equal(storyReducer(state, 'NEXT'), state, 'Repeated input cannot bypass handoff');
+assert.equal(storyReducer(state, 'ARRIVED'), state);
+assert.equal(storyReducer(state, 'SKIP').phase, 'WORLD');
 assert.equal(storyReducer(state, 'REPLAY').phase, 'OPENING');
 assert.equal(initialStory(true).phase, 'WORLD');
 globalThis.localStorage = { getItem() { throw new Error('disabled'); }, setItem() { throw new Error('disabled'); } };

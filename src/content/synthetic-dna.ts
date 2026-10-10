@@ -4,26 +4,16 @@ const p = (text: string): ContentBlock => ({ kind: 'paragraph', text });
 const section = (title: string, ...blocks: ContentBlock[]): WikiSection => ({ title, body: '', blocks });
 const customTable = (caption: string, columns: string[], rows: string[][]): ContentBlock => ({kind:'table',caption,columns,rows});
 export const syntheticDnaSections: WikiSection[] = [
-  section('TF2146: domains and construct definitions',
-    p('We use the complete CXC regions throughout this page: CXC1, residues 32–72; CXC2, residues 117–158. Narrower conserved cores are not used as alternative domain boundaries. All positions refer to the 457-residue TF2146 candidate.'),
-    customTable('Constructs and interpretation', ['Region or construct', 'Full-length coordinates', 'Interpretation'], [
-      ['CXC1', '32–72', 'First complete CXC region'],
-      ['CXC2', '117–158', 'Second complete CXC region'],
-      ['Dual-CXC / NLS construct', '21–230', 'Contains both CXC regions, S208 and the predicted NLS; not CXC1 alone'],
-      ['Predicted NLS', '209–217 · PPHKRARTA', 'Candidate nuclear-localisation signal; cellular localisation remains to be tested'],
-      ['S208', '208', 'Adjacent to the NLS; A/D substitutions test a hypothesis, not actual phosphorylation'],
-    ]),
-    p('The parallel construct-design work proposes full-length WT, the dual-CXC/NLS region, complete CXC1-only and CXC2-only constructs, and NLS variants. Y48F and Y133F probe aromatic side chains; K212Q and K212Q/R213Q probe local charge. These proposed experiments are distinct from the completed computational deletion screen above. Expression and localisation controls are necessary when interpreting changes in DNA binding.'),
-  ),
-    section('Parallel study: a TSO1-derived DNA duplex',
+  section('Parallel study: a TSO1-derived DNA duplex',
       p('This study uses a designed DNA substrate and is independent of the pDCA1 site 1/site 2/site 3 comparisons above. Its docking results are not pooled with those sequence controls.'),
       p('No clear CPP-family motif was identified in the scanned LCYB promoter sequence. The main 25-bp docking duplex was therefore designed from the Arabidopsis TSO1 JASPAR motif rather than demonstrated as a native LCYB promoter site. This makes the docking a transferable structural hypothesis, not proof that DsTF2146 binds the LCYB promoter in vivo.'),
       p('The sequence logo records the designed 15-position motif used to define the recognition pattern for the DNA substrate. The motif-derived sequence was assembled into the 25-bp duplex for docking, keeping the design substrate explicit and distinguishable from a native LCYB promoter segment. This provides a consistent sequence reference for interpreting the structural illustration and for tracking the DNA design through the docking workflow.'),
-      p('Figure 8 above provides the sequence-level reference for this designed duplex. The motif was derived from the Arabidopsis TSO1 JASPAR motif and is distinct from a validated native LCYB promoter site.'),
+      { kind: 'figure', src: 'figures/dry-lab/dna-logo.png', alt: 'Sequence logo of the 15-position designed DNA motif used to construct the docking duplex.', caption: 'Figure 10. Sequence logo of the designed DNA motif used to construct the 25-bp docking duplex. The motif was derived from the Arabidopsis TSO1 JASPAR motif and is distinct from a validated native LCYB promoter site.' },
+      p('Figure 8 in the TF2146 introduction shows the modeled protein–DNA complex alongside this separate sequence-level reference. The motif was derived from the Arabidopsis TSO1 JASPAR motif and is distinct from a validated native LCYB promoter site.'),
       p('The docking models also did not converge to a dominant cluster: reported ligand RMSDs were above 50 Å. Several mutants produced identical scores and coordinates, and a repaired full-length complex contained a severe Gln362–DNA steric collision. Under these conditions, docking-score differences cannot be interpreted as affinity changes, and they cannot be converted into predicted transcription strength.'),
       p('These quality checks define how the calculated poses and scores are used in the project. RMSD values above 50 Å indicate that the sampled ligand placements are widely separated rather than forming a common pose family. Identical coordinates and scores across some mutant entries are treated as a model-generation or input-audit signal, not as independent evidence that the proteins bind identically. The Gln362–DNA overlap identifies a concrete steric incompatibility in the repaired full-length model. Together, these observations distinguish the role of docking as a way to visualise candidate interfaces from quantitative binding evidence.'),
       p('The docking illustration pairs the designed DNA with the mutated protein model to show the intended components of the structural setup. It should be read together with the sequence logo: the logo defines the designed DNA pattern, while the structure view shows that DNA sequence represented in a protein–DNA docking model. The pose is presented as the project’s computational design visualization, not as a measured binding geometry.'),
-      p('Figure 7 introduces the protein–DNA complex in the first TF2146 section so the structural hypothesis is visible before the docking audit. It visualises the designed sequence and modeled protein together, not a measured binding geometry.'),
+      p('The sequence logo and docking illustration are presented in the TF2146 introduction so the proposed substrate and modeled complex are visible before the docking audit.'),
       customTable('Protein–DNA docking: what the current results mean', ['Observation', 'Supported conclusion', 'Unsupported conclusion'], [
         ['Designed 25-bp motif-derived duplex', 'A controlled substrate for testing a CPP/CXC binding hypothesis', 'A validated native LCYB promoter site'],
         ['Docking scores for truncations and mutants', 'Starting poses for interface inspection and experimental prioritisation', 'Binding constants, kcal mol⁻¹ values or transcriptional output'],

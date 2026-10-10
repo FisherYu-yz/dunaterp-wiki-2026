@@ -285,7 +285,7 @@ export class PixelEngine {
 
   /** Called from the scroll handler while in guided mode. */
   setScrollProgress(value: number) {
-    this.targetU = Math.max(TRAILHEAD_U, Math.min(0.999, value));
+    this.targetU = Math.max(TRAILHEAD_U, Math.min(this.world.archive.u, value));
   }
 
   enterFree() {
@@ -301,7 +301,7 @@ export class PixelEngine {
 
   exitFree() {
     if (this.mode !== "free") return;
-    this.u = this.world.path.nearestU(this.hero.x, this.hero.y);
+    this.u = Math.min(this.world.archive.u, this.world.path.nearestU(this.hero.x, this.hero.y));
     this.targetU = this.u;
     this.uVelocity = 0;
     this.returnFrom = { x: this.hero.x, y: this.hero.y };
@@ -352,7 +352,7 @@ export class PixelEngine {
     if (!station) return false;
     this.keys.clear();
     this.releaseStick();
-    this.targetU = Math.max(0.001, Math.min(0.999, station.u));
+    this.targetU = Math.max(0.001, Math.min(this.world.archive.u, station.u));
     this.uVelocity = 0;
     if (this.mode === "free") {
       const sample = this.world.path.sample(this.targetU);
@@ -677,7 +677,7 @@ export class PixelEngine {
       this.u = this.targetU;
       this.uVelocity = 0;
     } else {
-      this.u = Math.max(0.001, Math.min(0.999, next));
+      this.u = Math.max(0.001, Math.min(this.world.archive.u, next));
     }
 
     const sample = this.world.path.sample(this.u);

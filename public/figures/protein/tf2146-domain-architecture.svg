@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 320" role="img" aria-labelledby="title desc">
+  <title id="title">TF2146 sequence architecture</title>
+  <desc id="desc">A 457 amino-acid sequence map showing CXC1, CXC2, S208, the predicted nuclear localization signal, and predicted disordered regions.</desc>
+  <defs>
+    <pattern id="disorder" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="8" height="8" fill="#f4ead4"/>
+      <path d="M0 0V8" stroke="#bf8b48" stroke-width="2" opacity=".72"/>
+    </pattern>
+  </defs>
+  <rect width="1120" height="320" fill="#fff"/>
+  <text x="64" y="44" fill="#183e35" font-family="Arial, sans-serif" font-size="22" font-weight="700">TF2146 sequence architecture</text>
+  <text x="64" y="70" fill="#5c7068" font-family="Arial, sans-serif" font-size="14">457-aa candidate · sequence-derived feature map</text>
+
+  <line x1="80" y1="154" x2="1040" y2="154" stroke="#9eaea6" stroke-width="10" stroke-linecap="round"/>
+  <line x1="80" y1="154" x2="1040" y2="154" stroke="#31584d" stroke-width="2" stroke-linecap="round"/>
+
+  <rect x="145" y="132" width="86" height="44" rx="4" fill="#8dc8a0" stroke="#245b49" stroke-width="2"/>
+  <text x="188" y="150" text-anchor="middle" fill="#173c32" font-family="Arial, sans-serif" font-size="13" font-weight="700">CXC1</text>
+  <text x="188" y="166" text-anchor="middle" fill="#173c32" font-family="Arial, sans-serif" font-size="11">32–72</text>
+
+  <rect x="324" y="132" width="86" height="44" rx="4" fill="#8dc8a0" stroke="#245b49" stroke-width="2"/>
+  <text x="367" y="150" text-anchor="middle" fill="#173c32" font-family="Arial, sans-serif" font-size="13" font-weight="700">CXC2</text>
+  <text x="367" y="166" text-anchor="middle" fill="#173c32" font-family="Arial, sans-serif" font-size="11">117–158</text>
+
+  <rect x="450" y="111" width="96" height="8" rx="4" fill="url(#disorder)" stroke="#bf8b48" stroke-dasharray="4 3"/>
+  <text x="498" y="101" text-anchor="middle" fill="#805723" font-family="Arial, sans-serif" font-size="11">flexible region 177–222</text>
+  <line x1="515" y1="116" x2="515" y2="190" stroke="#d46a3b" stroke-width="2"/>
+  <circle cx="515" cy="154" r="6" fill="#d46a3b" stroke="#fff" stroke-width="2"/>
+  <text x="500" y="207" text-anchor="end" fill="#8c4528" font-family="Arial, sans-serif" font-size="12" font-weight="700">S208</text>
+  <rect x="517" y="138" width="19" height="32" rx="3" fill="#e7bd55" stroke="#865d1e" stroke-width="2"/>
+  <text x="544" y="232" fill="#6c511e" font-family="Arial, sans-serif" font-size="12" font-weight="700">Predicted NLS 209–217</text>
+  <line x1="526" y1="171" x2="526" y2="218" stroke="#a17c35" stroke-width="1.5"/>
+
+  <rect x="623" y="136" width="132" height="36" rx="4" fill="url(#disorder)" stroke="#bf8b48" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="689" y="158" text-anchor="middle" fill="#634c2b" font-family="Arial, sans-serif" font-size="12" font-weight="700">259–321</text>
+  <rect x="814" y="136" width="61" height="36" rx="4" fill="url(#disorder)" stroke="#bf8b48" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="844" y="158" text-anchor="middle" fill="#634c2b" font-family="Arial, sans-serif" font-size="12" font-weight="700">350–379</text>
+  <rect x="951" y="136" width="74" height="36" rx="4" fill="url(#disorder)" stroke="#bf8b48" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="988" y="158" text-anchor="middle" fill="#634c2b" font-family="Arial, sans-serif" font-size="12" font-weight="700">415–450</text>
+
+  <g fill="#546b61" font-family="Arial, sans-serif" font-size="11" text-anchor="middle">
+    <text x="80" y="196">1</text><text x="288" y="196">100</text><text x="498" y="196">200</text>
+    <text x="708" y="196">300</text><text x="918" y="196">400</text><text x="1040" y="196">457 aa</text>
+  </g>
+  <g stroke="#879a90" stroke-width="1">
+    <line x1="80" y1="184" x2="80" y2="190"/><line x1="288" y1="184" x2="288" y2="190"/>
+    <line x1="498" y1="184" x2="498" y2="190"/><line x1="708" y1="184" x2="708" y2="190"/>
+    <line x1="918" y1="184" x2="918" y2="190"/><line x1="1040" y1="184" x2="1040" y2="190"/>
+  </g>
+
+  <rect x="65" y="258" width="14" height="14" rx="2" fill="#8dc8a0" stroke="#245b49"/>
+  <text x="86" y="270" fill="#405a50" font-family="Arial, sans-serif" font-size="12">CXC domain</text>
+  <rect x="210" y="258" width="14" height="14" rx="2" fill="#e7bd55" stroke="#865d1e"/>
+  <text x="231" y="270" fill="#405a50" font-family="Arial, sans-serif" font-size="12">Predicted localization motif</text>
+  <rect x="445" y="258" width="14" height="14" rx="2" fill="url(#disorder)" stroke="#bf8b48" stroke-dasharray="3 2"/>
+  <text x="466" y="270" fill="#405a50" font-family="Arial, sans-serif" font-size="12">Predicted flexible / disordered region</text>
+  <text x="1040" y="293" text-anchor="end" fill="#71837a" font-family="Arial, sans-serif" font-size="11">Sequence-based schematic · not an atomic structure</text>
+</svg>

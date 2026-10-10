@@ -34,7 +34,7 @@ try {
     assert(!/[\u3400-\u9fff]/u.test(JSON.stringify(page)), `Non-English content: ${slug}`);
     for (const section of page.sections) {
       for (const block of section.blocks ?? []) {
-        const figureBlocks = block.kind === 'figure' ? [block] : block.kind === 'figure-grid' ? block.figures : [];
+  const figureBlocks = block.kind === 'figure' ? [block] : block.kind === 'figure-row' || block.kind === 'figure-grid' ? block.figures : [];
         for (const figure of figureBlocks) {
           figures++;
           assert(fs.existsSync(path.join('public', figure.src)), `Missing ${figure.src}`);
@@ -61,6 +61,15 @@ try {
   for (const stale of ['−10.790','−10.473','0.140 ± 0.010','37–68','122–154']) assert(!proteinText.includes(stale), `Obsolete protein content: ${stale}`);
   assert(proteinText.includes('TSO1') && proteinText.includes('pDCA1'), 'Both DNA studies must remain explicit');
   assert(proteinText.includes('32–72') && proteinText.includes('117–158'), 'Complete CXC boundaries required');
+  const lcybDockingBlocks = pages.protein.sections.find(section => section.title === 'Docking with lycopene').blocks;
+  const lcybViewRow = lcybDockingBlocks.find(block => block.kind === 'figure-row');
+  assert.equal(lcybViewRow?.figures.length, 2, 'Two LCYB close-up views should share a two-column row');
+  assert(lcybDockingBlocks.some(block => block.kind === 'docking-viewer'), 'Manual LCYB 3D viewer remains independent of the static figure row');
+  const tfIntroBlocks = pages.protein.sections.find(section => section.title === 'TF2146: a DNA-recognition hypothesis').blocks;
+  assert.equal(tfIntroBlocks[1].kind, 'figure');
+  assert(tfIntroBlocks[1].src.endsWith('tf2146-domain-architecture.svg'), 'TF2146 domain map should appear at the beginning of its introduction');
+  const dnaDockingBlocks = pages.protein.sections.find(section => section.title === 'Parallel study: a TSO1-derived DNA duplex').blocks;
+  assert(tfIntroBlocks.some(block => block.kind === 'figure' && block.src.endsWith('protein-dna-docking.png')));
   const structure = JSON.parse(fs.readFileSync('src/content/structures/lycopene-wt.json','utf8'));
   assert.equal(structure.identity.cid, 446925);
   assert.equal(structure.ligand.length,40); assert.equal(structure.bonds.length,39);
@@ -84,7 +93,7 @@ try {
   ]);
   assert(!/day-7|2\.0988|10\.9518|Car09|nine-state|FBA/i.test(JSON.stringify(pages.model)), 'Obsolete quantitative claim remains');
   for (const slug of ['transcriptomics','model','protein']) {
-    const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).flatMap(b => b.kind === 'figure' ? [b.caption] : b.kind === 'figure-grid' ? b.figures.map(figure => figure.caption) : []);
+  const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).flatMap(block => block.kind === 'figure' ? [block.caption] : block.kind === 'figure-row' || block.kind === 'figure-grid' ? block.figures.map(figure => figure.caption) : []);
     captions.forEach((caption, i) => assert(caption.startsWith('Figure ' + (i + 1) + '.'), 'Figure numbering in ' + slug + ': ' + caption));
   }
   assert(!pages.model.sections.some(section => /CPP/i.test(JSON.stringify(section))), 'Unverified CPP regulator remains in modeling');
@@ -96,7 +105,7 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,14);
+  assert.equal(figures,16);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware','hardware-design']) assert(workflow.includes(`            ${slug} \\`));
   console.log(`Dry Lab checks passed: complete seven-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);

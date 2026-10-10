@@ -7,6 +7,10 @@ const p = (text: string): ContentBlock => ({ kind: 'paragraph', text });
 const table = (caption: string, columns: string[], rows: string[][], collapsed = false): ContentBlock => ({ kind: 'table', caption, columns, rows, collapsed });
 const figures: Record<string, string> = { 'docking-seeds': 'figures/protein/docking-seeds.png', 'md-rmsd': 'figures/protein/md-rmsd.png', 'lcyb-lycopene': 'figures/protein/lcyb-lycopene.png', 'lcyb-lycopene_detail': 'figures/protein/lcyb-lycopene_detail.png', 'lcyb-lycopene-detail-alt': 'figures/protein/lcyb-lycopene-detail-alt.png' };
 const fig = (name: string, alt: string, caption: string): ContentBlock => ({ kind: 'figure', src: figures[name], alt, caption });
+const figureRow = (...items: Array<{ name: string; alt: string; caption: string }>): ContentBlock => ({
+  kind: 'figure-row',
+  figures: items.map(({ name, alt, caption }) => ({ src: figures[name], alt, caption })),
+});
 
 export const protein: WikiPage = {
   title: 'Protein design and DNA recognition',
@@ -26,6 +30,12 @@ export const protein: WikiPage = {
     ] },
     { title: 'Choosing the substitutions', body: '', blocks: [
       p('We considered conservative substitutions alongside larger perturbations. This lets us compare a modest chemical change with the risk of altering local packing. Residue names follow the project’s LCYB numbering; the dynamics construct retains residues 71–555.'),
+      p('The design rationale was informed by work on LCYE cyclases, whose substrate pockets are largely aromatic and hydrophobic. In C. zofingiensis LCYE, an alanine scan identified Tyr140, Phe321 and Thr337 as activity-maintaining residues; Leu236, Phe245, Phe405 and Leu488 contributed to β-ring formation, while T205A was reported to reduce steric resistance and enhance β,β cyclization. These findings motivated testing local polarity and side-chain size in LCYB, but they do not establish residue equivalence or the same catalytic role in our enzyme (Meng et al., 2025, Algal Research 87:103974).'),
+      table('LCYE literature used to frame LCYB design', ['Reported LCYE observation', 'Design question carried into LCYB'], [
+        ['Aromatic and hydrophobic residues dominate the substrate pocket', 'Could changing side-chain size or polarity alter local substrate accommodation?'],
+        ['Y140, F321 and T337 maintain activity; L236, F245, F405 and L488 contribute to β-ring formation', 'Which candidate substitutions can be screened without assuming these positions map directly to LCYB?'],
+        ['T205A was associated with lower steric resistance and enhanced β,β cyclization', 'Could a local steric change shift cyclization preference, and what structural risk would it carry?'],
+      ]),
       table('Candidate design rationale', ['Substitutions', 'Chemical change', 'Question and trade-off'], [
         ['Y159F, Y200F, Y322F', 'Remove a hydroxyl group while retaining an aromatic ring', 'Could reduced polarity be tolerated? Loss of a useful polar interaction could reduce function.'],
         ['F404Y / F404A', 'Add a hydroxyl group / remove most of the aromatic side chain', 'Compare a conservative polarity change with a larger packing perturbation.'],
@@ -50,10 +60,10 @@ export const protein: WikiPage = {
       fig('docking-seeds', 'Three lycopene docking scores for WT and F404Y, with their means and seed-to-seed standard deviations.', 'Figure 1. Open circles show the best score from each search seed. Squares and horizontal intervals show the mean ± sample SD across three seeds. These intervals describe docking-search variability, not biological uncertainty.'),
       { kind: 'docking-viewer' },
       fig('lcyb-lycopene', 'Coordinate-based overview of the WT LCYB C-alpha trace and selected lycopene docking pose.', 'Figure 2. WT residues 71–555 as a smoothed C-alpha trace (teal), all-trans lycopene heavy atoms (amber), and Phe404 (purple). Blender rendering from the corrected docking inputs; not an experimental structure or an MD snapshot.'),
-      { kind: 'figure-grid', figures: [
-        { src: figures['lcyb-lycopene_detail'], alt: 'Close-up of the corrected all-trans lycopene docking pose in WT LCYB.', caption: 'Figure 3. Close-up of the selected WT pose; the displayed pose does not establish affinity or catalysis.' },
-        { src: figures['lcyb-lycopene-detail-alt'], alt: 'Alternate orientation of the same WT lycopene docking pose.', caption: 'Figure 4. Alternate camera view of the same coordinates, not an independent model or replicate.' },
-      ] },
+      figureRow(
+        { name: 'lcyb-lycopene_detail', alt: 'Close-up of the corrected all-trans lycopene docking pose in WT LCYB.', caption: 'Figure 3. Close-up of the selected WT pose. Ligand connectivity contains 40 carbon atoms and 39 heavy-atom bonds, with no terminal rings.' },
+        { name: 'lcyb-lycopene-detail-alt', alt: 'Alternate orientation of the same WT lycopene docking pose.', caption: 'Figure 4. Alternate view of the same input coordinates. Camera orientation changes only; this is not an independent model or replicate.' },
+      ),
       table('Lycopene docking results', ['System', 'Mean ± seed SD (kcal/mol)', 'Seeds'], [
         ['WT','−9.434 ± 0.213','3'], ['F404Y','−9.701 ± 0.477','3'],
       ]),

@@ -3,6 +3,8 @@
 .research-blocks p { margin: 1.2rem 0; }
 .research-blocks a { color: #176c82; text-underline-offset: .2em; }
 .research-blocks .research-figure { margin: 2rem auto; padding: .75rem; border-radius: .4rem; }
+.research-figure-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; margin: 2rem 0; }
+.research-figure-row .research-figure { min-width: 0; width: 100%; margin: 0; }
 .research-figure a, .research-figure img { display: block; width: 100%; }
 .research-figure-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin: 2rem 0; }
 .research-figure-grid .research-figure { display: flex; flex-direction: column; margin: 0; min-width: 0; }
@@ -43,6 +45,7 @@
 .related-wiki-pages a { color: #176c82; }
 @media (max-width: 800px) {
   .article-toc { max-height: none; }
+  .research-figure-row { grid-template-columns: 1fr; }
   .research-table-scroll th, .research-table-scroll td { padding: .6rem; }
   .research-table-details { padding: .75rem; }
   .research-equation { margin: 1.8rem 0; padding: 1.45rem 1rem; }

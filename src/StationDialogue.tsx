@@ -92,7 +92,6 @@ export function StationDialogue({ station, onClose }: StationDialogueProps) {
       </div>
 
       <footer>
-        <span>Use ← → or the page tabs to inspect this station.</span>
         <div className="station-dialogue__pager">
           <button type="button" onClick={() => setPage((currentPage) => Math.max(0, currentPage - 1))} disabled={page === 0}>← PREVIOUS</button>
           {page < pages.length - 1
