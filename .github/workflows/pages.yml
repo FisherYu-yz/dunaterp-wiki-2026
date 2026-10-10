@@ -54,6 +54,7 @@ jobs:
             protein \
             model \
             hardware \
+            hardware-design \
             contribution \
             human-practices \
             safety-and-security \

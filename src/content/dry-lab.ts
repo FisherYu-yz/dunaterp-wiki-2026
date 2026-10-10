@@ -18,14 +18,20 @@ export const dryLabNavigation = [
   ['Metabolomics', '/metabolomics'],
   ['Protein', '/protein'],
   ['Mathematical Modeling', '/model'],
-  ['Hardware', '/hardware'],
+  ['Hardware Modeling', '/hardware'],
+  ['Hardware Design', '/hardware-design'],
+] as const;
+
+export const dryLabMenuGroups = [
+  { label: 'Modeling', items: [dryLabNavigation[1], dryLabNavigation[2], dryLabNavigation[3], dryLabNavigation[4]] },
+  { label: 'Hardware', items: [dryLabNavigation[5], dryLabNavigation[6]] },
 ] as const;
 
 const modelingChapters = [
-  ['Transcriptomics', '/transcriptomics', 'Identify light-responsive pathway transcripts and rank candidate regulators.'],
-  ['Metabolomics', '/metabolomics', 'Test product feasibility, pathway competition and branch-point control.'],
-  ['Protein', '/protein', 'Screen LCYB variants and examine the TF2146–DNA recognition hypothesis.'],
-  ['Mathematical Modeling', '/model', 'Connect TF2146 activity to LCYB expression and β-carotene supply.'],
+  ['Transcriptomics', '/transcriptomics', 'Rank pathway-associated regulators using published D. salina light-response RNA-seq.'],
+  ['Metabolomics', '/metabolomics', 'Compare four product routes across eight A–H conditions, then test pathway branch points.'],
+  ['Protein', '/protein', 'Screen LCYB variants and examine the proposed TF2146–DNA interaction.'],
+  ['Mathematical Modeling', '/model', 'Trace promoter occupancy through LCYB expression to the β-carotene pool.'],
 ] as const;
 
 export const transcriptomics: WikiPage = {
@@ -272,15 +278,33 @@ v_{\mathrm{LCYB}}&=q_{\mathrm{LCYB}}E\frac{L}{K_{m,\mathrm{LCYB}}+L}\\[4pt]
 
 export const dryLabIndex: WikiPage = {
   title: 'Dry Lab overview', eyebrow: 'Dry Lab', status: 'team-draft',
-  intro: 'The Dry Lab has two parts: modeling the biological system and designing the hardware used to cultivate it. The links below lead directly to the work that is already on the site.',
+  intro: 'The Dry Lab combines computational work with reactor design. We start from published light-response data, use a reconstructed Dunaliella salina network to compare four carotenoid-product routes, and examine the LCYB variants and proposed TF2146–DNA interaction behind the design. A five-state model follows a regulatory input through LCYB expression to the β-carotene pool. These analyses help frame experiments; they are not a substitute for wet-lab validation. The hardware work asks how to cultivate the engineered alga in a flat-panel airlift photobioreactor.',
   sections: [
     section('Modeling',
-      p('Four workflows examine the system at different scales: expression data, metabolic flux, molecular structure and regulatory dynamics.'),
+      p('Each page answers a specific design question. Transcriptomics uses public samples from three light intensities to rank pathway-associated regulator candidates; an expression association alone does not show direct promoter binding. Metabolomics tests whether the reconstructed network can support the four product branches across eight published A–H conditions, then compares product flux, chassis cost and branch-point effects. Protein analysis screens LCYB variants and explores the proposed TF2146–DNA interaction. The mathematical model links promoter occupancy to LCYB transcript, active enzyme, lycopene and β-carotene. Model outputs are predictions to guide experiments, not measured product titres.'),
       { kind: 'chapter-grid', items: modelingChapters.map(([title, href, text], index) => ({ index: `0${index + 1}`, title, href, text })) },
     ),
     section('Hardware',
-      p('The hardware work develops a flat-panel photobioreactor and an interactive design tool for testing cultivation conditions, light delivery and scale-up choices.'),
-      { kind: 'chapter-grid', items: [{ index: '05', title: 'Photobioreactor', href: '/hardware', text: 'Explore the reactor design, engineering model and interactive hardware tool.' }] },
+      p(
+        'The hardware work combines physical photobioreactor design with quantitative engineering analysis. The design page documents the reactor architecture and prototype iterations, while the modeling page explores light transport, cultivation dynamics, scale-up, energy use, and operating conditions.',
+      ),
+      {
+        kind: 'chapter-grid',
+        items: [
+          {
+            index: '05',
+            title: 'Hardware Modeling',
+            href: '/hardware',
+            text: 'Explore light transport, cultivation dynamics, scale-up, energy use, and the interactive PBR model.',
+          },
+          {
+            index: '06',
+            title: 'Hardware Design',
+            href: '/hardware-design',
+            text: 'Explore the physical reactor architecture, prototype iterations, structural design, and final configuration.',
+          },
+        ],
+      },
     ),
   ],
 };
@@ -298,9 +322,20 @@ const hardwareFig = (
   caption,
 });
 
+const hardwareDesignFig = (
+  filename: string,
+  alt: string,
+  caption: string,
+): ContentBlock => ({
+  kind: 'figure',
+  src: `/figures/hardware-design/${filename}`,
+  alt,
+  caption,
+});
+
 export const hardware: WikiPage = {
-  title: 'Hardware',
-  eyebrow: 'Dry Lab / Hardware',
+  title: 'Hardware Modeling',
+  eyebrow: 'Dry Lab / Hardware Modeling',
   status: 'team-draft',
   intro:
     'We developed a flat-panel airlift photobioreactor with symmetric double-sided illumination, together with a reduced-order engineering model to explore how reactor design and operating conditions may influence cultivation and production.',
@@ -338,7 +373,7 @@ X(t)
 \begin{bmatrix}
 I^+(z,t)\\
 I^-(z,t)
-\end{bmatrix}\\[4pt]
+\end{bmatrix}\\[10pt]
 I^+(0,t)&=I_F(t),\qquad
 I^-(L,t)=I_B(t)\\[4pt]
 I_F(t)&=I_B(t)=I_0(t)\\[4pt]
@@ -405,7 +440,7 @@ P
 (\mu-k_d)X\\
 -\mu X/Y_{X/N}\\
 (\alpha\mu+\beta(t))X-k_pP
-\end{bmatrix}\\[5pt]
+\end{bmatrix}\\[10pt]
 \mu(t)
 &=
 \mu_{\max}
@@ -468,7 +503,7 @@ I_{\mathrm{opt}}
 \begin{cases}
 [I_g,I_g,\beta_g], & 0\le t<t_s\\
 [I_p,I_p,\beta_p], & t_s\le t\le T
-\end{cases}\\[5pt]
+\end{cases}\\[10pt]
 Q_P(I_g,t_s)
 &=
 \frac{P(T;I_g,t_s)}{T}\\[4pt]
@@ -687,6 +722,76 @@ T_{\mathrm{payback}}
       ),
       p(
         'The model is therefore primarily used to explore engineering relationships, compare operating scenarios, identify influential parameters, and visualize trade-offs between light, growth, productivity, and energy consumption. Future experimental measurements could be used to further calibrate and validate the model.',
+      ),
+    ),
+  ],
+};
+
+export const hardwareDesign: WikiPage = {
+  title: 'Hardware Design',
+  eyebrow: 'Dry Lab / Hardware Design',
+  status: 'team-draft',
+  intro:
+    'To support Dunaliella cultivation, we designed a flat-panel airlift photobioreactor centered on a serpentine culture chamber and bubble-driven circulation of the culture medium.',
+  sections: [
+    section(
+      'Reactor Architecture and Working Principle',
+      p(
+        'For photosynthetic Dunaliella, reactor design should account for light availability, inorganic carbon supply, gas exchange, culture mixing, and the compatibility of materials and seals with saline media. For light supply, individual cells experience light according to both external illumination and their movement through the culture. We therefore designed the reactor to promote mixing through bubble-driven circulation and facilitate cell movement between well-lit regions near the transparent walls and darker regions within the culture, with the aim of creating light–dark exposure patterns that may benefit cultivation.',
+      ),
+      p(
+        'The reactor consists of two transparent PMMA plates designed for CNC machining. The transparent walls allow external illumination and observation of the interior, while the split construction provides access for cleaning and maintenance. The chamber integrates three functional regions: a bottom pressure-equalization and gas-distribution region, a central culture zone, and a top gas–liquid separation region. Silicone gaskets are incorporated at the plate interface, and polymer bulkhead fittings connect the gas and liquid lines.',
+      ),
+      p(
+        'For the central culture zone, the serpentine geometry guides circulation driven by rising gas bubbles. Gas introduced through the bottom distribution region transfers momentum to the surrounding culture medium, while internal flow-guiding structures direct the resulting liquid motion and are intended to establish local recirculation. This arrangement is designed to promote mixing without a separate mechanical impeller. At the top, an enlarged gas–liquid separation region provides space for gas disengagement and discharge, integrating gas introduction, bubble-driven circulation, and gas release within a single reactor body.',
+      ),
+    ),
+
+    section(
+      'Single-Unit Concept — Initial Geometry for CFD',
+      p(
+        'Our design process began with a simplified single-unit model developed in CATIA for preliminary CFD analysis. The geometry contained a single curved flow-guiding section, allowing us to investigate how rising bubbles interact with the surrounding liquid and internal walls. This stage focused on the basic hydrodynamic concept: using gas-driven liquid motion to promote circulation and mixing without a mechanical impeller. The simplified model provided a starting point for developing a larger serpentine culture chamber.',
+      ),
+      hardwareDesignFig(
+        'First_Generation_Flat_Panel_Airlift_Reactor_Single_Unit.JPG',
+        'Simplified single-unit flat-panel airlift reactor geometry developed for preliminary CFD analysis.',
+        'Figure 1. First-generation single-unit concept used to establish the basic bubble-driven circulation geometry.',
+      ),
+    ),
+
+    section(
+      'Initial Prototype — Piled Cultivation Chamber',
+      p(
+        'The initial full-panel prototype extended the single-unit concept into a series of connected flow-guiding sections. Developed in SolidWorks, this version established the reactor’s main functional layout: a bottom pressure-equalization and gas-distribution region, a central serpentine culture chamber, and a top gas–liquid separation region. The internal geometry was intended to guide bubble-driven liquid motion through the culture chamber while providing space for gas distribution and release. This iteration connected the preliminary flow concept with the overall architecture of a flat-panel photobioreactor.',
+      ),
+      hardwareDesignFig(
+        'Reactor_V1_Initial_Prototype.JPG',
+        'Initial full-panel prototype showing the connected serpentine cultivation chamber and functional reactor regions.',
+        'Figure 2. Reactor V1 initial prototype extending the single-unit circulation concept into a complete flat-panel architecture.',
+      ),
+    ),
+
+    section(
+      'Laboratory Prototype — Assembly and Sealing',
+      p(
+        'The laboratory prototype translated the functional layout into a two-part split design, with complementary plates enclosing the culture chamber. Fastening holes and internal support locations were incorporated, and silicone gaskets were introduced to seal the mating surfaces. These features were intended to support secure assembly while allowing the chamber to be opened for cleaning, inspection, and component replacement. This stage shifted the design focus toward practical laboratory use, particularly the integration of the flow geometry with fastening, sealing, and fluid connections.',
+      ),
+      hardwareDesignFig(
+        'Reactor_V2_Lab_Prototype.JPG',
+        'Laboratory prototype showing the split-plate construction, fastening layout, and sealing features.',
+        'Figure 3. Reactor V2 laboratory prototype integrating assembly, sealing, and maintainability into the flat-panel design.',
+      ),
+    ),
+
+    section(
+      'Production Design — Fastening Refinement and Wall-Thickness Optimization',
+      p(
+        'The final design refined the split-plate reactor for CNC machining from transparent PMMA. AI-assisted design exploration was used to refine the screw layout, considering fastening distribution, sealing support, and clearance around the culture channels and connection ports. Material-removal pockets on the outer surfaces were introduced to reduce the thickness of PMMA in consideration of both optical transmission and the mounting requirements of bulkhead fittings. The connection features were also adapted to existing polymer bulkhead fittings. As shown in the drawing, the culture-facing side of Plate A retains the serpentine flow-guiding geometry, bringing the circulation concept together with the requirements of fabrication and assembly.',
+      ),
+      hardwareDesignFig(
+        'Reactor_V3_Plate_A_Culture_Facing_Side_Vertical.JPG',
+        'Final Plate A design showing the culture-facing serpentine geometry, fastening layout, and machining refinements.',
+        'Figure 4. Reactor V3 production design integrating the circulation geometry with CNC fabrication, sealing, fastening, and connection requirements.',
       ),
     ),
   ],
