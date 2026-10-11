@@ -3,7 +3,7 @@ run-name: Publish wiki preview
 
 on:
   push:
-    branches: [main, codex/salt-route-world-polish]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
