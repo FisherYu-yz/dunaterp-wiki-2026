@@ -583,43 +583,6 @@ export function buildWorld(): World {
     });
   });
 
-  // The route begins at a small field outpost rather than an empty salt flat.
-  // Every item stays outside the boardwalk corridor so the traveller remains
-  // visible and the first movement is unobstructed.
-  const outpost = [
-    pointFromHead(-32, 110),
-    pointFromHead(-44, 136),
-    pointFromHead(32, 122),
-  ].find((point) => !occupied(point.x, point.y, 50)) ?? pointFromHead(-32, 110);
-  props.push({ sprite: "trailheadOutpost", x: outpost.x, y: outpost.y, shadow: "medium" });
-  for (let ty = Math.floor((outpost.y - 48) / TILE); ty <= Math.floor((outpost.y - 10) / TILE); ty += 1) {
-    for (let tx = Math.floor((outpost.x - 30) / TILE); tx <= Math.floor((outpost.x + 30) / TILE); tx += 1) {
-      if (inBounds(tx, ty) && !deckMask[index(tx, ty)]) blocked[index(tx, ty)] = 1;
-    }
-  }
-
-  // A short branch joins the outpost porch to the marked boardwalk.
-  const approachU = path.nearestU(outpost.x, outpost.y);
-  const approach = path.sample(approachU);
-  const spurX = outpost.x - approach.x;
-  const spurY = outpost.y + 6 - approach.y;
-  const spurAngle = Math.atan2(spurY, spurX);
-  const spurSteps = Math.max(1, Math.ceil(Math.hypot(spurX, spurY) / 8));
-  for (let step = 0; step <= spurSteps; step += 1) {
-    const t = step / spurSteps;
-    const x = approach.x + spurX * t;
-    const y = approach.y + spurY * t;
-    layDeck(x, y, spurAngle, 10);
-    const acrossX = -Math.sin(spurAngle);
-    const acrossY = Math.cos(spurAngle);
-    for (let offset = -14; offset <= 14; offset += 2) {
-      const tx = Math.floor((x + acrossX * offset) / TILE);
-      const ty = Math.floor((y + acrossY * offset) / TILE);
-      if (!inBounds(tx, ty)) continue;
-      deckMask[index(tx, ty)] = 1;
-      if (!isWet(tiles[index(tx, ty)] as Tile)) blocked[index(tx, ty)] = 0;
-    }
-  }
   const sign = pointFromHead(8, 66);
   const lodge = path.sample(0);
 
