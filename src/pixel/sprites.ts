@@ -22,6 +22,7 @@ import {
   surface,
   type Painter,
 } from "./paint";
+import { colorOf } from "./palette";
 
 // ---------------------------------------------------------------------------
 // Hero
@@ -379,44 +380,82 @@ function saltPile(): Painter {
 }
 
 function trailheadLodge(): Painter {
-  const p = surface(86, 68);
+  const p = surface(96, 76);
+  const polygon = (points: Array<[number, number]>, key: string) => {
+    const minY = Math.min(...points.map(([, y]) => y));
+    const maxY = Math.max(...points.map(([, y]) => y));
+    p.ctx.fillStyle = colorOf(key);
+    for (let y = minY; y < maxY; y += 1) {
+      const scanY = y + 0.5;
+      const intersections: number[] = [];
+      for (let i = 0; i < points.length; i += 1) {
+        const [x1, y1] = points[i];
+        const [x2, y2] = points[(i + 1) % points.length];
+        if ((y1 <= scanY && y2 > scanY) || (y2 <= scanY && y1 > scanY)) {
+          intersections.push(x1 + ((scanY - y1) * (x2 - x1)) / (y2 - y1));
+        }
+      }
+      intersections.sort((a, b) => a - b);
+      for (let i = 0; i + 1 < intersections.length; i += 2) {
+        const left = Math.ceil(intersections[i] - 0.5);
+        const right = Math.floor(intersections[i + 1] - 0.5);
+        rect(p, left, y, right - left + 1, 1, key);
+      }
+    }
+  };
 
-  // A small field lodge turns the loose end of the boardwalk into a real
-  // departure point. Salt-brick walls and the dark green roof reuse the
-  // archive/station vocabulary instead of introducing a separate art style.
-  block(p, 9, 25, 68, 38, "b", "d", "a");
-  for (let y = 28; y < 61; y += 5) {
-    for (let x = 11; x < 75; x += 10) {
-      rect(p, x + ((y / 5) % 2 === 0 ? 0 : 5), y, 9, 4, "c");
+  // Show two wall planes and a roof that recedes to the right, so the
+  // trailhead reads as a small pixel-art building rather than a flat sign.
+  polygon([[66, 28], [82, 19], [82, 59], [66, 67]], "c");
+  line(p, 66, 28, 82, 19, "1");
+  line(p, 82, 19, 82, 59, "1");
+  line(p, 82, 59, 66, 67, "1");
+  for (let y = 34; y < 61; y += 7) line(p, 68, y, 80, y - 6, "d");
+
+  block(p, 8, 28, 59, 37, "b", "d", "a");
+  for (let y = 32; y < 62; y += 5) {
+    for (let x = 10; x < 65; x += 10) {
+      rect(p, x + ((y / 5) % 2 === 0 ? 0 : 5), y, 8, 3, "c");
     }
   }
-  frame(p, 9, 25, 68, 38, "1");
+  frame(p, 8, 28, 59, 37, "1");
 
-  // Deep stepped roof with a lime trail marker.
-  for (let y = 0; y < 13; y += 1) {
-    rect(p, 2 + y * 3, 25 - y, 82 - y * 6, 1, y < 3 ? "8" : y < 8 ? "5" : "3");
-  }
-  rect(p, 1, 24, 84, 3, "1");
-  rect(p, 4, 22, 78, 2, "8");
+  // Gabled front roof plus a darker side plane gives the lodge clear depth.
+  polygon([[4, 28], [38, 3], [68, 28], [38, 17]], "5");
+  polygon([[38, 3], [87, 17], [68, 28], [38, 17]], "3");
+  line(p, 4, 28, 38, 3, "1");
+  line(p, 38, 3, 87, 17, "1");
+  line(p, 87, 17, 68, 28, "1");
+  line(p, 68, 28, 4, 28, "1");
+  rect(p, 4, 27, 64, 3, "1");
+  polygon([[68, 27], [87, 17], [87, 22], [68, 31]], "1");
+  rect(p, 7, 25, 60, 2, "8");
 
-  // Warm doorway meeting the first plank of the route.
-  block(p, 34, 38, 18, 25, "2", "1", "3");
-  for (let y = 0; y < 20; y += 1) {
-    rect(p, 37, 41 + y, 12, 1, y < 7 ? "D" : y < 14 ? "i" : "j");
-  }
-  px(p, 47, 50, "y");
+  // The receding wall gets one narrow sampling window.
+  block(p, 72, 36, 7, 11, "2", "1", "3");
+  rect(p, 74, 38, 3, 7, "x");
 
-  // Windows, route pennant and a compact sign band.
-  for (const x of [16, 58]) {
-    block(p, x, 37, 11, 10, "2", "1", "3");
-    rect(p, x + 2, 39, 7, 6, "x");
-    line(p, x + 5, 39, x + 5, 44, "1");
+  // Front sign, paired windows, and a warm doorway onto the boardwalk.
+  block(p, 25, 31, 29, 8, "2", "1", "3");
+  drawText(p, "TRAIL", 28, 33, "8", { shadow: "1" });
+  for (const x of [14, 56]) {
+    block(p, x, 42, 10, 10, "2", "1", "3");
+    rect(p, x + 2, 44, 6, 6, "x");
+    line(p, x + 5, 44, x + 5, 49, "1");
   }
-  block(p, 28, 28, 30, 8, "2", "1", "3");
-  drawText(p, "TRAIL", 31, 30, "8", { shadow: "1" });
-  line(p, 73, 18, 73, 4, "C");
-  rect(p, 74, 5, 9, 5, "8");
-  rect(p, 74, 10, 6, 3, "7");
+  block(p, 33, 41, 18, 24, "2", "1", "3");
+  for (let y = 0; y < 19; y += 1) rect(p, 36, 44 + y, 12, 1, y < 6 ? "D" : y < 13 ? "i" : "j");
+  px(p, 46, 53, "y");
+
+  // A hard-edged sill anchors the building without an oval ground shadow.
+  rect(p, 7, 65, 61, 2, "1");
+  line(p, 68, 66, 82, 59, "1");
+  line(p, 12, 69, 69, 69, "d");
+  line(p, 69, 69, 82, 62, "d");
+
+  line(p, 77, 20, 77, 8, "C");
+  rect(p, 78, 9, 9, 5, "8");
+  rect(p, 78, 14, 6, 3, "7");
   return p;
 }
 

@@ -18,7 +18,7 @@ export const OPENING_HOOK = "A programmable, salt-adapted platform for rewiring 
 export const STORY_BEATS: readonly StoryBeat[] = [
   {
     phase: "BACKGROUND",
-    chapter: "01 · BACKGROUND & CHALLENGE",
+    chapter: "BACKGROUND & CHALLENGE",
     speaker: "Field guide",
     speakerTone: "#cdf558",
     text: "Terpenoids colour foods, support nutrition and supply high-value ingredients. Plant extraction can be slow and variable, chemical synthesis can carry a heavy environmental cost, and conventional microbial production often depends on sterile freshwater processes.",
@@ -27,7 +27,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
   },
   {
     phase: "DESIGN",
-    chapter: "02 · BIOLOGICAL DESIGN",
+    chapter: "BIOLOGICAL DESIGN",
     speaker: "Dr. Lin · algal biologist",
     speakerTone: "#cdf558",
     text: "Dunaliella salina grows in seawater and hypersaline media, tolerates conditions that suppress many contaminants, fixes carbon with light, and already carries a complete MEP-to-carotenoid route. That makes it a practical chassis rather than only another product source.",
@@ -36,7 +36,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
   },
   {
     phase: "ROUTES",
-    chapter: "03 · METABOLIC REPROGRAMMING",
+    chapter: "METABOLIC REPROGRAMMING",
     speaker: "Mara · pathway engineer",
     speakerTone: "#f7a52d",
     text: "Our core design reprogrammes pathway regulation and redirects metabolic flux toward competitive β-carotene synthesis. The β-carotene pool becomes a controllable hub for the platform.",
@@ -45,7 +45,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
   },
   {
     phase: "PROCESS",
-    chapter: "04 · PLATFORM DESIGN & VALIDATION",
+    chapter: "PLATFORM DESIGN & VALIDATION",
     speaker: "Ari · community researcher",
     speakerTone: "#c4a8ff",
     text: "Modeling links transcriptional control to pathway flux. Four downstream designs—astaxanthin, β-ionone, crocetin and β-citraurin—then test how the same reprogrammable chassis can support distinct high-value products.",
@@ -54,7 +54,7 @@ export const STORY_BEATS: readonly StoryBeat[] = [
   },
   {
     phase: "JOURNEY",
-    chapter: "05 · YOUR JOURNEY",
+    chapter: "YOUR JOURNEY",
     speaker: "Field guide",
     speakerTone: "#cdf558",
     text: "Welcome to DunaTerp. Follow the boardwalk for our project story, or step off the route to talk with one of the three field guides.",

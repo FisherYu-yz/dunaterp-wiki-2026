@@ -23,11 +23,11 @@ export function StoryIllustration({ beat }: { beat: StoryBeat }) {
 
     case "products":
       return <div className="story-pathway" aria-label="Metabolic reprogramming redirects Dunaliella flux toward a beta-carotene hub">
-        <div className="story-specimen"><StoryGlyph kind="alga" /><span>Engineered Dunaliella</span></div>
-        <span className="story-arrow" aria-hidden="true">→</span>
-        <div className="story-hub">METABOLIC REPROGRAMMING</div>
-        <span className="story-arrow" aria-hidden="true">→</span>
-        <div className="story-products">{["REDIRECTED FLUX", "β-CAROTENE HUB"].map((text, index) => <span key={text} style={stagger(index)}>{text}</span>)}</div>
+        <div className="story-specimen story-pathway__source"><StoryGlyph kind="alga" /><span>Engineered Dunaliella</span></div>
+        <span className="story-arrow story-pathway__arrow story-pathway__arrow--source" aria-hidden="true">→</span>
+        <div className="story-hub story-pathway__hub">METABOLIC REPROGRAMMING</div>
+        <span className="story-arrow story-pathway__arrow story-pathway__arrow--products" aria-hidden="true">→</span>
+        <div className="story-products story-pathway__products">{["REDIRECTED FLUX", "β-CAROTENE HUB"].map((text, index) => <span key={text} style={stagger(index)}>{text}</span>)}</div>
       </div>;
 
     case "characterisation":

@@ -593,7 +593,7 @@ export function buildWorld(): World {
   const sign = pointFromHead(8, 66);
   const lodge = path.sample(0);
 
-  props.push({ sprite: "trailheadLodge", x: lodge.x, y: lodge.y + 3, shadow: "large" });
+  props.push({ sprite: "trailheadLodge", x: lodge.x, y: lodge.y + 3, shadow: "none" });
   props.push({
     sprite: "signScroll",
     x: sign.x,

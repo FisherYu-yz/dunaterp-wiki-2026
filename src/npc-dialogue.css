@@ -71,8 +71,9 @@
 
 .npc-dialogue__story {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  align-content: center;
+  gap: .85rem;
   padding: 1rem 1.2rem .9rem;
   background: var(--npc-paper);
 }
@@ -82,7 +83,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin: -1rem -1.2rem .9rem;
+  margin: -1rem -1.2rem 0;
   padding: .65rem .7rem .6rem 1.2rem;
   border-bottom: 3px solid var(--npc-ink);
   background: var(--npc-accent);
@@ -123,16 +124,19 @@
 }
 
 .npc-dialogue__line {
-  min-height: 12rem;
+  max-width: 58ch;
+  min-height: 0;
   margin: 0;
   color: var(--npc-ink);
-  font-size: clamp(1rem, 1.6vw, 1.24rem);
-  font-weight: 780;
-  line-height: 1.5;
+  font-size: clamp(.98rem, 1.35vw, 1.14rem);
+  font-weight: 650;
+  line-height: 1.6;
 }
 
 .npc-dialogue__hint {
-  margin: .65rem 0 0;
+  margin: .25rem 0 0;
+  padding-top: .8rem;
+  border-top: 2px solid color-mix(in srgb, var(--npc-ink) 20%, transparent);
   color: #304741;
   font: 900 .8rem/1.4 ui-monospace, Menlo, monospace;
   letter-spacing: .05em;
@@ -140,9 +144,10 @@
 }
 
 .npc-dialogue__chapter-hint {
-  margin: .55rem 0 0;
-  padding-top: .5rem;
-  border-top: 2px solid color-mix(in srgb, var(--npc-ink) 24%, transparent);
+  margin: -.5rem 0 0;
+  padding: .65rem .75rem;
+  border-left: 4px solid var(--npc-accent);
+  background: color-mix(in srgb, var(--npc-accent) 18%, var(--npc-paper));
   color: #304741;
   font: 800 .72rem/1.45 ui-monospace, Menlo, monospace;
   letter-spacing: .025em;
@@ -152,8 +157,8 @@
   display: flex;
   align-items: center;
   gap: .55rem;
-  margin-top: auto;
-  padding-top: 1rem;
+  margin-top: .2rem;
+  padding-top: .25rem;
 }
 .npc-dialogue__pager span { margin-right: auto; color: #52625d; font: 900 .72rem/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; }
 .npc-dialogue__pager button { width: 2.5rem; height: 2.3rem; border: 3px solid var(--npc-ink); background: var(--npc-paper); color: var(--npc-ink); box-shadow: 3px 3px 0 var(--npc-ink); cursor: pointer; font: 900 1rem/1 ui-monospace, Menlo, monospace; }
@@ -232,7 +237,7 @@
     border-left: 0;
   }
   .npc-dialogue__line { min-height: 0; font-size: .94rem; }
-  .npc-dialogue__story { min-height: 18rem; }
+  .npc-dialogue__story { min-height: 18rem; align-content: start; gap: .8rem; }
 }
 
 @media (max-height: 560px) and (min-width: 761px) {

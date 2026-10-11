@@ -782,7 +782,7 @@ export function ExpeditionJournal({
                   );
                 })}
               </div>
-              <p className="ej-contact-note">A conversation can add a question to your notes. It does not replace the evidence behind an answer.</p>
+              <p className="ej-contact-note">A conversation can add a question to your notes.</p>
             </aside>
 
             <div className="ej-journal-main">
