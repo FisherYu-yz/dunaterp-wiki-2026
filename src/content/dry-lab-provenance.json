@@ -1,10 +1,12 @@
 {
-  "source": "Team-authored transcriptomics analysis and regulatory LCYB model",
+  "source": "GSE120965 public counts and Trinity assembly; team sequence annotation, DESeq 1.10.1 rerun, and regulatory LCYB model",
   "revision_date": "2026-10-12",
   "figure_sha256": {
     "carotenoid-route.svg": "8503d5138716029739c2702ed6a20030ba5b0cca5dd667492284373e03113241",
     "transcriptomics-workflow.svg": "a763e22c3d2456f3e6bc6e8b593d4f2b7c6793ec613618301ed18b0b1f615077",
-    "pathway-expression-contrasts.svg": "fd3bfa971a49ea3cb56b69b4ea00a2c960eda4fdf2e7c1e3a08ac092039f8b5b",
+    "transcriptomics-sample-expression.svg": "f8bb948af4b5293ac1966da0d9c0acd3db1e6ae1cf5668f817866e4b378b2c96",
+    "transcriptomics-deseq-volcano.svg": "e00061f5efb35c5356c063f813a71fe53e5d3b3d8ed7ae07b753cf4416505040",
+    "transcriptomics-pathway-effects.svg": "a11a155e39489c5fc41508c3929974458f4b8bdea469af2fe0423fcc283abb7a",
     "01_gene_recovery.png": "d3ac58241b6451850fe19dc962f682ab3620e8fe3ba81985d715fca7aead340c",
     "06_expression_qc.png": "389f4f02ac547ff2eeb60cf04a8ed030d0e06a6f0b3733b3857b9c98d9aead57",
     "07_differential_expression.png": "49bd2329655fc0b12df007bd5d1ef8fe87bf49c21bb9c16cdf489323debe2b42",

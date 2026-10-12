@@ -33,52 +33,87 @@ const modelingChapters = [
 
 export const transcriptomics: WikiPage = {
   title: 'Transcriptomics', eyebrow: 'Dry Lab / Transcriptomics', status: 'team-draft',
-  intro: 'We followed the carotenoid pathway from its early precursor steps to the lycopene branch, then asked how those enzyme transcripts respond to light acclimation in Dunaliella salina. The clearest link to our design is LCYB, which directs lycopene toward the β-carotene pool used by the downstream models.',
+  intro: 'We started with the reaction sequence, matched the public Dunaliella salina transcripts to carotenoid-enzyme sequences, and then compared the nine light-acclimation samples with a replicate-aware count model. The output is a transcript-by-transcript view of which pathway steps respond to light—and which LCYB copies are worth carrying into the β-carotene model.',
   sections: [
-    section('Follow the route to the β-carotene branch',
-      p('Carotenoid synthesis is a chain of enzyme reactions, so we organized the analysis by pathway position. GGPS supplies GGPP, and PSY converts it to phytoene; PDS, Z-ISO, ZDS and CRTISO then lead toward lycopene. At lycopene, LCYB directs synthesis toward β-carotene, while LCYE opens the α-carotene branch.'),
-      { kind: 'figure', src: '/figures/dry-lab/carotenoid-route.svg', alt: 'Pathway diagram from MEP-derived precursors through phytoene and lycopene, branching at LCYB to beta-carotene and at LCYE to alpha-carotene.', caption: 'Figure 1. Enzyme order used to read the light-response data. The highlighted LCYB step connects the transcript analysis to the β-carotene model.' },
-      p('This pathway map sets the biological question: which steps change with light, and does the lycopene branch point respond in a way that is useful to test in the model?'),
+    section('Begin with the reactions we want to understand',
+      p('The route gives the analysis its order. PSY commits geranylgeranyl diphosphate to phytoene; PDS, Z-ISO, ZDS and CRTISO convert phytoene toward lycopene. At lycopene, LCYB feeds the β-carotene branch and LCYE feeds the competing α-carotene branch. We therefore annotate transcripts by enzyme first, then read the expression changes at their position in this route.'),
+      { kind: 'figure', src: '/figures/dry-lab/carotenoid-route.svg', alt: 'Carotenoid pathway from MEP-derived precursors through phytoene and lycopene, branching at LCYB to beta-carotene and at LCYE to alpha-carotene.', caption: 'Figure 1. The biochemical route used to organize transcript annotations. LCYB is the branch connecting this analysis to the β-carotene model.' },
+      p('The question is not whether one statistical cluster can represent the pathway. It is which sequence-supported enzyme transcripts change between the measured light conditions, and whether different copies assigned to the same enzyme show the same response.'),
     ),
-    section('From samples to enzyme steps',
-      p('The public study GSE120965 provides a de novo Trinity transcript assembly and a Readcount matrix from cells acclimated for 168 h at three light intensities. Each condition has three independent biological replicates.'),
-      customTable('Light-acclimation experiment', ['Light intensity (µmol photons m⁻² s⁻¹)', 'Samples', 'Replicates'], [
-        ['150','LL1, LL2, LL3','3'], ['600','ML1, ML2, ML3','3'], ['1500','HL1, HL2, HL3','3'],
+    section('Start with the experiment and its deposited data',
+      p('GSE120965 contains nine cultures: three biological replicates each at 150, 600 and 1500 µmol photons m⁻² s⁻¹, sampled after 168 h of light acclimation. In the published upstream pipeline, adapters, poly-N reads and low-quality reads were removed; Trinity assembled the clean reads, and the longest transcript in each Trinity subcomponent was retained as a unigene. We use that deposited unigene FASTA and GEO Readcount matrix. Their transcript identifiers match across all 76,875 rows, so the analysis below starts from the public processed files rather than claiming to reassemble the reads.'),
+      customTable('Light-acclimation design', ['Condition', 'GEO sample IDs', 'Independent cultures'], [
+        ['150 · low (LL)','LL1, LL2, LL3','3'], ['600 · medium (ML)','ML1, ML2, ML3','3'], ['1500 · high (HL)','HL1, HL2, HL3','3'],
       ]),
-      { kind: 'figure', src: '/figures/dry-lab/transcriptomics-workflow.svg', alt: 'Analysis workflow linking the three replicated light treatments to Trinity sequence annotation, DESeq count comparisons, pathway interpretation and the LCYB model.', caption: 'Figure 2. The two analysis tracks share transcript identifiers: sequence similarity assigns an enzyme step, while replicated read counts estimate its light response.' },
-      h('1 · Assign each transcript to a pathway reaction'),
-      p('DIAMOND blastx searches all six-frame translations from the Trinity assembly against Swiss-Prot and Dunaliella protein references. We retain hits with E-value ≤ 10⁻⁵, at least 20% identity and at least 15% reference-protein coverage; for each transcript, the highest bit-score hit supplies its enzyme annotation. We make this sequence-based list before testing light response and keep Trinity IDs as transcript-level features.'),
-      h('2 · Compare like with like'),
-      p('We use the Readcount matrix, not FPKM, for the treatment test. DESeq 1.10.1 first estimates median-of-ratios size factors to correct library depth, then estimates pooled dispersion across the nine samples. Its negative-binomial nbinomTest compares each light pair. The GEO matrix contains fractional entries, which are rounded to the nearest integer for this DESeq input.'),
-      h('3 · Test the three biological contrasts'),
-      customTable('Planned comparisons', ['Contrast', 'Question'], [
-        ['600 vs 150','Which transcripts respond at the intermediate light condition?'],
-        ['1500 vs 150','Which responses differ between the lowest and strongest light?'],
-        ['1500 vs 600','What changes between the two elevated-light conditions?'],
-      ]),
-      p('For each contrast, DESeq returns a log₂ fold change and P value. We adjust P values across tested transcripts with Benjamini–Hochberg; q < 0.05 marks a statistically supported expression difference. Positive log₂ fold change means the transcript is more abundant in the first-named condition.'),
+      { kind: 'figure', src: '/figures/dry-lab/transcriptomics-workflow.svg', alt: 'Analysis workflow: public sample design branches into sequence annotation and count-based differential expression, then transcript identifiers are joined for pathway interpretation.', caption: 'Figure 2. Sequence evidence assigns a transcript to a biochemical step; replicate counts estimate how that transcript responds. The two tracks meet only at the Trinity transcript ID.' },
     ),
-    section('What changes along the route',
-      p('The pathway does not move as one block. The light response differs by reaction, and the LCYB transcript is most abundant in the intermediate-light comparison rather than rising steadily across all three conditions.'),
-      customTable('Selected annotated carotenoid transcripts', ['Enzyme step', 'Trinity transcript', 'Contrast', 'log₂ fold change', 'q value'], [
-        ['CRTISO · isomerization toward lycopene','Cluster-5009.33436','1500 vs 600','+4.70','2.8 × 10⁻¹¹¹'],
-        ['LCYB · lycopene → β-carotene','Cluster-5009.34218','600 vs 150','+0.58','1.3 × 10⁻¹³'],
-        ['LCYB · lycopene → β-carotene','Cluster-5009.34218','1500 vs 600','−0.31','1.1 × 10⁻⁴'],
-        ['LCYE · competing lycopene branch','Cluster-5009.32344','1500 vs 150','+0.58','1.4 × 10⁻⁷'],
-        ['PDS · early desaturation','Cluster-5009.39826','1500 vs 150','−0.58','4.3 × 10⁻¹²'],
-        ['ZEP · xanthophyll branch','Cluster-5009.41790','1500 vs 150','−0.78','3.5 × 10⁻¹⁵'],
-      ]),
-      { kind: 'figure', src: '/figures/dry-lab/pathway-expression-contrasts.svg', alt: 'Diverging bar chart of six selected DESeq log2 fold changes for CRTISO, LCYB, LCYE, PDS and ZEP across the indicated light contrasts, with q values.', caption: 'Figure 3. Selected enzyme-level responses. The zero line marks no expression difference; bar direction follows the first-versus-second condition order shown at left.' },
-      p('The pattern points to a specific modeling question: at 600 µmol photons m⁻² s⁻¹, the annotated LCYB transcript is about 1.5-fold higher than at 150; at 1500, it is lower than at 600. Meanwhile, the competing LCYE transcript rises in the high-light comparison. We therefore carry LCYB forward as a condition-responsive branch point, not as a proxy for the whole pathway.'),
+    section('Algorithm 1 · connect transcript sequences to enzyme steps',
+      p('The FASTA contains nucleotide contigs, not named genes. We translate each contig in all six reading frames with DIAMOND blastx and search two protein references: archived Swiss-Prot and the recoverable 2018 Dunaliella protein set. A hit enters the primary-annotation pass at E ≤ 10⁻⁵, ≥20% identity and ≥15% subject-protein coverage. We rank qualifying hits by bit score, then use E-value and subject ID as stable tie-breaks; only after choosing the top hit do we classify its protein name as an enzyme family. This keeps a weaker pathway hit from displacing a stronger non-pathway match just because we hoped to see that enzyme.'),
+      { kind: 'code', label: 'Primary sequence-annotation rule · pseudocode', text: String.raw`for each Trinity transcript:
+    hits = DIAMOND blastx(transcript, archived protein references, E <= 1e-5)
+    hits = keep hits with identity >= 20% and subject coverage >= 15%
+    primary = sort hits by bitscore descending, E-value ascending, subject ID
+    annotation = classify protein name(primary) as enzyme family, or unresolved
+    save (Trinity ID, annotation, reference hit, scores)
+
+independently:
+    forward = DIAMOND blastx(transcriptome, curated pathway proteins)
+    reverse = TBLASTN(curated pathway proteins, transcriptome)
+    retain a curated match only when both searches select the same pair,
+    E < 1e-5, identity >= 30%, and reverse-search protein coverage >= 30%` },
+      p('The second, reciprocal-best-hit pass is an independent check against curated pathway proteins: the transcript must select a protein in the forward search, and that same protein must select the transcript in the reverse search. The reverse TBLASTN alignment must cover at least 30% of the reference protein. We merge agreeing enzyme-family labels but keep the original Trinity ID and annotation source. Differential-expression values do not decide which transcript gets an enzyme name.'),
+      p('This sequence-first union yields 20 transcript features assigned to nine enzyme families in the carotenoid route. Several families have multiple contigs. We keep those copies separate because they may represent paralogs, isoforms or fragmented de novo assemblies; they are not averaged into one “gene” measurement.'),
     ),
-    section('Connect expression to the model',
-      p('The transcript result defines the expression layer. The mathematical model carries LCYB transcript abundance through active enzyme to the lycopene-to-β-carotene reaction rate, where substrate supply and turnover shape the downstream pool.'),
-      p('We use GSE120965 to choose a light-responsive pathway step. TF2146 belongs to a separate design hypothesis, examined in the protein and DNA work.'),
-      links(['GSE120965 · expression data and transcript assembly','https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE120965'],['Li et al., 2019 · photoacclimation study','https://doi.org/10.1111/pre.12379'],['Next · Mathematical Modeling','/model']),
+    section('Algorithm 2 · compare replicated read counts',
+      p('We test the GEO Readcount matrix rather than FPKM: a count model needs the replicate-level count variation. In this matrix, 200,439 of 691,875 sample-by-transcript entries (28.97%) are fractional estimates, so the rerun converts them with base R round() (nearest integer, ties to even) before fitting DESeq 1.10.1. The same nine samples and the same count matrix are used for all three pairwise contrasts; no expression-derived clustering or fold-change preselection is used.'),
+      eq('Library-size normalization', String.raw`s_j = \operatorname{median}_{i\in I_{+}}\left(\frac{K_{ij}}{\left(\prod_{j'=1}^{m} K_{ij'}\right)^{1/m}}\right),\qquad K^{*}_{ij}=\frac{K_{ij}}{s_j}`),
+      p('For transcript i in sample j, Kᵢⱼ is the rounded read count and sⱼ is the DESeq median-of-ratios size factor. I₊ contains transcripts with a positive count in every sample, so their geometric mean is defined; the median ratio then estimates how deeply each sample was sequenced. This adjusts library depth without treating FPKM as count data.'),
+      eq('Replicate-aware count model', String.raw`K_{ij}\sim\operatorname{NB}(\mu_{ij},\alpha_i),\qquad \mu_{ij}=s_jq_{ij}`),
+      p('DESeq estimates a dispersion αᵢ for each transcript, with the pooled/maximum, parametric fit used in this rerun to stabilize estimates across the nine samples. The negative-binomial test compares the fitted expression levels for each planned pair. The reported fold change is condition B relative to condition A; Benjamini–Hochberg adjusts the P values across the transcript rows in that contrast.'),
+      customTable('Planned contrasts · second condition divided by first', ['Contrast', 'Biological comparison', 'Interpretation of positive log₂FC'], [
+        ['LL → ML · 150 → 600','Intermediate light vs low light','Higher at 600'],
+        ['LL → HL · 150 → 1500','High light vs low light','Higher at 1500'],
+        ['ML → HL · 600 → 1500','High light vs intermediate light','Higher at 1500'],
+      ]),
+      { kind: 'code', label: 'Count-model steps · DESeq 1.10.1', text: String.raw`counts <- round(read_count_matrix[, c("LL1","LL2","LL3",
+                                        "ML1","ML2","ML3",
+                                        "HL1","HL2","HL3")])
+group <- factor(rep(c("LL","ML","HL"), each = 3))
+cds <- newCountDataSet(counts, group)
+cds <- estimateSizeFactors(cds)
+cds <- estimateDispersions(cds, method = "pooled",
+                            sharingMode = "maximum",
+                            fitType = "parametric")
+for (pair in list(c("LL","ML"), c("LL","HL"), c("ML","HL"))) {
+    result <- nbinomTest(cds, pair[1], pair[2])
+    # log2FoldChange is pair[2] / pair[1]; padj is BH-adjusted
+}` },
+      p('The tested universe is the 76,875 deposited transcript rows; there is no low-count prefilter or minimum-fold-change cutoff in this rerun. The fractional-to-integer conversion and the dispersion options are explicit analysis settings, so the result is a transparent rerun of the public matrix—not a claim that every undocumented setting from the original paper has been recovered.'),
+    ),
+    section('Read the response at the transcript level',
+      p('The first view keeps all three biological replicates visible for six sequence-annotated examples. Counts are divided by the DESeq size factors and shown as log₂(normalized count + 1); points are samples, not technical repeats. The panels use separate y-scales because transcript abundance differs by orders of magnitude.'),
+      { kind: 'figure', src: '/figures/dry-lab/transcriptomics-sample-expression.svg', alt: 'Six small-multiple plots of normalized read counts for CRTISO, two LCYB contigs, LCYE, PDS and ZEP across three light conditions, with each biological replicate shown.', caption: 'Figure 3. Replicate-level expression for six enzyme-annotated transcripts. The LCYB contigs have distinct response shapes, so they are interpreted separately.' },
+      p('The volcano panels show the count-model results across the transcriptome for each planned contrast. Each point is one Trinity transcript; color marks q < 0.05 after Benjamini–Hochberg correction. These genome-wide plots show where the count model detects a response, but they do not rank pathway importance.'),
+      { kind: 'figure', src: '/figures/dry-lab/transcriptomics-deseq-volcano.svg', alt: 'Three volcano plots from DESeq 1.10.1 comparing 600 versus 150, 1500 versus 150 and 1500 versus 600 light conditions across Trinity transcripts.', caption: 'Figure 4. Differential-expression results for the three pairwise contrasts. The x-axis is log₂ fold change for the second condition relative to the first; colored points have BH-adjusted q < 0.05.' },
+      p('For pathway interpretation, we return to the sequence-defined enzyme set and retain its biochemical order rather than clustering rows by expression. Each cell below shows the transcript’s log₂ fold change; a dark dot marks q < 0.05. Repeated transcript IDs under one enzyme label are kept as separate sequence features.'),
+      { kind: 'figure', src: '/figures/dry-lab/transcriptomics-pathway-effects.svg', alt: 'Heatmap of all 20 sequence-annotated carotenoid pathway transcripts across three DESeq contrasts, grouped in biochemical enzyme order, with fold changes printed and significant contrasts marked.', caption: 'Figure 5. Pathway-ordered effect map for all 20 annotated transcripts. Rows are grouped by enzyme family—not by a data-driven cluster—and each dot marks q < 0.05.' },
+      customTable('Examples that shape the model question', ['Transcript · enzyme assignment', '600 vs 150 · log₂FC; q', '1500 vs 150 · log₂FC; q', '1500 vs 600 · log₂FC; q'], [
+        ['Cluster-5009.34218 · LCYB','+0.576; 1.30 × 10⁻¹³','+0.261; 3.10 × 10⁻³','−0.315; 1.11 × 10⁻⁴'],
+        ['Cluster-5009.36796 · LCYB','+1.746; 9.38 × 10⁻⁶','−0.310; 0.901','−2.056; 8.48 × 10⁻⁸'],
+        ['Cluster-5009.32344 · LCYE','+0.036; 1','+0.582; 1.37 × 10⁻⁷','+0.546; 5.10 × 10⁻⁷'],
+        ['Cluster-5009.33436 · CRTISO','−2.342; 6.40 × 10⁻³¹','+2.353; 2.58 × 10⁻³⁶','+4.696; 2.81 × 10⁻¹¹¹'],
+        ['Cluster-5009.39420 · PDS','−0.506; 2.29 × 10⁻³','−0.544; 8.51 × 10⁻⁴','−0.038; 1'],
+        ['Cluster-5009.41790 · ZEP','+0.419; 4.57 × 10⁻⁵','−0.780; 3.49 × 10⁻¹⁵','−1.199; 2.04 × 10⁻³⁶'],
+      ]),
+      p('The two LCYB contigs do not tell the same story: Cluster-5009.34218 is higher at 600 than 150 and remains modestly above 150 at 1500, while Cluster-5009.36796 rises at 600 and drops at 1500. CRTISO and ZEP also change direction across the ordered light conditions. This is why we do not force the data into one monotonic trend or average all copies of an enzyme into a single value.'),
+    ),
+    section('Pass an expression signal—not a flux claim—to the model',
+      p('The analysis identifies transcript-level light responses. It does not measure LCYB protein abundance, catalytic activity or β-carotene flux. In the mathematical model, transcript abundance is therefore an upstream expression state; translation and enzyme activity are separate steps before the lycopene-to-β-carotene rate is calculated.'),
+      p('The model follows the LCYB branch because it is the pathway step connected to the project’s β-carotene hub. The distinct responses among LCYB transcript contigs give us a specific biological feature to carry forward, while the model keeps substrate supply and turnover explicit.'),
+      links(['GSE120965 · sample design, expression matrix and Trinity assembly','https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE120965'],['Li et al., 2019 · photoacclimation and transcriptome study','https://doi.org/10.1111/pre.12379'],['Next · Mathematical Modeling','/model']),
     ),
   ],
 };
-
 export const metabolomics: WikiPage = {
   title: 'Metabolic Flow Analysis', eyebrow: 'Modeling / Metabolic Flow', status: 'team-draft',
   intro: 'We use a constraint-based chassis model and a local dynamic branch model to ask how D. salina can support four carotenoid-derived products, which conditions favour production, and where pathway intervention has the greatest leverage.',
@@ -679,7 +714,6 @@ T_{\mathrm{payback}}
     ),
   ],
 };
-
 export const hardwareDesign: WikiPage = {
   title: 'Hardware Design',
   eyebrow: 'Dry Lab / Hardware Design',

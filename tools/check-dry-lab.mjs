@@ -29,21 +29,24 @@ try {
   }
   const transcriptomicsText = JSON.stringify(pages.transcriptomics);
   assert(!/K-means|module M[1-5]|moderated t|peak_at_600|trough_at_600|FPKM ≥ 1|TF_RANKING|integrated MR/i.test(transcriptomicsText), 'Retired exploratory statistics remain in the active transcriptomics page');
-  assert(transcriptomicsText.includes('168 h') && transcriptomicsText.includes('three independent biological replicates'), 'Biological sample design must be explicit');
-  assert(transcriptomicsText.includes('DIAMOND blastx') && transcriptomicsText.includes('15% reference-protein coverage'), 'Transcript annotation must follow sequence evidence');
-  assert(transcriptomicsText.includes('DESeq 1.10.1') && transcriptomicsText.includes('median-of-ratios') && transcriptomicsText.includes('nbinomTest'), 'Count-based replicate-aware model must be described');
-  assert(transcriptomicsText.includes('defines the expression layer') && transcriptomicsText.includes('reaction rate'), 'Transcript expression must connect to the model at the correct biological layer');
-  assert(transcriptomicsText.includes('separate design hypothesis') && transcriptomicsText.includes('protein and DNA work'), 'TF2146 must remain separate from the public light-response analysis');
-  const pathwaySection = pages.transcriptomics.sections.find(section => section.title === 'Follow the route to the β-carotene branch');
+  assert(transcriptomicsText.includes('168 h') && transcriptomicsText.includes('three biological replicates each'), 'Biological sample design must be explicit');
+  assert(transcriptomicsText.includes('76,875 rows') && transcriptomicsText.includes('20 transcript features'), 'Input assembly and pathway annotation scope must be explicit');
+  assert(transcriptomicsText.includes('DIAMOND blastx') && transcriptomicsText.includes('subject coverage >= 15%') && transcriptomicsText.includes('reciprocal-best-hit'), 'Transcript annotation algorithm must be explicit');
+  assert(transcriptomicsText.includes('DESeq 1.10.1') && transcriptomicsText.includes('median-of-ratios') && transcriptomicsText.includes('nbinomTest') && transcriptomicsText.includes('28.97%'), 'Count-based replicate-aware model and count conversion must be explicit');
+  assert(transcriptomicsText.includes('600 → 1500') && transcriptomicsText.includes('Benjamini–Hochberg') && transcriptomicsText.includes('76,875 deposited transcript rows'), 'All three planned contrasts and multiple-testing procedure must be explicit');
+  assert(transcriptomicsText.includes('upstream expression state') && transcriptomicsText.includes('β-carotene rate'), 'Transcript expression must connect to the model at the correct biological layer');
+  assert(!transcriptomicsText.includes('TF2146'), 'TF2146 should not be introduced in the transcriptomics section');
+  const pathwaySection = pages.transcriptomics.sections.find(section => section.title === 'Begin with the reactions we want to understand');
   assert(pathwaySection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('carotenoid-route.svg')), 'Biological pathway map is missing');
-  const workflowSection = pages.transcriptomics.sections.find(section => section.title === 'From samples to enzyme steps');
+  const workflowSection = pages.transcriptomics.sections.find(section => section.title === 'Start with the experiment and its deposited data');
   assert(workflowSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-workflow.svg')), 'Transcriptomics workflow figure is missing');
-  const responseSection = pages.transcriptomics.sections.find(section => section.title === 'What changes along the route');
-  const pathwayTable = responseSection?.blocks.find(block => block.kind === 'table');
-  assert(pathwayTable, 'Selected pathway response table is missing');
-  assert.equal(pathwayTable.rows.length, 6, 'The main narrative should show the selected enzyme responses, not a transcript-clustering catalogue');
-  assert(pathwayTable.rows.some(row => row[0].startsWith('LCYB') && row[1] === 'Cluster-5009.34218'), 'The LCYB branch-point transcript should be shown');
-  assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('pathway-expression-contrasts.svg')), 'Selected pathway response chart is missing');
+  const responseSection = pages.transcriptomics.sections.find(section => section.title === 'Read the response at the transcript level');
+  assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-sample-expression.svg')), 'Replicate-level expression plot is missing');
+  assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-deseq-volcano.svg')), 'Genome-wide DESeq contrast plots are missing');
+  assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-pathway-effects.svg')), 'Pathway-ordered transcript effect plot is missing');
+  const examplesTable = responseSection?.blocks.find(block => block.kind === 'table');
+  assert(examplesTable && examplesTable.rows.length === 6, 'The selected examples should include pathway steps and both LCYB transcript copies');
+  assert(examplesTable.rows.some(row => row[0].includes('Cluster-5009.34218 · LCYB')) && examplesTable.rows.some(row => row[0].includes('Cluster-5009.36796 · LCYB')), 'Both LCYB copies must remain distinct');
   let figures = 0;
   let tables = 0;
   for (const slug of ['dry-lab','transcriptomics','model','protein','safety-and-security']) {
@@ -111,10 +114,10 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,13);
+  assert.equal(figures,15);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware','hardware-design']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: complete seven-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, six selected pathway responses and 5 core ODEs.`);
+  console.log(`Dry Lab checks passed: complete seven-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, three explicit transcriptomics contrasts and 5 core ODEs.`);
 } finally {
   await server.close();
 }
