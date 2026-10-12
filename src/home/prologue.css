@@ -51,7 +51,7 @@
 .story-products { display: flex; justify-content: center; gap: .6rem; flex-wrap: wrap; }
 .story-products > span { padding: .5rem .7rem; border: 2px solid #ebaf69; background: #493d28; font-size: .8rem; }
 .story-checkpoints { display: grid; width: min(34rem, 100%); gap: .8rem; }
-.story-checkpoints > div { display: grid; box-sizing: border-box; grid-template-columns: 7rem 1fr; align-items: center; gap: 1rem; min-height: 11rem; padding: 1rem; border: 2px solid #b9ce9c; background: #0a3028ec; box-shadow: 5px 5px #06221f; }
+.story-checkpoints > div { display: grid; box-sizing: border-box; grid-template-columns: 7rem 1fr; align-items: center; gap: 1rem; min-height: 4rem; padding: .75rem 1rem; border: 2px solid #b9ce9c; background: #0a3028ec; box-shadow: 5px 5px #06221f; }
 .story-checkpoints strong { color: #cdf558; letter-spacing: .1em; }
 .story-checkpoints span { font-size: .72rem; line-height: 1.5; }
 .story-pathway > small, .story-voices > small { font-size: .6rem; line-height: 1.4; text-align: center; color: #eeedce; background: #06221fbf; padding: .3rem .5rem; }
