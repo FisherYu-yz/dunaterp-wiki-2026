@@ -21,8 +21,8 @@ export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onN
       audio.current = context;
       if (context.state === "suspended") void context.resume();
 
-      // A single filtered, 18 ms click on user-initiated chapter changes—never a loop.
-      const length = Math.ceil(context.sampleRate * 0.018);
+      // A single bright, 10 ms key click on user-initiated chapter changes—never a loop.
+      const length = Math.ceil(context.sampleRate * 0.01);
       const buffer = context.createBuffer(1, length, context.sampleRate);
       const samples = buffer.getChannelData(0);
       for (let i = 0; i < length; i += 1) {
@@ -30,13 +30,16 @@ export function HomePrologue({ state, onNext, onSkip }: { state: StoryState; onN
         samples[i] = (Math.random() * 2 - 1) * envelope * envelope;
       }
       const source = context.createBufferSource();
-      const filter = context.createBiquadFilter();
+      const highPass = context.createBiquadFilter();
+      const lowPass = context.createBiquadFilter();
       const volume = context.createGain();
       source.buffer = buffer;
-      filter.type = "lowpass";
-      filter.frequency.value = 2200;
-      volume.gain.value = 0.12;
-      source.connect(filter).connect(volume).connect(context.destination);
+      highPass.type = "highpass";
+      highPass.frequency.value = 750;
+      lowPass.type = "lowpass";
+      lowPass.frequency.value = 6200;
+      volume.gain.value = 0.13;
+      source.connect(highPass).connect(lowPass).connect(volume).connect(context.destination);
       source.start();
     }
     onNext();

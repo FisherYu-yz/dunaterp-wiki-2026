@@ -146,7 +146,7 @@
 .px-trailhead__copy { min-width: 0; padding-right: 1rem; border-right: 2px solid rgba(240, 228, 200, .28); }
 .px-trailhead__copy > p { margin: 0 0 .35rem; color: var(--px-lime); font: 900 .62rem/1 ui-monospace, Menlo, monospace; letter-spacing: .14em; }
 .px-trailhead__copy h2 { margin: 0; font: 900 clamp(.95rem, 1.6vw, 1.25rem)/1.15 ui-monospace, Menlo, monospace; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
-.px-trailhead__keys { display: flex; align-items: center; justify-content: space-between; gap: .65rem 1.1rem; min-width: 0; }
+.px-trailhead__keys { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: .65rem 1.1rem; min-width: 0; }
 .px-trailhead__keys span { display: inline-flex; align-items: center; gap: .38rem; color: rgba(253, 246, 227, .78); font: 760 .68rem/1.35 ui-monospace, Menlo, monospace; white-space: nowrap; }
 .px-trailhead__keys kbd { border-color: var(--px-cream); background: transparent; color: var(--px-cream); box-shadow: none; }
 .px-world.is-started .px-trailhead, .px-world.is-free .px-trailhead { display: none; }
