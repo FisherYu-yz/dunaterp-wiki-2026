@@ -34,13 +34,13 @@ try {
   assert(transcriptomicsText.includes('DIAMOND blastx') && transcriptomicsText.includes('subject coverage >= 15%') && transcriptomicsText.includes('reciprocal-best-hit'), 'Transcript annotation algorithm must be explicit');
   assert(transcriptomicsText.includes('DESeq 1.10.1') && transcriptomicsText.includes('median-of-ratios') && transcriptomicsText.includes('nbinomTest') && transcriptomicsText.includes('28.97%'), 'Count-based replicate-aware model and count conversion must be explicit');
   assert(transcriptomicsText.includes('600 → 1500') && transcriptomicsText.includes('Benjamini–Hochberg') && transcriptomicsText.includes('76,875 deposited transcript rows'), 'All three planned contrasts and multiple-testing procedure must be explicit');
-  assert(transcriptomicsText.includes('upstream expression state') && transcriptomicsText.includes('β-carotene rate'), 'Transcript expression must connect to the model at the correct biological layer');
+  assert(transcriptomicsText.includes('transcript abundance—not enzyme activity or β-carotene flux') && transcriptomicsText.includes('necessary validation'), 'Transcriptomics conclusion must distinguish expression evidence from flux and state the validation need');
   assert(!transcriptomicsText.includes('TF2146'), 'TF2146 should not be introduced in the transcriptomics section');
-  const pathwaySection = pages.transcriptomics.sections.find(section => section.title === 'Begin with the reactions we want to understand');
+  const pathwaySection = pages.transcriptomics.sections.find(section => section.title === 'THE REACTIONS');
   assert(pathwaySection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('carotenoid-route.svg')), 'Biological pathway map is missing');
-  const workflowSection = pages.transcriptomics.sections.find(section => section.title === 'Start with the experiment and its deposited data');
+  const workflowSection = pages.transcriptomics.sections.find(section => section.title === 'THE DATASET');
   assert(workflowSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-workflow.svg')), 'Transcriptomics workflow figure is missing');
-  const responseSection = pages.transcriptomics.sections.find(section => section.title === 'Read the response at the transcript level');
+  const responseSection = pages.transcriptomics.sections.find(section => section.title === 'TRANSCRIPT-LEVEL RESPONSE');
   assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-sample-expression.svg')), 'Replicate-level expression plot is missing');
   assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-deseq-volcano.svg')), 'Genome-wide DESeq contrast plots are missing');
   assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-pathway-effects.svg')), 'Pathway-ordered transcript effect plot is missing');

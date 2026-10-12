@@ -16,6 +16,7 @@
 .home-prologue.is-opening { background: rgba(3, 22, 19, .68); }
 .story-fog { position: absolute; inset: 0 -10%; background: linear-gradient(170deg, transparent 35%, #dce7c51c 46%, transparent 58%); animation: story-fog 16s ease-in-out infinite alternate; }
 .story-skip { position: absolute; z-index: 3; right: max(1rem, env(safe-area-inset-right)); top: max(1rem, env(safe-area-inset-top)); padding: .65rem .8rem; border: 1px solid #fdf6e350; background: #06221fcc; color: #e4e7c9; font: 700 .65rem monospace; letter-spacing: .08em; cursor: pointer; }
+.story-sound-toggle { position: absolute; z-index: 3; top: max(1rem, env(safe-area-inset-top)); right: calc(max(1rem, env(safe-area-inset-right)) + 8.5rem); padding: .65rem .65rem; border: 1px solid #fdf6e350; background: #06221fcc; color: #e4e7c9; font: 700 .65rem monospace; letter-spacing: .06em; cursor: pointer; }
 .home-prologue button:focus-visible { outline: 3px solid #cdf558; outline-offset: 5px; }
 .story-title { position: absolute; inset: 50% auto auto 50%; width: min(52rem, calc(100% - 2rem)); transform: translate(-50%, -58%); text-align: center; text-shadow: 3px 3px #06221f; }
 .story-title > p { font-size: .65rem; letter-spacing: .3em; color: #dcdfba; }
