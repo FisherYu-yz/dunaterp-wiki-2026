@@ -380,7 +380,10 @@ function saltPile(): Painter {
 }
 
 function trailheadLodge(): Painter {
-  const p = surface(96, 76);
+  const p = surface(96, 85);
+  // Leave room for the rear ridge above the front gable without clipping it.
+  // The extra canvas height and this offset preserve the lodge's ground anchor.
+  p.ctx.translate(0, 9);
   const polygon = (points: Array<[number, number]>, key: string) => {
     const minY = Math.min(...points.map(([, y]) => y));
     const maxY = Math.max(...points.map(([, y]) => y));
@@ -420,15 +423,17 @@ function trailheadLodge(): Painter {
   }
   frame(p, 8, 28, 59, 37, "1");
 
-  // Gabled front roof plus a darker side plane gives the lodge clear depth.
-  polygon([[4, 28], [38, 3], [68, 28], [38, 17]], "5");
-  polygon([[38, 3], [87, 17], [68, 28], [38, 17]], "3");
+  // Match the roof's depth to the right wall exactly: both recede 16 px right
+  // and 9 px up, so the ridge and eaves converge in the same perspective.
+  polygon([[38, 3], [54, -6], [84, 19], [68, 28]], "3");
+  polygon([[4, 28], [38, 3], [68, 28]], "5");
   line(p, 4, 28, 38, 3, "1");
-  line(p, 38, 3, 87, 17, "1");
-  line(p, 87, 17, 68, 28, "1");
+  line(p, 38, 3, 54, -6, "1");
+  line(p, 54, -6, 84, 19, "1");
+  line(p, 84, 19, 68, 28, "1");
   line(p, 68, 28, 4, 28, "1");
   rect(p, 4, 27, 64, 3, "1");
-  polygon([[68, 27], [87, 17], [87, 22], [68, 31]], "1");
+  polygon([[68, 27], [84, 18], [84, 24], [68, 33]], "1");
   rect(p, 7, 25, 60, 2, "8");
 
   // The receding wall gets one narrow sampling window.
