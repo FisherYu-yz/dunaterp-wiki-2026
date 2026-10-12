@@ -71,7 +71,6 @@
 .story-signposts > b { display: block; margin-top: 1rem; text-align: center; letter-spacing: .25em; color: #cdf558; }
 .story-quest { text-align: center; }
 .story-quest .story-glyph { margin: 0 auto 1rem; }
-.story-quest p { color: #cdf558; font-size: .7rem; letter-spacing: .2em; }
 .story-quest h2 { font-size: 2rem; margin: .6rem; }
 .story-quest > span { font-size: .8rem; }
 .story-dialogue-cluster { position: absolute; z-index: 2; left: max(2rem, 5vw); right: auto; top: calc(50% + 2.5rem); width: min(34rem, 38vw); transform: translateY(-50%); }
