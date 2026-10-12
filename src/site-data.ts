@@ -113,16 +113,16 @@ export const pages: Record<string, WikiPage> = {
     title: "Make every step reproducible", eyebrow: "Experiments", intro: "A protocol-first home for wet-lab work, computational workflows, controls and raw-data provenance.", status: "structure-only",
     sections: [
       { title: "Wet-lab protocols", body: "Team input required: document strain handling, culture conditions, construct assembly, transformation, validation, product extraction and analytical measurements. Include dates, versions, controls and deviations from published protocols." },
-      { title: "Transcriptomics workflow", body: "The Transcriptomics page analyzes the public GSE120965 light-intensity experiment: sample structure, differential expression, pathway annotation, published-gene recovery and coexpression ranking. Its tables distinguish expression features from functional gene assignments." },
+      { title: "Transcriptomics workflow", body: "The Transcriptomics page follows the carotenoid pathway from sequence annotation to replicate-aware light comparisons, then carries the LCYB response into the mathematical model." },
       { title: "Modelling workflow", body: "The Mathematical Modeling page records a five-state ODE from regulatory-factor activity through promoter occupancy and LCYB expression to β-carotene. The implementation requires explicit parameters and initial values, so published observations and project measurements remain distinguishable." },
     ],
   },
   results: {
     title: "Evidence, with its limits visible", eyebrow: "Results", intro: "This draft separates observed computational results, model-dependent predictions and measurements that still need to be made.", status: "team-draft",
-    figure: { src: "/figures/dry-lab/06_expression_qc.png", alt: "Sample-scale factors, expression distributions and PCA for the nine GSE120965 samples", caption: "Public GSE120965 light-intensity data: three biological replicates at each of 150, 600 and 1500 µmol photons m⁻² s⁻¹. Analysis details appear on the Transcriptomics page." },
+    figure: { src: "/figures/dry-lab/carotenoid-route.svg", alt: "Carotenoid pathway diagram highlighting the LCYB branch from lycopene to beta-carotene", caption: "The transcript analysis follows the reaction order to the lycopene branch point, where LCYB directs synthesis toward beta-carotene." },
     sections: [
-      { title: "A light response to investigate", body: "In the current light-intensity analysis, the 600 µmol photons·m⁻²·s⁻¹ condition occupies a distinct transcriptomic state. A distinct expression profile alone does not establish an optimal cultivation condition or higher product yield. The source dataset, replicate structure and downstream measurements must be checked before drawing those conclusions." },
-      { title: "Pathway-associated TF homologs", body: "Joint coexpression ranking places C2H2 and NF-YC homologous transcript fragments near the top of the public light-intensity dataset. Sequence coverage and family annotations accompany those ranks. Their interaction with the LCYB promoter remains an experimental question." },
+      { title: "Light acclimation and carotenoid genes", body: "The experiment compares three independently replicated light conditions after acclimation. The annotated LCYB transcript rises at intermediate light and falls between the intermediate and high-light conditions, while other pathway steps show their own responses. This gives the mathematical model a specific branch point to examine." },
+      { title: "Regulator evidence", body: "The light-response analysis identifies a pathway step to carry forward. TF2146 is a separate design hypothesis examined in the protein and DNA analyses." },
       { title: "A measurable route to β-carotene", body: "The model specifies how regulatory-factor activity, promoter affinity, LCYB transcript and active enzyme determine the β-carotene balance. Absolute concentration predictions begin when promoter, expression and metabolite measurements from the project are supplied." },
     ],
   },

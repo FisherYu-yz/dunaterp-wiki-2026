@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Carotenoid pathway and the LCYB branch point</title>
+  <desc id="desc">MEP-derived precursors feed geranylgeranyl diphosphate through GGPS. PSY converts GGPP to phytoene; PDS, Z-ISO, ZDS and CRTISO lead to lycopene. LCYB directs lycopene to beta-carotene, while LCYE directs it to alpha-carotene.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#56766c" />
+    </marker>
+    <marker id="arrow-lime" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#719b32" />
+    </marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#c37b36" />
+    </marker>
+  </defs>
+  <rect width="1200" height="560" rx="22" fill="#fbf8ef" />
+  <path d="M34 70H1166" stroke="#d9dfd3" stroke-width="2" />
+  <text x="56" y="48" fill="#5c7d51" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="3">CAROTENOID PATHWAY · LIGHT-RESPONSE QUESTION</text>
+
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <rect x="50" y="121" width="170" height="104" rx="14" fill="#e9eee2" stroke="#9cae97" stroke-width="2" />
+    <text x="135" y="162" fill="#123b32" font-size="19" font-weight="700">MEP-derived</text>
+    <text x="135" y="190" fill="#123b32" font-size="19" font-weight="700">precursors</text>
+
+    <rect x="280" y="121" width="170" height="104" rx="14" fill="#e9eee2" stroke="#9cae97" stroke-width="2" />
+    <text x="365" y="159" fill="#123b32" font-size="21" font-weight="700">GGPP</text>
+    <text x="365" y="185" fill="#60756d" font-size="13">geranylgeranyl</text>
+    <text x="365" y="203" fill="#60756d" font-size="13">diphosphate</text>
+
+    <rect x="510" y="121" width="170" height="104" rx="14" fill="#e9eee2" stroke="#9cae97" stroke-width="2" />
+    <text x="595" y="165" fill="#123b32" font-size="21" font-weight="700">Phytoene</text>
+    <text x="595" y="194" fill="#60756d" font-size="14">first committed carotenoid</text>
+
+    <rect x="840" y="121" width="190" height="104" rx="14" fill="#e9eee2" stroke="#9cae97" stroke-width="2" />
+    <text x="935" y="165" fill="#123b32" font-size="21" font-weight="700">Lycopene</text>
+    <text x="935" y="194" fill="#60756d" font-size="15">branch point</text>
+
+    <rect x="660" y="382" width="230" height="104" rx="14" fill="#e2f0ac" stroke="#86a83a" stroke-width="3" />
+    <text x="775" y="425" fill="#123b32" font-size="21" font-weight="700">β-carotene</text>
+    <text x="775" y="454" fill="#496539" font-size="15">LCYB route · model focus</text>
+
+    <rect x="966" y="382" width="190" height="104" rx="14" fill="#f4e4c8" stroke="#cf9a55" stroke-width="2" />
+    <text x="1061" y="425" fill="#123b32" font-size="21" font-weight="700">α-carotene</text>
+    <text x="1061" y="454" fill="#8b6335" font-size="15">LCYE route</text>
+  </g>
+
+  <path d="M220 173H270" fill="none" stroke="#56766c" stroke-width="4" marker-end="url(#arrow)" />
+  <rect x="221" y="111" width="58" height="32" rx="16" fill="#fffdf7" stroke="#d9dfd3" />
+  <text x="250" y="132" fill="#47645a" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">GGPS</text>
+
+  <path d="M450 173H500" fill="none" stroke="#56766c" stroke-width="4" marker-end="url(#arrow)" />
+  <rect x="446" y="111" width="58" height="32" rx="16" fill="#fffdf7" stroke="#d9dfd3" />
+  <text x="475" y="132" fill="#47645a" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">PSY</text>
+
+  <path d="M680 173H829" fill="none" stroke="#56766c" stroke-width="4" marker-end="url(#arrow)" />
+  <rect x="687" y="91" width="136" height="58" rx="18" fill="#fffdf7" stroke="#d9dfd3" />
+  <text x="755" y="115" fill="#47645a" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">PDS · Z-ISO</text>
+  <text x="755" y="136" fill="#47645a" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">ZDS · CRTISO</text>
+
+  <path d="M910 225C884 292 807 319 779 371" fill="none" stroke="#719b32" stroke-width="5" marker-end="url(#arrow-lime)" />
+  <rect x="823" y="282" width="78" height="34" rx="17" fill="#f2f7df" stroke="#b6cc7c" />
+  <text x="862" y="304" fill="#52742d" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">LCYB</text>
+
+  <path d="M967 225C992 292 1030 319 1052 371" fill="none" stroke="#c37b36" stroke-width="4" marker-end="url(#arrow-amber)" />
+  <rect x="986" y="282" width="78" height="34" rx="17" fill="#fff8e9" stroke="#dfbd8b" />
+  <text x="1025" y="304" fill="#9b622b" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">LCYE</text>
+
+  <text x="56" y="528" fill="#64766d" font-family="Arial, sans-serif" font-size="14">Enzyme order used to organize the light-response transcript comparisons.</text>
+</svg>

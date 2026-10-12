@@ -27,6 +27,23 @@ try {
     assert(pages[slug].sections.length > 0, `Missing content: ${slug}`);
     assert(pages[slug].intro, `Missing introduction: ${slug}`);
   }
+  const transcriptomicsText = JSON.stringify(pages.transcriptomics);
+  assert(!/K-means|module M[1-5]|moderated t|peak_at_600|trough_at_600|FPKM ≥ 1|TF_RANKING|integrated MR/i.test(transcriptomicsText), 'Retired exploratory statistics remain in the active transcriptomics page');
+  assert(transcriptomicsText.includes('168 h') && transcriptomicsText.includes('three independent biological replicates'), 'Biological sample design must be explicit');
+  assert(transcriptomicsText.includes('DIAMOND blastx') && transcriptomicsText.includes('15% reference-protein coverage'), 'Transcript annotation must follow sequence evidence');
+  assert(transcriptomicsText.includes('DESeq 1.10.1') && transcriptomicsText.includes('median-of-ratios') && transcriptomicsText.includes('nbinomTest'), 'Count-based replicate-aware model must be described');
+  assert(transcriptomicsText.includes('defines the expression layer') && transcriptomicsText.includes('reaction rate'), 'Transcript expression must connect to the model at the correct biological layer');
+  assert(transcriptomicsText.includes('separate design hypothesis') && transcriptomicsText.includes('protein and DNA work'), 'TF2146 must remain separate from the public light-response analysis');
+  const pathwaySection = pages.transcriptomics.sections.find(section => section.title === 'Follow the route to the β-carotene branch');
+  assert(pathwaySection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('carotenoid-route.svg')), 'Biological pathway map is missing');
+  const workflowSection = pages.transcriptomics.sections.find(section => section.title === 'From samples to enzyme steps');
+  assert(workflowSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('transcriptomics-workflow.svg')), 'Transcriptomics workflow figure is missing');
+  const responseSection = pages.transcriptomics.sections.find(section => section.title === 'What changes along the route');
+  const pathwayTable = responseSection?.blocks.find(block => block.kind === 'table');
+  assert(pathwayTable, 'Selected pathway response table is missing');
+  assert.equal(pathwayTable.rows.length, 6, 'The main narrative should show the selected enzyme responses, not a transcript-clustering catalogue');
+  assert(pathwayTable.rows.some(row => row[0].startsWith('LCYB') && row[1] === 'Cluster-5009.34218'), 'The LCYB branch-point transcript should be shown');
+  assert(responseSection?.blocks.some(block => block.kind === 'figure' && block.src.endsWith('pathway-expression-contrasts.svg')), 'Selected pathway response chart is missing');
   let figures = 0;
   let tables = 0;
   for (const slug of ['dry-lab','transcriptomics','model','protein','safety-and-security']) {
@@ -34,7 +51,7 @@ try {
     assert(!/[\u3400-\u9fff]/u.test(JSON.stringify(page)), `Non-English content: ${slug}`);
     for (const section of page.sections) {
       for (const block of section.blocks ?? []) {
-        const figureBlocks = block.kind === 'figure' ? [block] : block.kind === 'figure-grid' ? block.figures : [];
+        const figureBlocks = block.kind === 'figure' ? [block] : block.kind === 'figure-row' || block.kind === 'figure-grid' ? block.figures : [];
         for (const figure of figureBlocks) {
           figures++;
           assert(fs.existsSync(path.join('public', figure.src)), `Missing ${figure.src}`);
@@ -70,8 +87,6 @@ try {
   const renderSources = JSON.parse(fs.readFileSync('docs/reviews/lycopene-render-provenance.json','utf8')).sources;
   for(const [file,hash] of Object.entries(structure.sha256)) assert.equal(hash,renderSources[`wt/${file}`], '3D and static render inputs must match');
   const data = JSON.parse(fs.readFileSync('src/content/dry-lab-tables.json','utf8'));
-  assert.equal(data.TF_RANKING.rows.length,333);
-  data.TF_RANKING.rows.forEach((row,i)=>assert.equal(Number(row[0]), i+1));
   assert.equal(data.RECOVERY.rows.length,16);
   for (const obsolete of ['PARAMETERS','FIT','ENDPOINTS','ELASTICITY','ROBUSTNESS','BOUNDS']) {
     assert(!data[obsolete], `Obsolete model table remains: ${obsolete}`);
@@ -79,12 +94,12 @@ try {
   const ode = pages.model.sections.flatMap(s=>s.blocks ?? []).find(b=>b.kind==='equation' && b.label==='Regulatory LCYB model');
   assert.equal((ode.text.match(/\\frac\{d/g) ?? []).length,5);
   assert.deepEqual(pages.model.sections.map(section => section.title), [
-    'Modeling question','Promoter occupancy and transcription','Five differential equations',
-    'Evidence and parameter status','What the model establishes','Interface with metabolomics',
+    'Why model the LCYB step?','From promoter binding to transcript output','Tracking the five model states',
+    'What is supported, and what still needs measuring','What the model can currently tell us','Passing the output to the product models',
   ]);
   assert(!/day-7|2\.0988|10\.9518|Car09|nine-state|FBA/i.test(JSON.stringify(pages.model)), 'Obsolete quantitative claim remains');
   for (const slug of ['transcriptomics','model','protein']) {
-    const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).flatMap(b => b.kind === 'figure' ? [b.caption] : b.kind === 'figure-grid' ? b.figures.map(figure => figure.caption) : []);
+    const captions = pages[slug].sections.flatMap(s => s.blocks ?? []).flatMap(block => block.kind === 'figure' ? [block.caption] : block.kind === 'figure-row' || block.kind === 'figure-grid' ? block.figures.map(figure => figure.caption) : []);
     captions.forEach((caption, i) => assert(caption.startsWith('Figure ' + (i + 1) + '.'), 'Figure numbering in ' + slug + ': ' + caption));
   }
   assert(!pages.model.sections.some(section => /CPP/i.test(JSON.stringify(section))), 'Unverified CPP regulator remains in modeling');
@@ -96,10 +111,10 @@ try {
   for (const [file, hash] of Object.entries(provenance.figure_sha256)) {
     assert.equal(createHash('sha256').update(fs.readFileSync(`public/figures/dry-lab/${file}`)).digest('hex'), hash);
   }
-  assert.equal(figures,14);
+  assert.equal(figures,13);
   const workflow = fs.readFileSync('.github/workflows/pages.yml','utf8');
   for(const slug of ['dry-lab','transcriptomics','metabolomics','protein','model','hardware','hardware-design']) assert(workflow.includes(`            ${slug} \\`));
-  console.log(`Dry Lab checks passed: complete seven-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, 333 ranked transcripts and 5 core ODEs.`);
+  console.log(`Dry Lab checks passed: complete seven-entry navigation, populated protein and safety pages, ${figures} figures, ${tables} tables, six selected pathway responses and 5 core ODEs.`);
 } finally {
   await server.close();
 }

@@ -12,6 +12,8 @@ const engine = new PixelEngine(document.createElement('canvas'), { clientWidth: 
   onEnter() { entries++; }, onNpcInteract() { talks++; },
 });
 const key = (value, interactive = false, repeat = false) => ({ key: value, repeat, target: new Element(interactive), preventDefault() {} });
+assert.equal(engine.world.props.some((prop) => prop.sprite === 'trailheadOutpost'), false, 'redundant FIELD outpost is absent');
+assert.ok(engine.world.props.some((prop) => prop.sprite === 'trailheadLodge'), 'TRAIL lodge remains at the route entrance');
 engine.enterFree();
 for (const npc of createNpcs(engine.world)) {
   assert.equal(isBlockedAt(engine.world, npc.x, npc.y), false, `${npc.id} must be reachable`);
