@@ -26,6 +26,7 @@ function LoadingScreen({ ratio }: { ratio: number }) {
   const filled = Math.round(ratio * cells);
   return (
     <div className="px-loading" role="status" aria-live="polite">
+      <div className="px-loading-crest" aria-hidden="true"><i /><i /><i /><i /><i /></div>
       <p className="px-loading-title">DUNATERP</p>
       <p className="px-loading-sub">Surveying the salt flats…</p>
       <div className="px-meter" aria-hidden="true">
@@ -43,6 +44,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const routeRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<PixelEngine | null>(null);
   const scrollLock = useRef(0);
   const archiveTimer = useRef<number | null>(null);
@@ -51,6 +53,7 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   const [dialogueNpc, setDialogueNpc] = useState<Npc | null>(null);
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
+  const [loadingMinimumElapsed, setLoadingMinimumElapsed] = useState(false);
   const [failed, setFailed] = useState(false);
   const [mode, setMode] = useState<Mode>("guided");
   const [chapter, setChapter] = useState(-1);
@@ -79,6 +82,11 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
   }, [isStory]);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => setLoadingMinimumElapsed(true), 1050);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if ((!dialogueNpc && !stationDialogue && !secretOpen) || mode === "free") return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -95,6 +103,14 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
       engine = new PixelEngine(surface, host, {
         onLoadProgress: setProgress,
         onReady: () => setReady(true),
+        onJourney: (value) => {
+          const route = routeRef.current;
+          if (!route) return;
+          route.style.setProperty("--px-journey", `${value * 100}%`);
+          route.setAttribute("aria-valuenow", String(Math.round(value * 100)));
+          const currentTask = [...STATION_COPY].reverse().find((station) => value >= station.u);
+          route.setAttribute("aria-valuetext", currentTask ? `${currentTask.index}: ${currentTask.short}` : "Salt Route trailhead");
+        },
         onIntroComplete: () => {
           dispatchStory("ARRIVED");
           requestAnimationFrame(() => canvas.current?.focus({ preventScroll: true }));
@@ -333,10 +349,10 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
           <canvas inert={isStory} ref={canvas} className="px-canvas" tabIndex={0} aria-label="Salt lake exploration. Use WASD or arrow keys to move; E to interact with a nearby guide; Escape to return to guided mode." />
         </div>
 
-        {!ready && !failed && <LoadingScreen ratio={progress} />}
+        {(!ready || !loadingMinimumElapsed) && !failed && <LoadingScreen ratio={progress} />}
         {failed && <div className="px-loading" role="alert"><p>The salt lake could not load.</p><Link className="px-button" to="/wiki-map">Read all project chapters</Link><button className="px-button" type="button" onClick={() => window.location.reload()}>Try again</button></div>}
 
-        {ready && isStory && <HomePrologue state={story} onNext={() => dispatchStory("NEXT")} onSkip={() => dispatchStory("SKIP")} />}
+        {ready && loadingMinimumElapsed && isStory && <HomePrologue state={story} onNext={() => dispatchStory("NEXT")} onSkip={() => dispatchStory("SKIP")} />}
 
         <div className="px-world-ui" inert={isStory || !ready || failed}>
         {!started && !dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <aside className="px-trailhead" aria-label="Salt Route instructions">
@@ -431,14 +447,29 @@ export function PixelWorld({ Header }: { Header: ComponentType<HeaderProps> }) {
 
         {!dialogueNpc && !stationDialogue && !secretOpen && !atArchive && <button type="button" className="px-restart" onClick={restart} aria-label="Return to the trailhead">↑</button>}
 
-        <div className="px-route" aria-hidden="true">
+        <div
+          ref={routeRef}
+          className="px-route"
+          role="progressbar"
+          aria-label="Salt Route progress"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={1}
+          aria-valuetext="Salt Route trailhead"
+          style={{ "--px-journey": "1.2%" } as React.CSSProperties}
+        >
+          <span className="px-route-fill" aria-hidden="true" />
           {STATION_COPY.map((station) => (
-            <i
+            <span
               key={station.key}
-              className={activeChapter?.key === station.key ? "is-on" : undefined}
-              style={{ left: `${station.u * 100}%`, background: station.color }}
-            />
+              className={`px-route-stop${station.index === "01" ? " is-first" : ""}${station.index === "04" ? " is-last" : ""}${activeChapter?.key === station.key ? " is-on" : ""}`}
+              style={{ left: `${station.u * 100}%`, "--px-accent": station.color } as React.CSSProperties}
+            >
+              <b>{station.index}</b>
+              <span>{station.short}</span>
+            </span>
           ))}
+          <i className="px-route-traveller" aria-hidden="true" />
         </div>
 
         <section className="px-archive" inert={!atArchive || mode === "free"} aria-label="DunaTerp wiki index">

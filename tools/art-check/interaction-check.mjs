@@ -65,10 +65,17 @@ engine.setMoveKey('d', true);
 engine.onBlur();
 assert.equal(engine.keys.size, 0, 'blur releases movement');
 assert.equal(engine.travelToStation('missing'), false);
+for (const [reference, offset] of [[0.582, 220], [0.802, -250]]) {
+  const sample = engine.world.path.sample(reference);
+  const x = sample.x - sample.dy * offset;
+  const y = sample.y + sample.dx * offset;
+  const continuous = engine.world.path.nearestU(x, y, reference);
+  assert.ok(Math.abs(continuous - reference) < 0.06, 'free-roam progress stays on its current route segment');
+}
 assert.equal(engine.travelToStation('archive'), true);
 const station = engine.world.archive;
 Object.assign(engine.hero, { x: station.x, y: station.y + 6 });
 engine.updateProximity();
 engine.interact();
 assert.equal(entries, 1, 'archive remains reachable');
-console.log('PASS: NPC activity areas, patrol, interaction priority, keyboard ownership, pause, multitouch, blur, travel and archive');
+console.log('PASS: NPC activity, interaction, keyboard ownership, switchback continuity, travel and archive');

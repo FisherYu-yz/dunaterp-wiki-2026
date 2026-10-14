@@ -91,6 +91,7 @@
 .story-next { display: flex; justify-content: end; gap: .65rem; font-size: .65rem; color: #cdf558; letter-spacing: .06em; }
 .story-dialogue--opening { position: absolute; left: 50%; right: auto; top: auto; bottom: clamp(3rem, 5.5vh, 5rem); display: block; width: min(42rem, calc(100% - 3rem)); transform: translateX(-50%); border: 0; outline: 0; box-shadow: none; background: #06221fe8; opacity: 1; animation: none; }
 .story-dialogue--opening .story-dialogue-button { text-align: center; }
+.story-dialogue--opening .story-text { font-size: clamp(1rem, 1.6vw, 1.2rem); }
 .story-dialogue--opening .story-speaker { display: none; }
 .story-dialogue--opening .story-next { justify-content: center; margin-top: .25rem; font-size: .8rem; letter-spacing: .14em; }
 .story-progress { display: flex; justify-content: center; gap: 6px; width: 100%; margin-top: 1rem; }

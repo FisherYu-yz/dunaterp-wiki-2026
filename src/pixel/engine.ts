@@ -27,6 +27,8 @@ export type EngineEvents = {
   onMode: (mode: Mode) => void;
   /** Index into world.stations, or -1 between chapters. */
   onChapter: (index: number) => void;
+  /** Current normalised position along the route. */
+  onJourney?: (u: number) => void;
   onPrompt: (station: Station | null) => void;
   /** Fired when the visitor confirms an interaction. */
   onEnter: (station: Station) => void;
@@ -301,7 +303,7 @@ export class PixelEngine {
 
   exitFree() {
     if (this.mode !== "free") return;
-    this.u = this.world.path.nearestU(this.hero.x, this.hero.y);
+    this.u = this.world.path.nearestU(this.hero.x, this.hero.y, this.u);
     this.targetU = this.u;
     this.uVelocity = 0;
     this.returnFrom = { x: this.hero.x, y: this.hero.y };
@@ -588,7 +590,7 @@ export class PixelEngine {
     this.walkDistance += Math.hypot(this.hero.vx, this.hero.vy) * delta;
     this.updateFacing(this.hero.vx, this.hero.vy);
     // Keep the page scroll roughly in step so leaving free mode never jumps.
-    this.u = this.world.path.nearestU(this.hero.x, this.hero.y);
+    this.u = this.world.path.nearestU(this.hero.x, this.hero.y, this.u);
     this.stepNpcs(delta);
   }
 
@@ -802,6 +804,7 @@ export class PixelEngine {
       else this.stepGuided(delta);
     }
 
+    this.events.onJourney?.(this.u);
     if (!this.introShot) this.updateProximity();
 
     // Camera leads slightly in the direction of travel, and on the guided

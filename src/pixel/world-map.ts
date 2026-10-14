@@ -86,8 +86,8 @@ export class RoutePath {
     return { x: a.x + dx * t, y: a.y + dy * t, dx: dx / len, dy: dy / len };
   }
 
-  /** Closest point on the route — used to hand control back after free roam. */
-  nearestU(x: number, y: number): number {
+  /** Closest point on the route, with continuity through nearby switchbacks. */
+  nearestU(x: number, y: number, referenceU?: number): number {
     let best = 0;
     let bestDistance = Infinity;
     for (let i = 0; i < this.points.length; i += 1) {
@@ -98,7 +98,24 @@ export class RoutePath {
         best = i;
       }
     }
-    return this.cumulative[best] / this.length;
+    if (referenceU === undefined) return this.cumulative[best] / this.length;
+
+    const closestDistance = Math.sqrt(bestDistance);
+    const continuityDistance = closestDistance + TILE * 1.5;
+    const continuityDistanceSquared = continuityDistance * continuityDistance;
+    let closestProgress = best;
+    let closestProgressDelta = Math.abs(this.cumulative[best] / this.length - referenceU);
+    for (let i = 0; i < this.points.length; i += 1) {
+      const point = this.points[i];
+      const distance = (point.x - x) ** 2 + (point.y - y) ** 2;
+      if (distance > continuityDistanceSquared) continue;
+      const progressDelta = Math.abs(this.cumulative[i] / this.length - referenceU);
+      if (progressDelta < closestProgressDelta) {
+        closestProgress = i;
+        closestProgressDelta = progressDelta;
+      }
+    }
+    return this.cumulative[closestProgress] / this.length;
   }
 }
 
